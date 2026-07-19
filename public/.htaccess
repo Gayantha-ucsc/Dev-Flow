@@ -1,0 +1,12 @@
+# Prevent directory listing
+Options -Indexes -MultiViews
+
+RewriteEngine On
+
+# If the request matches a real file or folder serve it directly
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Otherwise, everything goes through the front controller
+RewriteRule ^ index.php [L]
