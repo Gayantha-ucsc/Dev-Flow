@@ -1,0 +1,14 @@
+# Local config (real secrets)
+/config/database.php
+
+# Uploads (not committed, folder tracked via .gitkeep)
+/uploads/avatars/*
+
+# Composer, if you end up using it for autoload
+/vendor/
+
+# OS/editor cruft
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
