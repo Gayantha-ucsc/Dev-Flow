@@ -1,0 +1,80 @@
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    background: var(--color-sidebar-bg);
+    border-right: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-lg) var(--space-md);
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.sidebar__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+    padding: 0 var(--space-sm);
+}
+.sidebar__logo { width: 30px; height: 30px; object-fit: contain; }
+.sidebar__brand-name { font-size: 1.35rem; font-weight: 800; color: var(--color-text); }
+
+.btn-create-project {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    background: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 13px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    margin-bottom: var(--space-lg);
+}
+.btn-create-project:hover { background: var(--color-primary-hover); }
+
+.sidebar__section-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    padding: 0 var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.sidebar__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.sidebar__nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 10px var(--space-sm);
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+.sidebar__nav-item:hover { background: rgba(0, 0, 0, 0.04); }
+.sidebar__nav-item.is-active {
+    background: var(--color-white);
+    color: var(--color-primary);
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+.sidebar__nav-item svg { flex-shrink: 0; }
+
+.sidebar__spacer { flex: 1; }
+
+.sidebar__footer {
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-md);
+}
