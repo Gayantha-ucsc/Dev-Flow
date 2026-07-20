@@ -6,7 +6,7 @@ class PageController extends Controller {
     private function mockContext(string $currentRoute, string $pageTitle): array {
         return [
             'pageTitle'          => $pageTitle,
-            'currentProjectId'   => 1,
+            'currentProjectId'   => null,
             'currentProjectName' => 'Project Alpha',
             'userProjects' => [
                 ['project_id' => 1, 'name' => 'Project Alpha'],
@@ -21,9 +21,25 @@ class PageController extends Controller {
     }
 
     public function dashboard(): void {
-        $this->render('pages/placeholder', array_merge(
-            $this->mockContext('/dashboard', 'Dashboard'), ['heading' => 'Dashboard']
-        ));
+        $hasProject = false;
+        $context = $hasProject
+            ? $this->mockContext('/dashboard', 'Dashboard')
+            : array_merge($this->mockContext('/dashboard', 'Dashboard'), [
+                'currentProjectId'   => null,
+                'currentProjectName' => null,
+                'userProjects'       => [],
+                'userRoles'          => [],
+            ]);
+
+        $context = array_merge($context, [
+            'icon'     => 'rocket',
+            'heading'  => 'Ready to launch your first project?',
+            'subtext'  => 'Create a project to start managing tasks, tracking progress, and collaborating with your team.',
+            'ctaText'  => 'Create a Project',
+            'ctaHref'  => '/projects/create',
+        ]);
+
+        $this->render('pages/dashboard', $context);
     }
     public function projects(): void {
         $this->render('pages/placeholder', array_merge(
