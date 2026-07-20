@@ -15,13 +15,20 @@ class PageController extends Controller {
             'activeRole'  => 'team_lead',
             'userRoles'   => ['team_lead', 'developer'],
             'currentUser' => ['name' => 'User One', 'profile_picture' => null],
-            'unreadCount' => 3,
+            'unreadCount' => 4,
             'currentRoute' => $currentRoute,
+            'notifications' => [
+                ['message' => 'Your task "Login Page UI" was approved', 'icon' => 'review', 'is_read' => false, 'created_at' => '10m ago', 'href' => '/tasks'],
+                ['message' => 'New comment on "Database Schema" task', 'icon' => 'chat', 'is_read' => false, 'created_at' => '1h ago', 'href' => '/chat'],
+                ['message' => 'Milestone payment requested', 'icon' => 'payment', 'is_read' => false, 'created_at' => '3h ago', 'href' => '/payment'],
+                ['message' => 'Stage "Testing" is ready for review', 'icon' => 'tasks', 'is_read' => true, 'created_at' => 'Yesterday', 'href' => '/review'],
+            ],
         ];
+
     }
 
     public function dashboard(): void {
-        $hasProject = false;
+        $hasProject = true;
         $context = $hasProject
             ? $this->mockContext('/dashboard', 'Dashboard')
             : array_merge($this->mockContext('/dashboard', 'Dashboard'), [
