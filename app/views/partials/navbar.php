@@ -8,60 +8,61 @@
 // $unreadCount      = 3
 ?>
 <header class="navbar">
+    <!-- Project Switcher -->
     <div class="navbar-left">
-        <?php $projectNames = array_column($userProjects ?? [], 'name', 'project_id'); ?>
-        <?php $currentProjectName = $projectNames[$currentProjectId] ?? 'Select Project'; ?>
+        <?php if (!empty($currentProjectId)): ?>
+            <?php $projectNames = array_column($userProjects ?? [], 'name', 'project_id'); ?>
+            <?php $currentProjectName = $projectNames[$currentProjectId] ?? 'Select Project'; ?>
 
-        <!-- Project Switcher -->
-        <div class="dropdown" data-dropdown>
-            <button class="project-switcher" data-dropdown-trigger>
-                <span><?= htmlspecialchars($currentProjectName) ?></span>
-                <!-- TODO: make the svg images assets -->
-                <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none">
-                    <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            </button>
-
-            <div class="dropdown__menu" data-dropdown-menu>
-                <?php foreach (($userProjects ?? []) as $project): ?>
-                    <a href="<?= url('/projects/' . (int)$project['project_id']) ?>"
-                       class="dropdown__item <?= $project['project_id'] === ($currentProjectId ?? null) ? 'is-active' : '' ?>">
-                       <?= htmlspecialchars($project['name']) ?>
-                    </a>
-                <?php endforeach; ?>
-            </div>
-        </div>
-
-        <!-- Role Switcher — placeholder data for now, wire to real ProjectMember lookup later -->
-        <?php if (count($userRoles ?? []) > 1): ?>
             <div class="dropdown" data-dropdown>
-                <button class="role-badge" data-dropdown-trigger>
-                    <?php 
-                    if ($currentProjectName === 'Select Project'){
-                        $activeRole = 'User';
-                    }; ?>
-                    <?= htmlspecialchars(strtoupper(str_replace('_', ' ', $activeRole ?? ''))) ?>
-                    <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none">
+                <button class="project-switcher" data-dropdown-trigger>
+                    <span><?= htmlspecialchars($currentProjectName) ?></span>
+                    <!-- TODO: make the svg images assets -->
+                    <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none">
                         <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                     </svg>
                 </button>
 
                 <div class="dropdown__menu" data-dropdown-menu>
-                    <?php foreach ($userRoles as $role): ?>
-                        <a href="?switch_role=<?= urlencode($role) ?>"
-                           class="dropdown__item <?= $role === $activeRole ? 'is-active' : '' ?>">
-                            <?= htmlspecialchars(strtoupper(str_replace('_', ' ', $role))) ?>
+                    <?php foreach (($userProjects ?? []) as $project): ?>
+                        <a href="<?= url('/projects/' . (int)$project['project_id']) ?>"
+                        class="dropdown__item <?= $project['project_id'] === ($currentProjectId ?? null) ? 'is-active' : '' ?>">
+                        <?= htmlspecialchars($project['name']) ?>
                         </a>
                     <?php endforeach; ?>
                 </div>
             </div>
-        <?php else: ?>
-            <!-- Single role — static badge, no dropdown needed -->
-            <span class="role-badge role-badge--static">
-                <?= htmlspecialchars(strtoupper(str_replace('_', ' ', $activeRole ?? ''))) ?>
-            </span>
-        <?php endif; ?>
 
+            <!-- Role Switcher — placeholder data for now, wire to real ProjectMember lookup later -->
+            <?php if (count($userRoles ?? []) > 1): ?>
+                <div class="dropdown" data-dropdown>
+                    <button class="role-badge" data-dropdown-trigger>
+                        <?php 
+                        if ($currentProjectName === 'Select Project'){
+                            $activeRole = 'User';
+                        }; ?>
+                        <?= htmlspecialchars(strtoupper(str_replace('_', ' ', $activeRole ?? ''))) ?>
+                        <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none">
+                            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+
+                    <div class="dropdown__menu" data-dropdown-menu>
+                        <?php foreach ($userRoles as $role): ?>
+                            <a href="?switch_role=<?= urlencode($role) ?>"
+                            class="dropdown__item <?= $role === $activeRole ? 'is-active' : '' ?>">
+                                <?= htmlspecialchars(strtoupper(str_replace('_', ' ', $role))) ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php else: ?>
+                    <!-- Single role  -->
+                    <span class="role-badge role-badge--static">
+                        <?= htmlspecialchars(strtoupper(str_replace('_', ' ', $activeRole ?? ''))) ?>
+                    </span>
+            <?php endif; ?>
+        <?php endif; ?>
     </div>
 
     <div class="navbar-right">

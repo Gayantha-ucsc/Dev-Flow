@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="<?= url('assets/css/global.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/navbar.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/sidebar.css') ?>">
+    <link rel="stylesheet" href="<?= url('assets/css/components/empty-state.css') ?>">
 </head>
 <body>
     <div style="display:flex;">
