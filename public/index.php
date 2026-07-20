@@ -25,39 +25,8 @@ if ($app['env'] === 'development') {
 date_default_timezone_set($app['timezone']);
 session_start(); // TODO: Dedicated session stuff
 
-// TODO: TEMP placeholder
-$currentProjectId = 1;
-$userProjects   = [
-    ['project_id' => 1, 'name' => 'Project Alpha'],
-    ['project_id' => 2, 'name' => 'Project Beta'],
-];
-$activeRole = 'client';
-$userRoles  = ['team_lead', 'developer', 'user'];
-$currentUser = ['name' => 'User One', 'profile_picture' => null];
-$unreadCount = 69;
-
 require __DIR__ . '/../app/core/helpers.php';
+require __DIR__ . '/../app/core/Controller.php';
+require __DIR__ . '/../app/core/Router.php';
 
-$currentProjectName = 'Project Alpha';
-$currentRoute = '/dashboard';
-
-?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <?php include __DIR__ . '/../app/views/partials/head-meta.php'; ?>
-    <link rel="stylesheet" href="assets/css/global.css">
-    <link rel="stylesheet" href="assets/css/components/navbar.css">
-    <link rel="stylesheet" href="assets/css/components/sidebar.css">
-</head>
-<body>
-    <div style="display:flex;">
-        <?php include __DIR__ . '/../app/views/partials/sidebar.php'; ?>
-        <div style="flex:1;">
-            <?php include __DIR__ . '/../app/views/partials/navbar.php'; ?>
-        </div>
-    </div>
-    <script src="assets/js/global.js"></script>
-</body>
-</html>
+(new Router())->dispatch();

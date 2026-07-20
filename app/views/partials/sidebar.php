@@ -20,11 +20,11 @@ if ($hasProject) {
 <aside class="sidebar">
 
     <div class="sidebar__brand">
-        <img src="assets/img/logo.png" alt="DevFlow" class="sidebar__logo">
+        <img src="<?= url('assets/img/logo.png') ?>" alt="DevFlow" class="sidebar__logo">
         <span class="sidebar__brand-name">DevFlow</span>
     </div>
 
-    <a href="/projects/create" class="btn-create-project">
+    <a href="<?= url('/projects/create') ?>" class="btn-create-project">
         <?= renderIcon('plus') ?>
         <span>Create a Project</span>
     </a>
@@ -35,7 +35,7 @@ if ($hasProject) {
         </div>
         <nav class="sidebar__nav">
             <?php foreach ($visibleNavItems as $item): ?>
-                <a href="<?= htmlspecialchars($item['href']) ?>"
+                <a href="<?= url($item['href']) ?>"
                    class="sidebar__nav-item <?= ($currentRoute ?? '') === $item['href'] ? 'is-active' : '' ?>">
                     <?= renderIcon($item['icon']) ?>
                     <span><?= htmlspecialchars($item['label']) ?></span>
@@ -44,7 +44,7 @@ if ($hasProject) {
         </nav>
     <?php else: ?>
         <nav class="sidebar__nav">
-            <a href="/dashboard" class="sidebar__nav-item is-active">
+            <a href="<?= url('/dashboard') ?>" class="sidebar__nav-item is-active">
                 <?= renderIcon('dashboard') ?>
                 <span>Dashboard</span>
             </a>
@@ -54,7 +54,7 @@ if ($hasProject) {
     <div class="sidebar__spacer"></div>
 
     <div class="sidebar__footer">
-        <a href="/settings" class="sidebar__nav-item">
+        <a href="<?= url('/settings') ?>" class="sidebar__nav-item">
             <?= renderIcon('settings') ?>
             <span>Settings</span>
         </a>
