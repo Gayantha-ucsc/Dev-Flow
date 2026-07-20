@@ -16,6 +16,7 @@
         <div class="dropdown" data-dropdown>
             <button class="project-switcher" data-dropdown-trigger>
                 <span><?= htmlspecialchars($currentProjectName) ?></span>
+                <!-- TODO: make the svg images assets -->
                 <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none">
                     <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                 </svg>
@@ -23,7 +24,7 @@
 
             <div class="dropdown__menu" data-dropdown-menu>
                 <?php foreach (($userProjects ?? []) as $project): ?>
-                    <a href="/projects/<?= (int)$project['project_id'] ?>"
+                    <a href="<?= url('/projects/' . (int)$project['project_id']) ?>"
                        class="dropdown__item <?= $project['project_id'] === ($currentProjectId ?? null) ? 'is-active' : '' ?>">
                        <?= htmlspecialchars($project['name']) ?>
                     </a>
@@ -66,7 +67,7 @@
     <div class="navbar-right">
 
         <!-- Notifications -->
-        <a href="/notifications" class="icon-btn" aria-label="Notifications">
+         <a href="<?= url('/notifications') ?>" class="icon-btn" aria-label="Notifications">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                 <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M13.7 21a2 2 0 01-3.4 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -84,14 +85,14 @@
                     <?php if (!empty($currentUser['profile_picture'])): ?>
                         <img src="<?= htmlspecialchars($currentUser['profile_picture']) ?>" alt="">
                     <?php else: ?>
-                        <img src="<?= $app['base_url'] ?>/assets/img/default-avatar.png" alt="">
+                        <img src="<?= url('assets/img/default-avatar.png') ?>" alt="">
                     <?php endif; ?>
                 </span>
             </button>
             <div class="dropdown__menu dropdown__menu--right" data-dropdown-menu>
-                <a href="/profile" class="dropdown__item">Profile</a>
-                <a href="/settings" class="dropdown__item">Settings</a>
-                <a href="/logout" class="dropdown__item dropdown__item--danger">Log out</a>
+                <a href="<?= url('/profile')  ?>" class="dropdown__item">Profile</a>
+                <a href="<?= url('/settings') ?>" class="dropdown__item">Settings</a>
+                <a href="<?= url('/logout')   ?>" class="dropdown__item dropdown__item--danger">Log out</a>
             </div>
         </div>
 
