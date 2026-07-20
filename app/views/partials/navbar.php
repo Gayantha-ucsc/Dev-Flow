@@ -68,15 +68,17 @@
     <div class="navbar-right">
 
         <!-- Notifications -->
-         <a href="<?= url('/notifications') ?>" class="icon-btn" aria-label="Notifications">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M13.7 21a2 2 0 01-3.4 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-            </svg>
-            <?php if (($unreadCount ?? 0) > 0): ?>
-                <span class="badge-count"><?= (int)$unreadCount ?></span>
-            <?php endif; ?>
-        </a>
+        <div class="dropdown" data-dropdown>
+            <button class="icon-btn" data-dropdown-trigger aria-label="Notifications">
+                <?= renderIcon('bell') ?>
+                <?php if (($unreadCount ?? 0) > 0): ?>
+                    <span class="badge-count"><?= (int)$unreadCount ?></span>
+                <?php endif; ?>
+            </button>
+            <div class="dropdown__menu dropdown__menu--right dropdown__menu--notifications" data-dropdown-menu>
+                <?php include __DIR__ . '/notification-panel.php'; ?>
+            </div>
+        </div>
 
         <!-- User Menu -->
         <div class="dropdown" data-dropdown>
