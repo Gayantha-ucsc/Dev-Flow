@@ -26,15 +26,20 @@ date_default_timezone_set($app['timezone']);
 session_start(); // TODO: Dedicated session stuff
 
 // TODO: TEMP placeholder
-$currentProjectId = 4;
+$currentProjectId = 1;
 $userProjects   = [
     ['project_id' => 1, 'name' => 'Project Alpha'],
     ['project_id' => 2, 'name' => 'Project Beta'],
 ];
-$activeRole = 'team_lead';
+$activeRole = 'client';
 $userRoles  = ['team_lead', 'developer', 'user'];
 $currentUser = ['name' => 'User One', 'profile_picture' => null];
 $unreadCount = 69;
+
+require __DIR__ . '/../app/core/helpers.php';
+
+$currentProjectName = 'Project Alpha';
+$currentRoute = '/dashboard';
 
 ?>
 
@@ -44,14 +49,15 @@ $unreadCount = 69;
     <?php include __DIR__ . '/../app/views/partials/head-meta.php'; ?>
     <link rel="stylesheet" href="assets/css/global.css">
     <link rel="stylesheet" href="assets/css/components/navbar.css">
+    <link rel="stylesheet" href="assets/css/components/sidebar.css">
 </head>
 <body>
-    <?php include __DIR__ . '/../app/views/partials/navbar.php'; ?>
-
-    <main style="padding: 24px;">
-        <p>Navbar test page.</p>
-    </main>
-
+    <div style="display:flex;">
+        <?php include __DIR__ . '/../app/views/partials/sidebar.php'; ?>
+        <div style="flex:1;">
+            <?php include __DIR__ . '/../app/views/partials/navbar.php'; ?>
+        </div>
+    </div>
     <script src="assets/js/global.js"></script>
 </body>
 </html>
