@@ -73,3 +73,7 @@
     font-weight: 700; padding: 12px 24px; cursor: pointer;
 }
 .btn-continue:hover { background: var(--color-primary-hover); }
+
+.wizard-step { cursor: default; }
+.wizard-step.is-clickable { cursor: pointer; }
+.wizard-step.is-clickable:hover .wizard-step__label { color: var(--color-primary); }

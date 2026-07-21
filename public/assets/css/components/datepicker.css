@@ -1,3 +1,9 @@
+.dropdown__menu--calendar {
+    top: auto;
+    bottom: calc(100% + 8px);
+    left: 0;
+}
+
 .date-field__input {
     width: 100%;
     box-sizing: border-box;
@@ -40,3 +46,26 @@
 .date-calendar__day.is-disabled { color: var(--color-border); cursor: not-allowed; }
 .date-calendar__day.is-selected { background: var(--color-primary); color: var(--color-white); font-weight: 700; }
 .date-calendar__day.is-empty { pointer-events: none; }
+
+.date-calendar__center { display: flex; gap: var(--space-xs); }
+
+.date-calendar__label {
+    background: none; border: none; cursor: pointer;
+    font-weight: 700; font-size: 0.9rem; color: var(--color-text);
+    padding: 2px 6px; border-radius: var(--radius-sm);
+}
+.date-calendar__label:hover { background: var(--color-sidebar-bg); }
+.date-calendar__label--static { cursor: default; }
+.date-calendar__label--static:hover { background: none; }
+
+.date-calendar__grid { display: grid; gap: 4px; }
+.date-calendar__grid--months,
+.date-calendar__grid--years { grid-template-columns: repeat(3, 1fr); }
+
+.date-calendar__cell {
+    background: none; border: none; cursor: pointer;
+    padding: 12px 4px; border-radius: var(--radius-sm);
+    font-size: 0.85rem; color: var(--color-text);
+}
+.date-calendar__cell:hover { background: var(--color-sidebar-bg); }
+.date-calendar__cell.is-selected { background: var(--color-primary); color: var(--color-white); font-weight: 700; }

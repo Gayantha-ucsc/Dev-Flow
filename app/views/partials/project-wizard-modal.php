@@ -1,4 +1,4 @@
-<div class="modal-overlay" data-modal="project-wizard">
+<div class="modal-overlay" data-modal="project-wizard" hidden>
     <div class="modal-backdrop" data-modal-close></div>
 
     <div class="modal-box wizard-modal">

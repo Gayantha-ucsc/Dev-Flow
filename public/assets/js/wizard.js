@@ -3,12 +3,14 @@ document.querySelectorAll('[data-modal="project-wizard"]').forEach(function (mod
     const panels = modal.querySelectorAll('.wizard-panel');
     const continueBtn = modal.querySelector('[data-wizard-continue]');
     let currentStep = 1;
+    let maxStepReached = 1;
 
     function goToStep(index) {
         steps.forEach(s => {
             const idx = parseInt(s.dataset.stepIndex, 10);
             s.classList.toggle('is-active', idx === index);
-            s.classList.toggle('is-complete', idx < index);
+            s.classList.toggle('is-complete', idx < maxStepReached || (idx < index && idx <= maxStepReached));
+            s.classList.toggle('is-clickable', idx <= maxStepReached);
         });
         panels.forEach(p => {
             p.classList.toggle('is-active', parseInt(p.dataset.panelIndex, 10) === index);
@@ -51,8 +53,25 @@ document.querySelectorAll('[data-modal="project-wizard"]').forEach(function (mod
 
     continueBtn.addEventListener('click', function () {
         if (currentStep === 1 && !validateStep1()) return;
-        if (currentStep < 4) goToStep(currentStep + 1);
+        if (currentStep < 4) {
+            maxStepReached = Math.max(maxStepReached, currentStep + 1);
+            goToStep(currentStep + 1);
+        }
     });
 
-    modal.addEventListener('modal:opened', () => goToStep(1));
+    // click a step number to jump back
+    steps.forEach(function (stepEl) {
+        stepEl.addEventListener('click', function () {
+            const idx = parseInt(stepEl.dataset.stepIndex, 10);
+            if (idx <= maxStepReached) {
+                goToStep(idx);
+            }
+        });
+    });
+
+    modal.addEventListener('modal:opened', function () {
+        currentStep = 1;
+        maxStepReached = 1;
+        goToStep(1);
+    });
 });

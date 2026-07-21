@@ -26,27 +26,37 @@ document.addEventListener('click', function (e) {
     }
 });
 
+const MODAL_TRANSITION_MS = 200; // matches modal.css's transition duration
+
+function openModal(modal) {
+    modal.removeAttribute('hidden');
+    requestAnimationFrame(() => modal.classList.add('is-open'));
+    modal.dispatchEvent(new CustomEvent('modal:opened'));
+}
+
+function closeModal(modal) {
+    modal.classList.remove('is-open');
+    setTimeout(() => modal.setAttribute('hidden', ''), MODAL_TRANSITION_MS);
+}
+
 document.addEventListener('click', function (e) {
     const opener = e.target.closest('[data-modal-trigger]');
     if (opener) {
         e.preventDefault();
         const modal = document.querySelector(`[data-modal="${opener.dataset.modalTrigger}"]`);
-        if (modal) {
-            modal.classList.add('is-open');
-            modal.dispatchEvent(new CustomEvent('modal:opened'));
-        }
+        if (modal) openModal(modal);
         return;
     }
 
     const closer = e.target.closest('[data-modal-close]');
     if (closer) {
         const modal = closer.closest('[data-modal]');
-        if (modal) modal.classList.remove('is-open');
+        if (modal) closeModal(modal);
     }
 });
 
 document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
-        document.querySelectorAll('[data-modal].is-open').forEach(m => m.classList.remove('is-open'));
+        document.querySelectorAll('[data-modal].is-open').forEach(closeModal);
     }
 });
