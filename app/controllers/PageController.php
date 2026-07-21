@@ -43,7 +43,7 @@ class PageController extends Controller {
             'heading'  => 'Ready to launch your first project?',
             'subtext'  => 'Create a project to start managing tasks, tracking progress, and collaborating with your team.',
             'ctaText'  => 'Create a Project',
-            'ctaHref'  => '/projects/create',
+            'ctaTrigger' => 'project-wizard',
         ]);
 
         $this->render('pages/dashboard', $context);
