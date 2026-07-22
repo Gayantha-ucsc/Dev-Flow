@@ -123,11 +123,14 @@
             <script>
                 window.WORKFLOW_TEMPLATES = <?= json_encode($workflowTemplates) ?>;
                 window.WIZARD_ICONS = {
-                    grip:      <?= json_encode(renderIcon('grip-vertical')) ?>,
-                    pencil:    <?= json_encode(renderIcon('pencil')) ?>,
-                    trash:     <?= json_encode(renderIcon('trash-2')) ?>,
-                    arrowLeft: <?= json_encode(renderIcon('arrow-left')) ?>,
-                    x:         <?= json_encode(renderIcon('x')) ?>
+                    grip:           <?= json_encode(renderIcon('grip-vertical')) ?>,
+                    pencil:         <?= json_encode(renderIcon('pencil')) ?>,
+                    trash:          <?= json_encode(renderIcon('trash-2')) ?>,
+                    arrowLeft:      <?= json_encode(renderIcon('arrow-left')) ?>,
+                    x:              <?= json_encode(renderIcon('x')) ?>,
+                    layoutTemplate: <?= json_encode(renderIcon('layout-template')) ?>,
+                    info:           <?= json_encode(renderIcon('info')) ?>,
+                    user:           <?= json_encode(renderIcon('user')) ?>
                 };
             </script>
 
@@ -156,9 +159,28 @@
                 </div>
             </div>
 
-            <!-- Step 4: Review — placeholder -->
+            <!-- Step 4: Review -->
             <div class="wizard-panel" data-panel-index="4">
-                <p class="wizard-placeholder">Review and confirm — coming soon.</p>
+                <h3>Review your project</h3>
+                <p class="wizard-subtext">Check everything looks right before creating.</p>
+
+                <div class="review-card">
+                    <div class="review-card__header">
+                        <span>PROJECT DETAILS</span>
+                        <button type="button" class="review-card__edit" data-review-edit="1"><?= renderIcon('pencil') ?> Edit</button>
+                    </div>
+                    <div class="review-card__body" data-review-details></div>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-card__header">
+                        <span>WORKFLOW</span>
+                        <button type="button" class="review-card__edit" data-review-edit="2"><?= renderIcon('pencil') ?> Edit</button>
+                    </div>
+                    <div class="review-card__body" data-review-workflow></div>
+                </div>
+
+                <div data-review-team></div>
             </div>
 
         </div>

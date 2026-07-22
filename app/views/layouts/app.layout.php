@@ -16,6 +16,7 @@
     <script src="<?= url('assets/js/datepicker.js') ?>"></script>
     <script src="<?= url('assets/js/workflow-step.js') ?>"></script>
     <script src="<?= url('assets/js/team-step.js') ?>"></script>
+    <script src="<?= url('assets/js/review-step.js') ?>"></script>
     <script src="<?= url('assets/js/wizard.js') ?>"></script>
 
 </head>
