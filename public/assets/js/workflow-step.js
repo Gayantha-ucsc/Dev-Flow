@@ -106,6 +106,13 @@
         return div.innerHTML;
     }
 
+    function updateStageBadges() {
+        listEl.querySelectorAll('.stage-row').forEach((row, i) => {
+            const badge = row.querySelector('.stage-row__badge');
+            if (badge) badge.textContent = i + 1;
+        });
+    }
+
     function attachRowHandlers() {
         listEl.querySelectorAll('.stage-row').forEach(row => {
             const id = parseInt(row.dataset.stageId, 10);
@@ -135,11 +142,22 @@
 
                 const moved = stages.splice(draggedIndex, 1)[0];
                 stages.splice(overIndex, 0, moved);
+
+                // Move the existing row nodes instead of rebuilding the list, so the
+                // node currently mid-drag (and its dragend listener) never gets
+                // replaced — that's what left rows stuck grayed out before.
+                const draggedRow = listEl.querySelector(`[data-stage-id="${moved.id}"]`);
+                const rows = Array.from(listEl.children);
+                const targetRow = rows[overIndex];
+                if (draggedRow && targetRow && draggedRow !== targetRow) {
+                    if (overIndex > draggedIndex) {
+                        targetRow.after(draggedRow);
+                    } else {
+                        targetRow.before(draggedRow);
+                    }
+                }
+                updateStageBadges();
                 draggedIndex = overIndex;
-                renderStages();
-                // re-mark dragging row after re-render, since renderStages rebuilds the DOM
-                const newRow = listEl.querySelector(`[data-stage-id="${id}"]`);
-                if (newRow) newRow.classList.add('is-dragging');
             });
         });
     }

@@ -149,13 +149,36 @@ document.querySelectorAll('[data-modal="project-wizard"]').forEach(function (mod
         });
     });
 
-    modal.addEventListener('modal:opened', function () {
-        currentStep = 1;
-        maxStepReached = 1;
+    function resetDetailsStep() {
+        const name = modal.querySelector('#project-name');
+        const description = modal.querySelector('#project-description');
+        const deadlineField = modal.querySelector('[data-datepicker]');
+        const nameError = modal.querySelector('[data-error-for="project-name"]');
+        const deadlineError = modal.querySelector('[data-error-for="project-deadline"]');
+
+        name.value = '';
+        description.value = '';
+        if (deadlineField && deadlineField.datepickerReset) deadlineField.datepickerReset();
+        nameError.classList.remove('is-visible');
+        deadlineError.classList.remove('is-visible');
+    }
+
+    function resetWizard() {
+        resetDetailsStep();
         setWorkflowPhase('select');
         if (window.workflowReset) window.workflowReset();
         if (window.teamStepReset) window.teamStepReset();
+    }
+
+    modal.addEventListener('modal:opened', function () {
+        currentStep = 1;
+        maxStepReached = 1;
+        resetWizard();
         goToStep(1);
+    });
+
+    modal.addEventListener('modal:closed', function () {
+        resetWizard();
     });
 
     updateFooter();

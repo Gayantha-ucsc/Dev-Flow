@@ -36,6 +36,7 @@ function openModal(modal) {
 
 function closeModal(modal) {
     modal.classList.remove('is-open');
+    modal.dispatchEvent(new CustomEvent('modal:closed'));
     setTimeout(() => modal.setAttribute('hidden', ''), MODAL_TRANSITION_MS);
 }
 

@@ -128,6 +128,18 @@ document.querySelectorAll('[data-datepicker]').forEach(function (field) {
     // itself persists across re-renders, only its innerHTML is replaced.
     calendarEl.addEventListener('click', e => e.stopPropagation());
 
+    // Reset hook — clears the picked date and restores the placeholder display.
+    field.datepickerReset = function () {
+        selectedDate = null;
+        viewDate = new Date();
+        viewDate.setDate(1);
+        view = 'days';
+        display.textContent = 'mm/dd/yyyy';
+        display.classList.remove('has-value');
+        hiddenInput.value = '';
+        field.classList.remove('is-open');
+    };
+
     trigger.addEventListener('click', function () {
         view = 'days';
         render();
