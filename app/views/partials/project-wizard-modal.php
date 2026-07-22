@@ -122,17 +122,38 @@
             <!-- Icon + template data handed to JS once -->
             <script>
                 window.WORKFLOW_TEMPLATES = <?= json_encode($workflowTemplates) ?>;
-                window.STAGE_ICONS = {
-                    grip:   <?= json_encode(renderIcon('grip-vertical')) ?>,
-                    pencil: <?= json_encode(renderIcon('pencil')) ?>,
-                    trash:  <?= json_encode(renderIcon('trash-2')) ?>,
-                    arrowLeft: <?= json_encode(renderIcon('arrow-left')) ?>
+                window.WIZARD_ICONS = {
+                    grip:      <?= json_encode(renderIcon('grip-vertical')) ?>,
+                    pencil:    <?= json_encode(renderIcon('pencil')) ?>,
+                    trash:     <?= json_encode(renderIcon('trash-2')) ?>,
+                    arrowLeft: <?= json_encode(renderIcon('arrow-left')) ?>,
+                    x:         <?= json_encode(renderIcon('x')) ?>
                 };
             </script>
 
-            <!-- Step 3: Team — placeholder -->
+            <!-- Step 3: Team -->
             <div class="wizard-panel" data-panel-index="3">
-                <p class="wizard-placeholder">Team setup — coming soon.</p>
+                <h3>Add Team Members</h3>
+                <p class="wizard-subtext">Invite people to collaborate on this project. You can always add more later.</p>
+
+                <div class="team-add-row">
+                    <input type="email" id="team-email" class="team-add-row__input" placeholder="Enter email address">
+                    <select id="team-role" class="team-add-row__select">
+                        <option value="developer">Developer</option>
+                        <option value="designer">Designer</option>
+                        <option value="team_lead">Team Lead</option>
+                        <option value="manager">Manager</option>
+                    </select>
+                    <button type="button" class="team-add-row__btn" data-add-member>
+                        <?= renderIcon('plus') ?> <span>Add</span>
+                    </button>
+                </div>
+                <span class="field-error" data-error-for="team-email"></span>
+
+                <div class="team-members" data-team-members-section hidden>
+                    <div class="team-members__label">TEAM MEMBERS</div>
+                    <div class="team-members__list" data-team-members-list></div>
+                </div>
             </div>
 
             <!-- Step 4: Review — placeholder -->
@@ -143,7 +164,7 @@
         </div>
 
         <!-- footer -->
-         <div class="wizard-footer">
+        <div class="wizard-footer">
             <button type="button" class="btn-cancel" data-modal-close data-wizard-back>Cancel</button>
             <div class="wizard-footer__right">
                 <button type="button" class="btn-skip" data-wizard-skip hidden>Skip</button>

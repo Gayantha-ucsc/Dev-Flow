@@ -73,19 +73,26 @@
         document.querySelector('[data-error-for="workflow-template"]').classList.remove('is-visible');
     };
 
+    window.workflowGetSummary = function () {
+        return {
+            templateId: selectedTemplateId,
+            stages: stages.map(s => s.name),
+        };
+    };
+
     // ---------- Stage list rendering + editing ----------
     const listEl = document.querySelector('[data-stage-list]');
 
     function renderStages() {
         listEl.innerHTML = stages.map((s, i) => `
             <div class="stage-row" draggable="true" data-stage-id="${s.id}">
-                <span class="stage-row__grip">${window.STAGE_ICONS.grip}</span>
+                <span class="stage-row__grip">${window.WIZARD_ICONS.grip}</span>
                 <span class="stage-row__badge">${i + 1}</span>
                 <span class="stage-row__name" data-name-display>${escapeHtml(s.name)}</span>
                 <input type="text" class="stage-row__name-input" data-name-input value="${escapeHtml(s.name)}" draggable="false" hidden>
                 <span class="stage-row__actions">
-                    <button type="button" class="stage-row__action" data-edit-stage draggable="false">${window.STAGE_ICONS.pencil}</button>
-                    <button type="button" class="stage-row__action stage-row__action--danger" data-delete-stage draggable="false">${window.STAGE_ICONS.trash}</button>
+                    <button type="button" class="stage-row__action" data-edit-stage draggable="false">${window.WIZARD_ICONS.pencil}</button>
+                    <button type="button" class="stage-row__action stage-row__action--danger" data-delete-stage draggable="false">${window.WIZARD_ICONS.trash}</button>
                 </span>
             </div>
         `).join('');

@@ -108,7 +108,7 @@ document.querySelectorAll('[data-modal="project-wizard"]').forEach(function (mod
 
         if (currentStep === 3) {
             maxStepReached = Math.max(maxStepReached, 4);
-            window.reviewStepPopulate();
+            if (window.reviewStepPopulate) window.reviewStepPopulate();
             goToStep(4);
             return;
         }
@@ -138,7 +138,7 @@ document.querySelectorAll('[data-modal="project-wizard"]').forEach(function (mod
 
     skipBtn.addEventListener('click', function () {
         maxStepReached = Math.max(maxStepReached, 4);
-        window.reviewStepPopulate();
+        if (window.reviewStepPopulate) window.reviewStepPopulate();
         goToStep(4);
     });
 
