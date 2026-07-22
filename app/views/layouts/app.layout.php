@@ -14,7 +14,9 @@
     <link rel="stylesheet" href="<?= url('assets/css/components/datepicker.css') ?>">
 
     <script src="<?= url('assets/js/datepicker.js') ?>"></script>
+    <script src="<?= url('assets/js/workflow-step.js') ?>"></script>
     <script src="<?= url('assets/js/wizard.js') ?>"></script>
+
 </head>
 <body>
     <div style="display:flex;">

@@ -1,18 +1,17 @@
-.modal-overlay[hidden] { display: none !important; }
-
 .modal-overlay {
     position: fixed;
     inset: 0;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
-    padding-top: 8vh;
+    padding: 4vh 20px;
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 .modal-overlay.is-open { opacity: 1; visibility: visible; }
+.modal-overlay[hidden] { display: none !important; }
 
 .modal-backdrop {
     position: absolute;
@@ -28,7 +27,11 @@
     border-radius: var(--radius-md);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
     max-width: 640px;
-    width: 92%;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     transform: scale(0.95);
     opacity: 0;
     transition: transform 0.2s ease, opacity 0.2s ease;

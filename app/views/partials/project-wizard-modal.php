@@ -1,3 +1,5 @@
+<?php $workflowTemplates = require __DIR__ . '/../../../config/mock/workflow-templates.php'; ?>
+
 <div class="modal-overlay" data-modal="project-wizard" hidden>
     <div class="modal-backdrop" data-modal-close></div>
 
@@ -6,26 +8,39 @@
             <h2>Create New Project</h2>
             <div class="wizard-steps">
                 <div class="wizard-step is-active" data-step-index="1">
-                    <span class="wizard-step__dot">1</span>
+                    <span class="wizard-step__dot">
+                        <span class="wizard-step__num">1</span>
+                        <span class="wizard-step__check"><?= renderIcon('check') ?></span>
+                    </span>
                     <span class="wizard-step__label">DETAILS</span>
                 </div>
                 <span class="wizard-step__line"></span>
                 <div class="wizard-step" data-step-index="2">
-                    <span class="wizard-step__dot">2</span>
+                    <span class="wizard-step__dot">
+                        <span class="wizard-step__num">2</span>
+                        <span class="wizard-step__check"><?= renderIcon('check') ?></span>
+                    </span>
                     <span class="wizard-step__label">WORKFLOW</span>
                 </div>
                 <span class="wizard-step__line"></span>
                 <div class="wizard-step" data-step-index="3">
-                    <span class="wizard-step__dot">3</span>
+                    <span class="wizard-step__dot">
+                        <span class="wizard-step__num">3</span>
+                        <span class="wizard-step__check"><?= renderIcon('check') ?></span>
+                    </span>
                     <span class="wizard-step__label">TEAM</span>
                 </div>
                 <span class="wizard-step__line"></span>
                 <div class="wizard-step" data-step-index="4">
-                    <span class="wizard-step__dot">4</span>
+                    <span class="wizard-step__dot">
+                        <span class="wizard-step__num">4</span>
+                        <span class="wizard-step__check"><?= renderIcon('check') ?></span>
+                    </span>
                     <span class="wizard-step__label">REVIEW</span>
                 </div>
             </div>
         </div>
+
 
         <div class="wizard-body">
 
@@ -59,10 +74,61 @@
                 </div>
             </div>
 
-            <!-- Step 2: Workflow — placeholder, built next -->
+            <!-- Step 2: Workflow -->
             <div class="wizard-panel" data-panel-index="2">
-                <p class="wizard-placeholder">Workflow template selection — coming soon.</p>
+
+                <!-- Sub-phase A: pick a template -->
+                <div class="workflow-phase is-active" data-phase="select">
+                    <h3>Choose a workflow template</h3>
+                    <p class="wizard-subtext">Start from a preset template or build your own stages from scratch.</p>
+                    <span class="field-error" data-error-for="workflow-template"></span>
+
+                    <div class="template-list">
+                        <?php foreach ($workflowTemplates as $tpl): ?>
+                            <label class="template-card">
+                                <input type="radio" name="workflow-template" value="<?= (int)$tpl['id'] ?>" class="template-card__radio-input" data-template-radio>
+                                <span class="template-card__icon template-card__icon--<?= htmlspecialchars($tpl['icon_bg']) ?>"><?= renderIcon($tpl['icon']) ?></span>
+                                <span class="template-card__body">
+                                    <span class="template-card__name"><?= htmlspecialchars($tpl['name']) ?></span>
+                                    <span class="template-card__desc"><?= htmlspecialchars($tpl['description']) ?></span>
+                                    <span class="template-card__count"><?= count($tpl['stages']) ?> stages</span>
+                                </span>
+                                <span class="template-card__radio-dot"></span>
+                            </label>
+                        <?php endforeach; ?>
+
+                        <button type="button" class="template-card template-card--scratch" data-template-scratch>
+                            <span class="template-card__scratch-icon"><?= renderIcon('plus') ?></span>
+                            <span class="template-card__name">Start from Scratch</span>
+                            <span class="template-card__desc">Build your perfect workflow board stage by stage.</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sub-phase B: arrange stages -->
+                <div class="workflow-phase" data-phase="arrange">
+                    <h3>Arrange your stages</h3>
+                    <p class="wizard-subtext" data-arrange-subtext>Reorder, rename, add, or remove stages.</p>
+
+                    <div class="stage-list" data-stage-list></div>
+
+                    <button type="button" class="stage-add-btn" data-add-stage>
+                        <span><?= renderIcon('plus') ?></span>
+                        <span>Add Stage</span>
+                    </button>
+                </div>
             </div>
+
+            <!-- Icon + template data handed to JS once -->
+            <script>
+                window.WORKFLOW_TEMPLATES = <?= json_encode($workflowTemplates) ?>;
+                window.STAGE_ICONS = {
+                    grip:   <?= json_encode(renderIcon('grip-vertical')) ?>,
+                    pencil: <?= json_encode(renderIcon('pencil')) ?>,
+                    trash:  <?= json_encode(renderIcon('trash-2')) ?>,
+                    arrowLeft: <?= json_encode(renderIcon('arrow-left')) ?>
+                };
+            </script>
 
             <!-- Step 3: Team — placeholder -->
             <div class="wizard-panel" data-panel-index="3">
@@ -76,9 +142,15 @@
 
         </div>
 
-        <div class="wizard-footer">
-            <button type="button" class="btn-cancel" data-modal-close>Cancel</button>
-            <button type="button" class="btn-continue" data-wizard-continue>Continue</button>
+        <!-- footer -->
+         <div class="wizard-footer">
+            <button type="button" class="btn-cancel" data-modal-close data-wizard-back>Cancel</button>
+            <div class="wizard-footer__right">
+                <button type="button" class="btn-skip" data-wizard-skip hidden>Skip</button>
+                <button type="button" class="btn-continue" data-wizard-continue>
+                    <span data-continue-label>Continue</span> <?= renderIcon('arrow-right') ?>
+                </button>
+            </div>
         </div>
     </div>
 </div>
