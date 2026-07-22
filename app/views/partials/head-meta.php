@@ -4,5 +4,5 @@
 <link rel="icon" type="image/png" href="<?= url('assets/img/logo.png') ?>">
 
 <title>
-    <?= isset($pageTitle) ? htmlspecialchars($pageTitle) . ' — Dev-Flow' : 'Dev-Flow' ?>
+    <?= isset($pageTitle) ? htmlspecialchars($pageTitle) . ' - Dev-Flow' : 'Dev-Flow' ?>
 </title>

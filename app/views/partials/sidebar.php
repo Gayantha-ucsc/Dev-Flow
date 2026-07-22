@@ -24,10 +24,10 @@ if ($hasProject) {
         <span class="sidebar__brand-name">DevFlow</span>
     </div>
 
-    <a href="<?= url('/projects/create') ?>" class="btn-create-project">
+    <button type="button" class="btn-create-project" data-modal-trigger="project-wizard">
         <?= renderIcon('plus') ?>
         <span>Create a Project</span>
-    </a>
+    </button>
 
     <?php if ($hasProject): ?>
         <div class="sidebar__section-label">

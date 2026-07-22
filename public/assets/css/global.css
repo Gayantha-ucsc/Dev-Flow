@@ -10,6 +10,13 @@
     --color-border: #F0DAD3;
     --color-danger: #C0392B;
     --color-white: #FFFFFF;
+    --color-tint-1: #F8D6C4;
+    --color-tint-2: #F3C4E0;
+    --color-tint-3: #E4D3CE;
+    --color-tint-4: #D9E3D8;
+    --color-tint-4-text: #3D5A3D;
+    --color-warning-bg: #FCE4D6;
+    --color-warning-border: #F0C9A8;
 
     /* Spacing */
     --space-xs: 4px;
