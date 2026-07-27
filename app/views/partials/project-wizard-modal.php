@@ -123,14 +123,13 @@
             <script>
                 window.WORKFLOW_TEMPLATES = <?= json_encode($workflowTemplates) ?>;
                 window.WIZARD_ICONS = {
-                    grip:           <?= json_encode(renderIcon('grip-vertical')) ?>,
-                    pencil:         <?= json_encode(renderIcon('pencil')) ?>,
-                    trash:          <?= json_encode(renderIcon('trash-2')) ?>,
-                    arrowLeft:      <?= json_encode(renderIcon('arrow-left')) ?>,
-                    x:              <?= json_encode(renderIcon('x')) ?>,
-                    layoutTemplate: <?= json_encode(renderIcon('layout-template')) ?>,
-                    info:           <?= json_encode(renderIcon('info')) ?>,
-                    user:           <?= json_encode(renderIcon('user')) ?>
+                    grip:           <?= iconJson('grip-vertical') ?>,
+                    pencil:         <?= iconJson('pencil') ?>,
+                    trash:          <?= iconJson('trash-2') ?>,
+                    arrowLeft:      <?= iconJson('arrow-left') ?>,
+                    layoutTemplate: <?= iconJson('layout-template') ?>,
+                    info:           <?= iconJson('info') ?>,
+                    user:           <?= iconJson('user') ?>
                 };
             </script>
 

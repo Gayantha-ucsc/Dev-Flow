@@ -2,7 +2,7 @@
 // current user's project list
 
 return [
-    'currentProjectId'   => null,
+    'currentProjectId'   => 1,
     'currentProjectName' => 'Project Alpha',
     'userProjects' => [
         ['project_id' => 1, 'name' => 'Project Alpha'],
