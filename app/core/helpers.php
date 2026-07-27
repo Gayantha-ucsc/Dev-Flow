@@ -22,3 +22,7 @@ function baseUrl(): string {
 function url(string $path = ''): string {
     return baseUrl() . '/' . ltrim($path, '/');
 }
+
+function iconJson(string $name): string {
+    return json_encode(renderIcon($name));
+}
