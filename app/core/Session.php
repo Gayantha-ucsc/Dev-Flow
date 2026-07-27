@@ -74,12 +74,12 @@ class Session {
 
     // ---------------- Flash messages ----------------
     public static function flash(string $key, string $message): void {
-        $_SESSION['_flash'][$key] = $message;
+        $_SESSION['_flash'][$key][] = $message;
     }
 
-    public static function getFlash(string $key): ?string {
-        $message = $_SESSION['_flash'][$key] ?? null;
+    public static function getFlash(string $key): array {
+        $messages = $_SESSION['_flash'][$key] ?? [];
         unset($_SESSION['_flash'][$key]);
-        return $message;
+        return $messages;
     }
 }

@@ -23,8 +23,6 @@ class PageController extends Controller {
     }
 
     public function dashboard(): void {
-        Session::flash('error', 'Something went wrong uploading the file');
-        Session::flash('error', 'Something went wrong uploading the file');
         $hasProject = true;
         $context = $hasProject
             ? $this->mockContext('/dashboard', 'Dashboard')

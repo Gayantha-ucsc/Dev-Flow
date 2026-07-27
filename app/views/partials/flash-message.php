@@ -1,14 +1,14 @@
 <?php
-$success = Session::getFlash('success');
-$error   = Session::getFlash('error');
+$successMessages = Session::getFlash('success');
+$errorMessages   = Session::getFlash('error');
 ?>
-<?php if ($success): ?>
-    <script>window.addEventListener('DOMContentLoaded', () => 
-        window.showToast('success', <?= json_encode($success) ?>)
+<?php foreach ($successMessages as $msg): ?>
+    <script>window.addEventListener('DOMContentLoaded', () =>
+        window.showToast('success', <?= json_encode($msg) ?>)
     );</script>
-<?php endif; ?>
-<?php if ($error): ?>
-    <script>window.addEventListener('DOMContentLoaded', () => 
-        window.showToast('error', <?= json_encode($error) ?>)
+<?php endforeach; ?>
+<?php foreach ($errorMessages as $msg): ?>
+    <script>window.addEventListener('DOMContentLoaded', () =>
+        window.showToast('error', <?= json_encode($msg) ?>)
     );</script>
-<?php endif; ?>
+<?php endforeach; ?>

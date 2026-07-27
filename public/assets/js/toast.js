@@ -1,5 +1,9 @@
 (function () {
-    const MAX_AGE_MS = { success: 4000, error: 6000, info: 4500 };
+    const MAX_AGE_MS = { 
+        success : 4000, 
+        error   : 6000, 
+        info    : 4500 
+    };
 
     let container = document.querySelector('[data-toast-container]');
     if (!container) {
@@ -23,8 +27,18 @@
 
     function enforceOverflow() {
         const available = window.innerHeight - container.getBoundingClientRect().top - 20;
-        while (container.scrollHeight > available && container.firstElementChild) {
-            removeToast(container.firstElementChild);
+
+        const toasts = Array.from(container.children).filter(el => !el.dataset.removing);
+        const gap = parseFloat(getComputedStyle(container).gap) || 0;
+
+        let totalHeight = toasts.reduce((sum, el) => sum + el.offsetHeight, 0)
+            + gap * Math.max(0, toasts.length - 1);
+
+        let i = 0;
+        while (totalHeight > available && i < toasts.length) {
+            totalHeight -= toasts[i].offsetHeight + gap;
+            removeToast(toasts[i]);
+            i++;
         }
     }
 
