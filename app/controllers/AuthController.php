@@ -13,19 +13,19 @@ class AuthController extends Controller {
 
     // POST /login
     public function login(): void {
-        $email    = trim($_POST['email'] ?? '');
+        $username = trim($_POST['username'] ?? '');
         $password = (string) ($_POST['password'] ?? '');
 
-        if ($email === '' || $password === '') {
-            Session::flash('error', 'Please enter both your email and password.');
+        if ($username === '' || $password === '') {
+            Session::flash('error', 'Please enter both your username and password.');
             header('Location: ' . url('login'));
             exit;
         }
 
-        $user = Auth::attempt($email, $password);
+        $user = Auth::attempt($username, $password);
 
         if (!$user) {
-            Session::flash('error', 'Incorrect email or password.');
+            Session::flash('error', 'Incorrect username or password.');
             header('Location: ' . url('login'));
             exit;
         }

@@ -3,8 +3,8 @@
     <h1 class="auth-title">Log in to Dev-Flow</h1>
 
     <form method="POST" action="<?= url('login') ?>" class="auth-form" novalidate>
-        <label class="auth-label" for="email">Email</label>
-        <input class="auth-input" type="email" id="email" name="email" required autofocus>
+        <label class="auth-label" for="username">Username</label>
+        <input class="auth-input" type="text" id="username" name="username" required autofocus autocomplete="username">
 
         <label class="auth-label" for="password">Password</label>
         <input class="auth-input" type="password" id="password" name="password" required>

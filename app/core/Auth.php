@@ -2,8 +2,8 @@
 
 class Auth {
 
-    public static function attempt(string $email, string $password): ?array {
-        $user = User::findByEmail($email);
+    public static function attempt(string $username, string $password): ?array {
+        $user = User::findByUsername($username);
 
         if (!$user || !password_verify($password, $user['password_hash'])) {
             return null;

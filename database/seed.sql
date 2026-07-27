@@ -1,6 +1,6 @@
 -- DEFAULT ADMINISTRATOR ACCOUNT
-INSERT INTO `User` (name, email, password_hash, profile_picture, is_admin, is_active, is_temp, is_temp_password_changed)
-VALUES ('System Administrator', 'admin@example.com', 'REPLACE_WITH_REAL_PASSWORD_HASH', NULL, TRUE, TRUE, FALSE, FALSE);
+INSERT INTO `User` (name, username, email, password_hash, profile_picture, is_admin, is_active, is_temp, is_temp_password_changed)
+VALUES ('System Administrator', 'admin', 'admin@example.com', '$2y$10$iD4BtQ.ARm.sDz/MELlXxumn7VWLgusUpHIbcD9A/BcYFvP6RMhJe', NULL, TRUE, TRUE, FALSE, FALSE);
 
 -- DEFAULT ROLE PERMISSION MATRIX
 INSERT INTO `RolePermission` (role, permission_key, is_allowed, updated_by) VALUES
