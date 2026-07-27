@@ -1,8 +1,8 @@
-(function () {
-    const MAX_AGE_MS = { 
-        success : 4000, 
-        error   : 6000, 
-        info    : 4500 
+document.addEventListener('DOMContentLoaded', function () {
+    const MAX_AGE_MS = {
+        success : 4000,
+        error   : 6000,
+        info    : 4500
     };
 
     let container = document.querySelector('[data-toast-container]');
@@ -22,12 +22,11 @@
         if (!el || el.dataset.removing) return;
         el.dataset.removing = 'true';
         el.classList.remove('is-visible');
-        setTimeout(() => el.remove(), 200); // matches the CSS transition duration
+        setTimeout(() => el.remove(), 200);
     }
 
     function enforceOverflow() {
         const available = window.innerHeight - container.getBoundingClientRect().top - 20;
-
         const toasts = Array.from(container.children).filter(el => !el.dataset.removing);
         const gap = parseFloat(getComputedStyle(container).gap) || 0;
 
@@ -67,4 +66,4 @@
 
         enforceOverflow();
     };
-})();
+});
