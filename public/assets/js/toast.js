@@ -47,9 +47,12 @@
         el.className = `toast toast--${type}`;
         el.innerHTML = `
             <span class="toast__icon">${icon(type)}</span>
-            <span class="toast__message">${message}</span>
-            <button type="button" class="toast__close" aria-label="Dismiss">${window.APP_ICONS ? window.APP_ICONS.x : ''}</button>
+            <span class="toast__message"></span>
+            <button type="button" class="toast__close" aria-label="Dismiss">
+                ${window.APP_ICONS ? window.APP_ICONS.x : ''}
+            </button>
         `;
+        el.querySelector('.toast__message').textContent = message;
         container.appendChild(el);
 
         requestAnimationFrame(() => el.classList.add('is-visible'));

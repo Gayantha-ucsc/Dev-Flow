@@ -66,6 +66,8 @@ class Session {
             );
             session_destroy();
         }
+
+        self::$started = false;
     }
 
     public static function regenerate(): void {
@@ -77,6 +79,7 @@ class Session {
         $_SESSION['_flash'][$key][] = $message;
     }
 
+    // Returns all queued messages for $key (empty array if none)
     public static function getFlash(string $key): array {
         $messages = $_SESSION['_flash'][$key] ?? [];
         unset($_SESSION['_flash'][$key]);
