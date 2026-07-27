@@ -15,6 +15,10 @@ require __DIR__ . '/../app/core/Session.php';
 Session::start();
 
 require __DIR__ . '/../app/core/helpers.php';
+require __DIR__ . '/../app/core/Database.php';
+require __DIR__ . '/../app/models/User.php';
+require __DIR__ . '/../app/core/Auth.php';
+require __DIR__ . '/../app/core/Middleware.php';
 require __DIR__ . '/../app/core/Controller.php';
 require __DIR__ . '/../app/core/Router.php';
 

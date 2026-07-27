@@ -1,8 +1,8 @@
-(function () {
-    const MAX_AGE_MS = { 
-        success : 4000, 
-        error   : 6000, 
-        info    : 4500 
+document.addEventListener('DOMContentLoaded', function () {
+    const MAX_AGE_MS = {
+        success : 4000,
+        error   : 6000,
+        info    : 4500
     };
 
     let container = document.querySelector('[data-toast-container]');
@@ -22,12 +22,11 @@
         if (!el || el.dataset.removing) return;
         el.dataset.removing = 'true';
         el.classList.remove('is-visible');
-        setTimeout(() => el.remove(), 200); // matches the CSS transition duration
+        setTimeout(() => el.remove(), 200);
     }
 
     function enforceOverflow() {
         const available = window.innerHeight - container.getBoundingClientRect().top - 20;
-
         const toasts = Array.from(container.children).filter(el => !el.dataset.removing);
         const gap = parseFloat(getComputedStyle(container).gap) || 0;
 
@@ -47,9 +46,12 @@
         el.className = `toast toast--${type}`;
         el.innerHTML = `
             <span class="toast__icon">${icon(type)}</span>
-            <span class="toast__message">${message}</span>
-            <button type="button" class="toast__close" aria-label="Dismiss">${window.APP_ICONS ? window.APP_ICONS.x : ''}</button>
+            <span class="toast__message"></span>
+            <button type="button" class="toast__close" aria-label="Dismiss">
+                ${window.APP_ICONS ? window.APP_ICONS.x : ''}
+            </button>
         `;
+        el.querySelector('.toast__message').textContent = message;
         container.appendChild(el);
 
         requestAnimationFrame(() => el.classList.add('is-visible'));
@@ -64,4 +66,4 @@
 
         enforceOverflow();
     };
-})();
+});

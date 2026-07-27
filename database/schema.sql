@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS `User`;
 CREATE TABLE `User` (
     user_id                     INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name                        VARCHAR(150) NOT NULL,
+    username                    VARCHAR(50) NOT NULL,   -- login identifier, one per user
     email                       VARCHAR(190) NOT NULL,
     password_hash               VARCHAR(255) NOT NULL,
     profile_picture             VARCHAR(255) NULL,
@@ -15,6 +16,7 @@ CREATE TABLE `User` (
     created_at                  TIMESTAMP NOT NULL,   -- set by trg_user_bi
     updated_at                  TIMESTAMP NOT NULL,   -- set by trg_user_bi / trg_user_bu
 
+    UNIQUE KEY uq_user_username (username),
     UNIQUE KEY uq_user_email (email)
 ) ENGINE=InnoDB;
 

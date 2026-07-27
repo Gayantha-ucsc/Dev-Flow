@@ -1,12 +1,11 @@
 <?php
-// config/routes.php — URL path => [ControllerClass, method]
-// Frontend-only phase: every route points to PageController, which renders
-// placeholder content with mock data. Swap individual entries to real
-// controllers as each section gets built for real.
-
 return [
+    // Routes that skip Middleware::requireAuth() in Router::dispatch().
+    'public' => ['/login'],
+
     'GET' => [
         '/'               => ['PageController', 'dashboard'],
+        '/login'          => ['AuthController', 'showLogin'],
         '/dashboard'      => ['PageController', 'dashboard'],
         '/projects'       => ['PageController', 'projects'],
         '/team'           => ['PageController', 'team'],
@@ -18,6 +17,10 @@ return [
         '/settings'       => ['PageController', 'settings'],
         '/notifications'  => ['PageController', 'notifications'],
         '/profile'        => ['PageController', 'profile'],
-        '/logout'         => ['PageController', 'logout'],
+        '/logout'         => ['AuthController', 'logout'],
+    ],
+
+    'POST' => [
+        '/login'          => ['AuthController', 'login'],
     ],
 ];

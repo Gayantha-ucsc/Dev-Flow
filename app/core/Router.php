@@ -21,6 +21,11 @@ class Router {
         }
         $path = '/' . trim($path, '/');
 
+        // Every route needs a logged-in, active user except the ones under 'public' in routes.php.
+        if (!in_array($path, $this->routes['public'] ?? [], true)) {
+            Middleware::requireAuth();
+        }
+
         $handler = $this->routes[$method][$path] ?? null;
 
         if (!$handler) {

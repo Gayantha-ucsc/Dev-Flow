@@ -93,9 +93,4 @@ class PageController extends Controller {
             $this->mockContext('/profile', 'Profile'), ['heading' => 'Profile']
         ));
     }
-    public function logout(): void {
-        $this->render('pages/placeholder', array_merge(
-            $this->mockContext('/logout', 'Logged Out'), ['heading' => 'Logged Out (placeholder)']
-        ));
-    }
 }
