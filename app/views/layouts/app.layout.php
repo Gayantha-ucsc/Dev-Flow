@@ -26,11 +26,11 @@
 
 </head>
 <body>
-    <div style="display:flex;">
+    <div class="app-shell">
         <?php include __DIR__ . '/../partials/sidebar.php'; ?>
-        <div style="flex:1; display:flex; flex-direction:column;">
+        <div class="app-shell__main">
             <?php include __DIR__ . '/../partials/navbar.php'; ?>
-            <main style="flex:1;">
+            <main class="app-shell__content">
                 <?php include __DIR__ . '/../partials/flash-message.php'; ?>
                 <?= $content ?>
             </main>

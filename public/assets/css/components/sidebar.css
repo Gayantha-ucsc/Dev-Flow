@@ -8,6 +8,7 @@
     padding: var(--space-lg) var(--space-md);
     box-sizing: border-box;
     flex-shrink: 0;
+    overflow-y: auto;
 }
 
 .sidebar__brand {
