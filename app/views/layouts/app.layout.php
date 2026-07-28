@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="<?= url('assets/css/components/navbar.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/sidebar.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/empty-state.css') ?>">
+    <link rel="stylesheet" href="<?= url('assets/css/components/card.css') ?>">
+    <link rel="stylesheet" href="<?= url('assets/css/components/badge.css') ?>">
+    <link rel="stylesheet" href="<?= url('assets/css/dashboard.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/modal.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/wizard.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/datepicker.css') ?>">
