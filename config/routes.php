@@ -7,7 +7,7 @@ return [
         '/'               => ['DashboardController', 'index'],
         '/login'          => ['AuthController', 'showLogin'],
         '/dashboard'      => ['DashboardController', 'index'],
-        '/projects'       => ['PageController', 'projects'],
+        '/projects'       => ['ProjectController', 'index'],
         '/team'           => ['PageController', 'team'],
         '/tasks'          => ['PageController', 'tasks'],
         '/review'         => ['PageController', 'review'],
