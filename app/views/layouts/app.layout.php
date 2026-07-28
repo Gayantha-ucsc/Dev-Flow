@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="<?= url('assets/css/components/navbar.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/sidebar.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/empty-state.css') ?>">
+    <link rel="stylesheet" href="<?= url('assets/css/components/card.css') ?>">
+    <link rel="stylesheet" href="<?= url('assets/css/components/badge.css') ?>">
+    <link rel="stylesheet" href="<?= url('assets/css/dashboard.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/modal.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/wizard.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/datepicker.css') ?>">
@@ -23,11 +26,11 @@
 
 </head>
 <body>
-    <div style="display:flex;">
+    <div class="app-shell">
         <?php include __DIR__ . '/../partials/sidebar.php'; ?>
-        <div style="flex:1; display:flex; flex-direction:column;">
+        <div class="app-shell__main">
             <?php include __DIR__ . '/../partials/navbar.php'; ?>
-            <main style="flex:1;">
+            <main class="app-shell__content">
                 <?php include __DIR__ . '/../partials/flash-message.php'; ?>
                 <?= $content ?>
             </main>

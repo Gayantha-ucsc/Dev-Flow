@@ -4,9 +4,9 @@ return [
     'public' => ['/login'],
 
     'GET' => [
-        '/'               => ['PageController', 'dashboard'],
+        '/'               => ['DashboardController', 'index'],
         '/login'          => ['AuthController', 'showLogin'],
-        '/dashboard'      => ['PageController', 'dashboard'],
+        '/dashboard'      => ['DashboardController', 'index'],
         '/projects'       => ['PageController', 'projects'],
         '/team'           => ['PageController', 'team'],
         '/tasks'          => ['PageController', 'tasks'],
