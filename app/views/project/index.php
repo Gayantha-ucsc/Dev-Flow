@@ -1,5 +1,6 @@
 <?php
 // Expects: $projectsList (see config/mock/projects-list.php)
+
 $statusToneMap = [
     'active'   => 'primary',
     'archived' => 'neutral',
@@ -8,14 +9,17 @@ $statusToneMap = [
 ?>
 <div class="projects-page">
 
-    <div class="projects-header">
-        <h1>Projects</h1>
-        <p>Manage and track every project you're a part of.</p>
-    </div>
-
-    <?php if (empty($projectsList)): ?>
-        <?php include __DIR__ . '/../partials/empty-state.php'; ?>
-    <?php else: ?>
+    <div class="projects-sticky">
+        <div class="projects-header">
+            <div>
+                <h1>Projects</h1>
+                <p>Manage and track every project you're a part of.</p>
+            </div>
+            <div class="projects-header__date">
+                <?= renderIcon('calendar') ?>
+                <?= htmlspecialchars(date('l, F j, Y')) ?>
+            </div>
+        </div>
 
         <?php if (count($projectsList) > 1): ?>
         <div class="projects-toolbar">
@@ -32,17 +36,26 @@ $statusToneMap = [
             <div class="projects-sort">
                 <label for="projectSort">Sort by:</label>
                 <select id="projectSort">
-                    <option value="updated">Recently Updated</option>
+                    <option value="deadline" selected>Deadline (Earliest)</option>
                     <option value="name">Name (A-Z)</option>
-                    <option value="deadline">Deadline (Soonest)</option>
+                    <option value="updated">Recently Updated</option>
                 </select>
             </div>
         </div>
         <?php endif; ?>
+    </div>
+
+    <?php if (empty($projectsList)): ?>
+        <?php include __DIR__ . '/../partials/empty-state.php'; ?>
+    <?php else: ?>
 
         <div class="project-list" id="projectList">
             <?php foreach ($projectsList as $project): ?>
                 <?php
+                    // Approval-style badges (pending/overdue/blocked) are only
+                    // meaningful to whoever holds manager/team_lead ON THIS
+                    // PROJECT - a Designer row for the same project simply
+                    // won't render them.
                     $isApprover = (bool) array_intersect($project['roles'], ['manager', 'team_lead']);
                     $stages     = $project['stages'];
                     $roleLabel  = implode(' + ', array_map(
@@ -101,15 +114,6 @@ $statusToneMap = [
                 </a>
             <?php endforeach; ?>
         </div>
-
-        <?php if (count($projectsList) > 1): ?>
-        <div class="projects-pagination">
-            <a href="#">Previous</a>
-            <span class="projects-pagination__page is-active">1</span>
-            <a href="#"><span class="projects-pagination__page">2</span></a>
-            <a href="#">Next</a>
-        </div>
-        <?php endif; ?>
 
     <?php endif; ?>
 </div>

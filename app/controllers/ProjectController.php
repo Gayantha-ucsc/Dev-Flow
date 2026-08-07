@@ -8,6 +8,8 @@ class ProjectController extends Controller {
         $notifications = require __DIR__ . '/../../config/mock/notifications.php';
         $projectsList  = require __DIR__ . '/../../config/mock/projects-list.php';
 
+        usort($projectsList, fn($a, $b) => strtotime($a['deadline']) <=> strtotime($b['deadline']));
+
         $context = array_merge(
             [
                 'pageTitle'     => 'Projects',

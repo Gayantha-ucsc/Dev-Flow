@@ -6,7 +6,7 @@
 
     <div class="dash-header">
         <h1>Dashboard</h1>
-        <p>Welcome back<?= !empty($currentUser['name']) ? ', ' . htmlspecialchars($currentUser['name']) : '' ?> — here's what needs your attention across your projects.</p>
+        <p>Welcome back<?= !empty($currentUser['name']) ? ', ' . htmlspecialchars($currentUser['name']) : '' ?> - here's what needs your attention across your projects.</p>
     </div>
 
     <!-- Stat cards: Active Projects, Pending Approvals, Overdue Tasks, Blocked Tasks -->
