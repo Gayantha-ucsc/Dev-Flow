@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="<?= url('assets/css/components/badge.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/dashboard.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/projects.css') ?>">
+    <link rel="stylesheet" href="<?= url('assets/css/project-detail.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/modal.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/wizard.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/datepicker.css') ?>">

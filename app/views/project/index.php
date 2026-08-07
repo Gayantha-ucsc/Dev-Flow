@@ -1,21 +1,19 @@
 <?php
 // Expects: $projectsList (see config/mock/projects-list.php)
-$statusToneMap = [
-    'active'   => 'primary',
-    'archived' => 'neutral',
-    'closed'   => 'pink',
-];
 ?>
 <div class="projects-page">
 
-    <div class="projects-header">
-        <h1>Projects</h1>
-        <p>Manage and track every project you're a part of.</p>
-    </div>
-
-    <?php if (empty($projectsList)): ?>
-        <?php include __DIR__ . '/../partials/empty-state.php'; ?>
-    <?php else: ?>
+    <div class="projects-sticky">
+        <div class="projects-header">
+            <div>
+                <h1>Projects</h1>
+                <p>Manage and track every project you're a part of.</p>
+            </div>
+            <div class="projects-header__date">
+                <?= renderIcon('calendar') ?>
+                <?= htmlspecialchars(date('l, F j, Y')) ?>
+            </div>
+        </div>
 
         <?php if (count($projectsList) > 1): ?>
         <div class="projects-toolbar">
@@ -32,13 +30,18 @@ $statusToneMap = [
             <div class="projects-sort">
                 <label for="projectSort">Sort by:</label>
                 <select id="projectSort">
-                    <option value="updated">Recently Updated</option>
+                    <option value="deadline" selected>Deadline (Earliest)</option>
                     <option value="name">Name (A-Z)</option>
-                    <option value="deadline">Deadline (Soonest)</option>
+                    <option value="updated">Recently Updated</option>
                 </select>
             </div>
         </div>
         <?php endif; ?>
+    </div>
+
+    <?php if (empty($projectsList)): ?>
+        <?php include __DIR__ . '/../partials/empty-state.php'; ?>
+    <?php else: ?>
 
         <div class="project-list" id="projectList">
             <?php foreach ($projectsList as $project): ?>
@@ -59,7 +62,7 @@ $statusToneMap = [
                     <div class="project-row__info">
                         <div class="project-row__title-line">
                             <h2 class="project-row__name"><?= htmlspecialchars($project['name']) ?></h2>
-                            <span class="badge badge--<?= $statusToneMap[$project['status']] ?> badge--outline">
+                            <span class="badge badge--<?= projectStatusTone($project['status']) ?> badge--outline">
                                 <?= strtoupper($project['status']) ?>
                             </span>
                         </div>
@@ -101,15 +104,6 @@ $statusToneMap = [
                 </a>
             <?php endforeach; ?>
         </div>
-
-        <?php if (count($projectsList) > 1): ?>
-        <div class="projects-pagination">
-            <a href="#">Previous</a>
-            <span class="projects-pagination__page is-active">1</span>
-            <a href="#"><span class="projects-pagination__page">2</span></a>
-            <a href="#">Next</a>
-        </div>
-        <?php endif; ?>
 
     <?php endif; ?>
 </div>

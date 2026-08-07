@@ -26,3 +26,12 @@ function url(string $path = ''): string {
 function iconJson(string $name): string {
     return json_encode(renderIcon($name));
 }
+
+function projectStatusTone(string $status): string {
+    return match ($status) {
+        'active'   => 'primary',
+        'archived' => 'neutral',
+        'closed'   => 'pink',
+        default    => 'neutral',
+    };
+}
