@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var searchInput = document.getElementById('projectSearch');
     var filterBar    = document.getElementById('projectFilters');
     var sortSelect   = document.getElementById('projectSort');
+    if (!searchInput || !filterBar || !sortSelect) return; // toolbar hidden (one project) - nothing to wire up
+
     var rows         = Array.prototype.slice.call(list.querySelectorAll('.project-row'));
 
     var activeFilter = 'all';

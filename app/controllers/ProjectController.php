@@ -9,6 +9,8 @@ class ProjectController extends Controller {
 
         usort($projectsList, fn($a, $b) => strtotime($a['deadline']) <=> strtotime($b['deadline']));
 
+        usort($projectsList, fn($a, $b) => strtotime($a['deadline']) <=> strtotime($b['deadline']));
+
         $context = array_merge(
             [
                 'pageTitle'     => 'Projects',

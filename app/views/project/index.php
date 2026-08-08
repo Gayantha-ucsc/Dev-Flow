@@ -1,5 +1,11 @@
 <?php
 // Expects: $projectsList (see config/mock/projects-list.php)
+
+$statusToneMap = [
+    'active'   => 'primary',
+    'archived' => 'neutral',
+    'closed'   => 'pink',
+];
 ?>
 <div class="projects-page">
 
@@ -46,6 +52,10 @@
         <div class="project-list" id="projectList">
             <?php foreach ($projectsList as $project): ?>
                 <?php
+                    // Approval-style badges (pending/overdue/blocked) are only
+                    // meaningful to whoever holds manager/team_lead ON THIS
+                    // PROJECT - a Designer row for the same project simply
+                    // won't render them.
                     $isApprover = (bool) array_intersect($project['roles'], ['manager', 'team_lead']);
                     $stages     = $project['stages'];
                     $roleLabel  = implode(' + ', array_map(

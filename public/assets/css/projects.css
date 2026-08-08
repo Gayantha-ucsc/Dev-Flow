@@ -4,28 +4,54 @@
     margin: 0 auto;
 }
 
-.projects-header { margin-bottom: var(--space-lg); }
+.projects-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--color-white);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.projects-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+}
 .projects-header h1 {
-    font-size: 2rem;
+    font-size: 1.7rem;
     font-weight: 800;
     color: var(--color-text);
-    margin: 0 0 4px;
+    margin: 0 0 2px;
 }
 .projects-header p {
     color: var(--color-text-muted);
     margin: 0;
+    font-size: 0.9rem;
 }
+.projects-header__date {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    padding-top: 4px;
+}
+.projects-header__date svg { width: 16px; height: 16px; }
 
 /* ---- Toolbar: search, status filter pills, sort ---- */
 .projects-toolbar {
     display: flex;
     align-items: center;
-    gap: var(--space-lg);
+    gap: var(--space-md);
     background: var(--color-sidebar-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    padding: var(--space-md) var(--space-lg);
-    margin-bottom: var(--space-lg);
+    padding: var(--space-sm) var(--space-md);
     flex-wrap: wrap;
 }
 
@@ -36,17 +62,17 @@
     background: var(--color-white);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-pill);
-    padding: 8px var(--space-md);
+    padding: 6px var(--space-md);
     flex: 1;
     min-width: 220px;
     color: var(--color-text-muted);
 }
-.projects-search svg { flex-shrink: 0; width: 18px; height: 18px; }
+.projects-search svg { flex-shrink: 0; width: 16px; height: 16px; }
 .projects-search input {
     border: none;
     outline: none;
     background: none;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-family: var(--font-family);
     color: var(--color-text);
     width: 100%;
@@ -59,9 +85,9 @@
 }
 
 .filter-pill {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
-    padding: 8px 18px;
+    padding: 6px 14px;
     border-radius: var(--radius-pill);
     border: 1px solid var(--color-border);
     background: var(--color-white);
@@ -84,17 +110,17 @@
 }
 .projects-sort select {
     font-family: var(--font-family);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: var(--color-text);
-    padding: 8px var(--space-md);
+    padding: 6px var(--space-sm);
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border);
     background: var(--color-white);
 }
 
 /* ---- Project rows ---- */
-.project-list { display: flex; flex-direction: column; gap: var(--space-md); }
+.project-list { display: flex; flex-direction: column; gap: var(--space-md); margin-top: var(--space-md); }
 
 .project-row {
     display: flex;
@@ -185,33 +211,8 @@
 }
 .project-row__arrow svg { width: 18px; height: 18px; }
 
-/* ---- Pagination (presentational stub until real paging exists) ---- */
-.projects-pagination {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-md);
-    margin-top: var(--space-lg);
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-}
-.projects-pagination a { color: inherit; text-decoration: none; }
-.projects-pagination__page {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: var(--radius-sm);
-    font-weight: 700;
-    color: var(--color-text);
-}
-.projects-pagination__page.is-active {
-    background: var(--color-accent-pink);
-    color: var(--color-accent-pink-text);
-}
-
 @media (max-width: 900px) {
+    .projects-header { flex-wrap: wrap; }
     .project-row { flex-wrap: wrap; }
     .project-row__info { flex: 1 1 100%; }
     .project-row__meta { flex: 1 1 100%; text-align: left; }
