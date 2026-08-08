@@ -8,6 +8,7 @@ return [
         '/login'          => ['AuthController', 'showLogin'],
         '/dashboard'      => ['DashboardController', 'index'],
         '/projects'       => ['ProjectController', 'index'],
+        '/projects/:id'   => ['ProjectController', 'overview'],
         '/team'           => ['PageController', 'team'],
         '/tasks'          => ['PageController', 'tasks'],
         '/review'         => ['PageController', 'review'],

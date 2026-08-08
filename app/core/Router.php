@@ -4,6 +4,8 @@ class Router {
     private array $routes;
     private string $basePath;
 
+    public static array $params = [];
+
     public function __construct() {
         $this->routes = require __DIR__ . '/../../config/routes.php';
 
@@ -27,6 +29,11 @@ class Router {
         }
 
         $handler = $this->routes[$method][$path] ?? null;
+        $params  = [];
+
+        if (!$handler) {
+            [$handler, $params] = $this->matchDynamic($method, $path);
+        }
 
         if (!$handler) {
             http_response_code(404);
@@ -34,8 +41,45 @@ class Router {
             return;
         }
 
+        self::$params = $params;
+
         [$controllerName, $action] = $handler;
         require_once __DIR__ . "/../controllers/{$controllerName}.php";
         (new $controllerName())->$action();
+    }
+
+    private function matchDynamic(string $method, string $path): array {
+        $pathSegments = explode('/', trim($path, '/'));
+
+        foreach ($this->routes[$method] ?? [] as $pattern => $handler) {
+            if (!str_contains($pattern, ':')) {
+                continue;
+            }
+
+            $patternSegments = explode('/', trim($pattern, '/'));
+            if (count($patternSegments) !== count($pathSegments)) {
+                continue;
+            }
+
+            $params  = [];
+            $matches = true;
+
+            foreach ($patternSegments as $i => $segment) {
+                if (str_starts_with($segment, ':')) {
+                    $params[substr($segment, 1)] = $pathSegments[$i];
+                    continue;
+                }
+                if ($segment !== $pathSegments[$i]) {
+                    $matches = false;
+                    break;
+                }
+            }
+
+            if ($matches) {
+                return [$handler, $params];
+            }
+        }
+
+        return [null, []];
     }
 }

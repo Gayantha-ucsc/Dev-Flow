@@ -72,7 +72,7 @@ $statusToneMap = [
                     <div class="project-row__info">
                         <div class="project-row__title-line">
                             <h2 class="project-row__name"><?= htmlspecialchars($project['name']) ?></h2>
-                            <span class="badge badge--<?= $statusToneMap[$project['status']] ?> badge--outline">
+                            <span class="badge badge--<?= projectStatusTone($project['status']) ?> badge--outline">
                                 <?= strtoupper($project['status']) ?>
                             </span>
                         </div>

@@ -2,11 +2,12 @@
 class ProjectController extends Controller {
 
     public function index(): void {
-        $user          = require __DIR__ . '/../../config/mock/users.php';
-        $roles         = require __DIR__ . '/../../config/mock/roles.php';
-        $projects      = require __DIR__ . '/../../config/mock/projects.php';
-        $notifications = require __DIR__ . '/../../config/mock/notifications.php';
-        $projectsList  = require __DIR__ . '/../../config/mock/projects-list.php';
+        $user           = require __DIR__ . '/../../config/mock/users.php';
+        $projectContext = currentProjectContext();
+        $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
+        $projectsList   = require __DIR__ . '/../../config/mock/projects-list.php';
+
+        usort($projectsList, fn($a, $b) => strtotime($a['deadline']) <=> strtotime($b['deadline']));
 
         usort($projectsList, fn($a, $b) => strtotime($a['deadline']) <=> strtotime($b['deadline']));
 
@@ -19,10 +20,52 @@ class ProjectController extends Controller {
                 'notifications' => $notifications['items'],
                 'projectsList'  => $projectsList,
             ],
-            $roles,
-            $projects
+            $projectContext
         );
 
         $this->render('project/index', $context);
+    }
+
+    public function overview(): void {
+        $id = (int) (Router::$params['id'] ?? 0);
+
+        $projectsList = require __DIR__ . '/../../config/mock/projects-list.php';
+        $project = null;
+        foreach ($projectsList as $row) {
+            if ($row['id'] === $id) {
+                $project = $row;
+                break;
+            }
+        }
+
+        if ($project === null) {
+            http_response_code(404);
+            require __DIR__ . '/../views/errors/404.php';
+            return;
+        }
+
+        setCurrentProjectId($id);
+
+        $detail = require __DIR__ . '/../../config/mock/project-detail.php';
+        $stages = $detail[$id]['stages'] ?? [];
+
+        $user           = require __DIR__ . '/../../config/mock/users.php';
+        $projectContext = currentProjectContext();
+        $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
+
+        $context = array_merge(
+            [
+                'pageTitle'     => $project['name'],
+                'currentUser'   => $user,
+                'currentRoute'  => '/projects',
+                'unreadCount'   => $notifications['unreadCount'],
+                'notifications' => $notifications['items'],
+                'project'       => $project,
+                'stages'        => $stages,
+            ],
+            $projectContext
+        );
+
+        $this->render('project/overview', $context);
     }
 }
