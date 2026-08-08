@@ -104,3 +104,26 @@ function userHasRoleAnywhere(string $role): bool {
     }
     return false;
 }
+
+function memberRoleTone(string $role): string {
+    return match ($role) {
+        'manager'   => 'pink',
+        'team_lead' => 'primary',
+        'developer' => 'success',
+        'designer'  => 'warning',
+        'client'    => 'neutral',
+        default     => 'neutral',
+    };
+}
+
+function memberRoleLabel(string $role): string {
+    return match ($role) {
+        'team_lead' => 'Team Lead',
+        default     => ucfirst($role),
+    };
+}
+
+function avatarColorClass(string $seed): string {
+    $palette = ['primary', 'pink', 'success', 'warning', 'danger', 'neutral'];
+    return $palette[crc32($seed) % count($palette)];
+}
