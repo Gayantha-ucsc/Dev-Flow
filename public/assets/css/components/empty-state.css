@@ -41,3 +41,27 @@
     border-radius: var(--radius-md);
 }
 .empty-state__cta:hover { background: var(--color-primary-hover); }
+
+.empty-state--card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 1px 2px rgba(58, 42, 38, 0.04);
+    padding: var(--space-lg) var(--space-lg) calc(var(--space-lg) * 1.4);
+    max-width: 420px;
+}
+.empty-state--card .empty-state__icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-accent-pink);
+    color: var(--color-accent-pink-text);
+    margin: 0 auto var(--space-md);
+}
+.empty-state--card .empty-state__icon svg { width: 30px; height: 30px; }
+.empty-state--card .empty-state__heading { font-size: 1.4rem; margin-bottom: 6px; }
+.empty-state--card .empty-state__subtext { font-size: 0.9rem; margin-bottom: var(--space-md); }
+.empty-state--card .empty-state__cta { padding: 10px 20px; font-size: 0.9rem; }

@@ -20,11 +20,6 @@ class PageController extends Controller {
         );
     }
 
-    public function team(): void {
-        $this->render('pages/placeholder', array_merge(
-            $this->mockContext('/team', 'Team & Roles'), ['heading' => 'Team & Roles']
-        ));
-    }
     public function tasks(): void {
         $this->render('pages/placeholder', array_merge(
             $this->mockContext('/tasks', 'Tasks'), ['heading' => 'Tasks']

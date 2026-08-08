@@ -9,7 +9,7 @@ return [
         '/dashboard'      => ['DashboardController', 'index'],
         '/projects'       => ['ProjectController', 'index'],
         '/projects/:id'   => ['ProjectController', 'overview'],
-        '/team'           => ['PageController', 'team'],
+        '/team'           => ['TeamController', 'index'],
         '/tasks'          => ['PageController', 'tasks'],
         '/review'         => ['PageController', 'review'],
         '/chat'           => ['PageController', 'chat'],

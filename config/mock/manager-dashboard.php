@@ -1,10 +1,4 @@
 <?php
-// Mock data for the Manager's cross-project dashboard.
-// Shape mirrors what DashboardController will eventually assemble from
-// Project / Stage / Task / JointApprovalRequest / MemberApprovalRequest /
-// StageChangeProposal / ActivityLog once those models exist - see
-// DevFlow_Project_Reference.md section 23.6 for the layout this backs.
-
 return [
 
     'stats' => [
@@ -42,9 +36,6 @@ return [
         ],
     ],
 
-    // Cross-project queue of everything only a Manager can act on:
-    // stage-completion joint approvals (FR-2.5), member-addition
-    // confirmations (FR-2.6.3), and stage-change proposals (FR-2.4.2).
     'needsAttention' => [
         [
             'type'    => 'stage_completion',
@@ -60,7 +51,7 @@ return [
         [
             'type'    => 'member_request',
             'icon'    => 'user-plus',
-            'title'   => 'New Member: Ishara Perera — Developer',
+            'title'   => 'New Member: User Twenty-One — Developer',
             'project' => 'Project Gamma',
             'meta'    => 'Added by Team Lead — needs your confirmation',
             'actions' => [
@@ -91,8 +82,6 @@ return [
         ],
     ],
 
-    // Cross-project rollup, prioritized by urgency (at-risk projects first) -
-    // not alphabetical, per 23.6. Deliberately excludes task-level detail.
     'projects' => [
         [
             'id'         => 2,
@@ -148,11 +137,10 @@ return [
         ],
     ],
 
-    // Cross-project feed, each entry tagged with its project name per 23.6.
     'activity' => [
         [
             'time'    => '10 mins ago',
-            'text'    => '<strong>Chamika (Team Lead)</strong> marked stage "Client Design Review" ready for client review.',
+            'text'    => '<strong>User One (Team Lead)</strong> marked stage "Client Design Review" ready for client review.',
             'project' => 'Project Beta',
             'tone'    => 'default',
         ],
