@@ -4,10 +4,9 @@
 class PageController extends Controller {
 
     private function mockContext(string $currentRoute, string $pageTitle): array {
-        $user          = require __DIR__ . '/../../config/mock/users.php';
-        $roles         = require __DIR__ . '/../../config/mock/roles.php';
-        $projects      = require __DIR__ . '/../../config/mock/projects.php';
-        $notifications = require __DIR__ . '/../../config/mock/notifications.php';
+        $user           = require __DIR__ . '/../../config/mock/users.php';
+        $projectContext = currentProjectContext();
+        $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
 
         return array_merge(
             [
@@ -17,16 +16,10 @@ class PageController extends Controller {
                 'unreadCount'  => $notifications['unreadCount'],
                 'notifications' => $notifications['items'],
             ],
-            $roles,
-            $projects
+            $projectContext
         );
     }
 
-    public function projects(): void {
-        $this->render('pages/placeholder', array_merge(
-            $this->mockContext('/projects', 'Projects'), ['heading' => 'Projects']
-        ));
-    }
     public function team(): void {
         $this->render('pages/placeholder', array_merge(
             $this->mockContext('/team', 'Team & Roles'), ['heading' => 'Team & Roles']

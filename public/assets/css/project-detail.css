@@ -1,0 +1,194 @@
+.project-overview {
+    padding: var(--space-lg);
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+/* ---- Header ---- */
+.project-overview__header {
+    position: relative;
+    margin-bottom: var(--space-lg);
+}
+
+.project-overview__title-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: 4px;
+}
+.project-overview__title-row h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-text);
+    margin: 0;
+}
+
+.project-overview__edit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+}
+.project-overview__edit:hover { background: var(--color-sidebar-bg); color: var(--color-text); }
+.project-overview__edit svg { width: 18px; height: 18px; }
+
+.project-overview__description {
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    margin: 0 0 var(--space-sm);
+}
+
+.project-overview__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+.project-overview__meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.project-overview__meta svg { width: 16px; height: 16px; }
+
+/* ---- Workflow section ---- */
+.project-overview__workflow-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-md);
+}
+.project-overview__workflow-header h2 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--color-text);
+    margin: 0;
+}
+
+.btn-add-stage {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-white);
+    background: var(--color-primary);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 10px var(--space-md);
+    cursor: pointer;
+}
+.btn-add-stage:hover { background: var(--color-primary-hover); }
+.btn-add-stage svg { width: 16px; height: 16px; }
+
+.stage-list { display: flex; flex-direction: column; gap: var(--space-md); }
+
+/* ---- Stage row ---- */
+.stage-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+}
+.stage-row--current {
+    border-color: var(--color-primary);
+    box-shadow: 0 1px 3px rgba(166, 64, 31, 0.08);
+}
+
+.stage-row__reorder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    border: none;
+    background: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+}
+.stage-row__reorder:hover { background: var(--color-sidebar-bg); }
+.stage-row__reorder svg { width: 16px; height: 16px; }
+
+.stage-row__number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    font-weight: 700;
+    background: var(--color-tint-3);
+    color: var(--color-text);
+}
+.stage-row__number--current {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+.stage-row__body { flex: 1; min-width: 0; }
+.stage-row__name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0 0 4px;
+}
+
+.stage-row__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+}
+.stage-row__sep { color: var(--color-border); }
+
+.stage-row__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+}
+.stage-row__status svg { width: 15px; height: 15px; }
+.stage-row__status--completed   { color: var(--color-tint-4-text); }
+.stage-row__status--in-progress { color: var(--color-primary); }
+.stage-row__status--pending     { color: var(--color-primary); }
+.stage-row__status--not-started { color: var(--color-text-muted); }
+
+.stage-row__actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: none;
+    color: var(--color-text-muted);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+.icon-btn:hover { background: var(--color-sidebar-bg); color: var(--color-text); }
+.icon-btn--danger:hover { color: var(--color-danger); }
+.icon-btn svg { width: 16px; height: 16px; }
+
+@media (max-width: 700px) {
+    .project-overview__meta { flex-wrap: wrap; gap: var(--space-sm); }
+    .stage-row { flex-wrap: wrap; }
+    .stage-row__actions { margin-left: 44px; }
+}
