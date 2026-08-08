@@ -2,11 +2,10 @@
 class ProjectController extends Controller {
 
     public function index(): void {
-        $user          = require __DIR__ . '/../../config/mock/users.php';
-        $roles         = require __DIR__ . '/../../config/mock/roles.php';
-        $projects      = require __DIR__ . '/../../config/mock/projects.php';
-        $notifications = require __DIR__ . '/../../config/mock/notifications.php';
-        $projectsList  = require __DIR__ . '/../../config/mock/projects-list.php';
+        $user           = require __DIR__ . '/../../config/mock/users.php';
+        $projectContext = currentProjectContext();
+        $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
+        $projectsList   = require __DIR__ . '/../../config/mock/projects-list.php';
 
         usort($projectsList, fn($a, $b) => strtotime($a['deadline']) <=> strtotime($b['deadline']));
 
@@ -19,14 +18,12 @@ class ProjectController extends Controller {
                 'notifications' => $notifications['items'],
                 'projectsList'  => $projectsList,
             ],
-            $roles,
-            $projects
+            $projectContext
         );
 
         $this->render('project/index', $context);
     }
 
-    // Projects Tab row's arrow link
     public function overview(): void {
         $id = (int) (Router::$params['id'] ?? 0);
 
@@ -45,13 +42,14 @@ class ProjectController extends Controller {
             return;
         }
 
+        setCurrentProjectId($id);
+
         $detail = require __DIR__ . '/../../config/mock/project-detail.php';
         $stages = $detail[$id]['stages'] ?? [];
 
-        $user          = require __DIR__ . '/../../config/mock/users.php';
-        $roles         = require __DIR__ . '/../../config/mock/roles.php';
-        $projects      = require __DIR__ . '/../../config/mock/projects.php';
-        $notifications = require __DIR__ . '/../../config/mock/notifications.php';
+        $user           = require __DIR__ . '/../../config/mock/users.php';
+        $projectContext = currentProjectContext();
+        $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
 
         $context = array_merge(
             [
@@ -63,8 +61,7 @@ class ProjectController extends Controller {
                 'project'       => $project,
                 'stages'        => $stages,
             ],
-            $roles,
-            $projects
+            $projectContext
         );
 
         $this->render('project/overview', $context);
