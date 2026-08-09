@@ -10,7 +10,6 @@ $soloNoRequests = count($members) <= 1 && empty($pendingApprovals);
             <p>Manage who has access to <?= htmlspecialchars($currentProjectName ?? 'this project') ?> and their roles.</p>
         </div>
         <div class="team-header__actions">
-            <!-- Client invitation (FR-2.7) and member addition (FR-2.6.1) aren't wired up yet - visual only for now. -->
             <a href="#" class="btn-outline">Invite Client</a>
             <a href="#" class="btn-add-member"><?= renderIcon('user-plus') ?> Add Member</a>
         </div>
@@ -105,10 +104,9 @@ $soloNoRequests = count($members) <= 1 && empty($pendingApprovals);
                         <?php foreach ($members as $member): ?>
                             <?php
                                 $initials = strtoupper(substr($member['name'], 0, 1) . substr(strrchr($member['name'], ' ') ?: '', 1, 1));
-                                $rolesAttr = implode(' ', $member['roles']);
                             ?>
                             <tr data-name="<?= htmlspecialchars(strtolower($member['name'] . ' ' . $member['email'])) ?>"
-                                data-roles="<?= htmlspecialchars($rolesAttr) ?>"
+                                data-role="<?= htmlspecialchars($member['role']) ?>"
                                 data-status="<?= htmlspecialchars($member['status']) ?>">
                                 <td>
                                     <div class="member-cell">
@@ -123,11 +121,7 @@ $soloNoRequests = count($members) <= 1 && empty($pendingApprovals);
                                 </td>
                                 <td class="team-table__muted"><?= htmlspecialchars($member['email']) ?></td>
                                 <td>
-                                    <div class="role-badges">
-                                        <?php foreach ($member['roles'] as $role): ?>
-                                            <span class="badge badge--<?= memberRoleTone($role) ?>"><?= memberRoleLabel($role) ?></span>
-                                        <?php endforeach; ?>
-                                    </div>
+                                    <span class="badge badge--<?= memberRoleTone($member['role']) ?>"><?= memberRoleLabel($member['role']) ?></span>
                                 </td>
                                 <td>
                                     <span class="badge badge--<?= $member['status'] === 'active' ? 'success' : 'neutral' ?>">
@@ -136,7 +130,7 @@ $soloNoRequests = count($members) <= 1 && empty($pendingApprovals);
                                 </td>
                                 <td class="team-table__muted"><?= htmlspecialchars(date('M j, Y', strtotime($member['joinedAt']))) ?></td>
                                 <td>
-                                    <!-- Role changes/deactivation (FR-2.6.11-12) aren't wired up yet. -->
+                                    <!-- Role changes/deactivation aren't wired up yet. -->
                                     <button type="button" class="icon-btn" aria-label="Manage <?= htmlspecialchars($member['name']) ?>">
                                         <?= renderIcon('ellipsis-vertical') ?>
                                     </button>

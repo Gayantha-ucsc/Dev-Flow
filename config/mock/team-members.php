@@ -8,7 +8,7 @@ return [
                 'user_id' => 1, 
                 'name' => 'User One',       
                 'email' => 'user_1@gmail.com',    
-                'roles' => ['manager'],   
+                'role' => 'manager',   
                 'status' => 'active', 
                 'joinedAt' => '2026-02-03'
             ],
@@ -16,7 +16,7 @@ return [
                 'user_id' => 7, 
                 'name' => 'User Seven',  
                 'email' => 'user_7@gmail.com',    
-                'roles' => ['team_lead'], 
+                'role' => 'team_lead', 
                 'status' => 'active', 
                 'joinedAt' => '2026-02-05'
             ],
@@ -24,7 +24,7 @@ return [
                 'user_id' => 8, 
                 'name' => 'User Eight',  
                 'email' => 'user_8@gmail.com',    
-                'roles' => ['developer'], 
+                'role' => 'developer', 
                 'status' => 'active', 
                 'joinedAt' => '2026-02-10'
             ],
@@ -32,7 +32,7 @@ return [
                 'user_id' => 9, 
                 'name' => 'User Nine', 
                 'email' => 'user_9@gmail.com',     
-                'roles' => ['designer'],  
+                'role' => 'designer',  
                 'status' => 'active', 
                 'joinedAt' => '2026-02-10'
             ],
@@ -46,7 +46,7 @@ return [
                 'user_id' => 1,  
                 'name' => 'User One',      
                 'email' => 'user_1@gmail.com',   
-                'roles' => ['manager'],   
+                'role' => 'manager',   
                 'status' => 'active',   
                 'joinedAt' => '2026-03-01'
             ],
@@ -54,7 +54,7 @@ return [
                 'user_id' => 10,
                 'name' => 'User Ten',
                 'email' => 'user_10@gmail.com',
-                'roles' => ['team_lead'],
+                'role' => 'team_lead',
                 'status' => 'active',
                 'joinedAt' => '2026-03-02'
             ],
@@ -62,7 +62,7 @@ return [
                 'user_id' => 11,
                 'name' => 'User Eleven',
                 'email' => 'user_11@gmail.com',
-                'roles' => ['developer'],
+                'role' => 'developer',
                 'status' => 'active',
                 'joinedAt' => '2026-03-05'
             ],
@@ -70,7 +70,7 @@ return [
                 'user_id' => 12,
                 'name' => 'User Twelve',
                 'email' => 'user_12@gmail.com',
-                'roles' => ['developer'],
+                'role' => 'developer',
                 'status' => 'inactive',
                 'joinedAt' => '2026-03-08'
             ],
@@ -93,7 +93,7 @@ return [
                 'user_id' => 1,  
                 'name' => 'User One',        
                 'email' => 'user_1@gmail.com',     
-                'roles' => ['manager'], 
+                'role' => 'manager', 
                 'status' => 'active', 
                 'joinedAt' => '2026-01-12'
             ],
@@ -101,7 +101,7 @@ return [
                 'user_id' => 13, 
                 'name' => 'User Thirteen', 
                 'email' => 'user_13@gmail.com', 
-                'roles' => ['developer'],            
+                'role' => 'developer',            
                 'status' => 'active', 
                 'joinedAt' => '2026-01-15'
             ],
@@ -109,7 +109,7 @@ return [
                 'user_id' => 14, 
                 'name' => 'User Fourteen', 
                 'email' => 'user_14@gmail.com', 
-                'roles' => ['developer'],           
+                'role' => 'developer',           
                 'status' => 'active', 
                 'joinedAt' => '2026-01-15'
             ],
@@ -117,7 +117,7 @@ return [
                 'user_id' => 15, 
                 'name' => 'User Fifteen',  
                 'email' => 'user_15@gmail.com',      
-                'roles' => ['designer'],            
+                'role' => 'designer',            
                 'status' => 'active', 
                 'joinedAt' => '2026-01-18'
             ],
@@ -125,7 +125,7 @@ return [
                 'user_id' => 16, 
                 'name' => 'User Sixteen',  
                 'email' => 'user_16@gmail.com',      
-                'roles' => ['developer'],           
+                'role' => 'developer',           
                 'status' => 'active', 
                 'joinedAt' => '2026-01-20'
             ],
@@ -133,7 +133,7 @@ return [
                 'user_id' => 17, 
                 'name' => 'User Seventeen', 
                 'email' => 'user_17@gmail.com',    
-                'roles' => ['designer'],            
+                'role' => 'designer',            
                 'status' => 'inactive', 
                 'joinedAt' => '2026-01-22'
             ],
@@ -141,7 +141,7 @@ return [
                 'user_id' => 18, 
                 'name' => 'User Eighteen',   
                 'email' => 'user_18@gmail.com',     
-                'roles' => ['developer'],           
+                'role' => 'developer',           
                 'status' => 'active', 
                 'joinedAt' => '2026-01-25'
             ],
@@ -149,7 +149,7 @@ return [
                 'user_id' => 19, 
                 'name' => 'User Nineteen', 
                 'email' => 'user_19@gmail.com', 
-                'roles' => ['client'], 
+                'role' => 'client', 
                 'status' => 'active', 
                 'joinedAt' => '2026-01-25'
             ]
@@ -172,7 +172,7 @@ return [
                 'user_id' => 1, 
                 'name' => 'User One',   
                 'email' => 'user_1@gmail.com', 
-                'roles' => ['manager'],   
+                'role' => 'manager',   
                 'status' => 'active', 
                 'joinedAt' => '2026-05-01'
             ],
@@ -180,7 +180,7 @@ return [
                 'user_id' => 24, 
                 'name' => 'User Twenty-Four', 
                 'email' => 'user_24@gmail.com', 
-                'roles' => ['team_lead'], 
+                'role' => 'team_lead', 
                 'status' => 'active', 
                 'joinedAt' => '2026-05-02'
             ],
@@ -188,7 +188,7 @@ return [
                 'user_id' => 25, 
                 'name' => 'User Twenty-Five', 
                 'email' => 'user_25@gmail.com', 
-                'roles' => ['designer'], 
+                'role' => 'designer', 
                 'status' => 'active', 
                 'joinedAt' => '2026-05-06'
             ],
@@ -202,7 +202,7 @@ return [
                 'user_id' => 1, 
                 'name' => 'User One',    
                 'email' => 'user_1@gmail.com', 
-                'roles' => ['manager'],   
+                'role' => 'manager',   
                 'status' => 'active', 
                 'joinedAt' => '2025-11-01'
             ],
@@ -210,7 +210,7 @@ return [
                 'user_id' => 26, 
                 'name' => 'User Twenty-Six', 
                 'email' => 'user_26@gmail.com',  
-                'roles' => ['team_lead'], 
+                'role' => 'team_lead', 
                 'status' => 'active', 
                 'joinedAt' => '2025-11-02'
             ],

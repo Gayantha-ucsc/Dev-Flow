@@ -2,8 +2,7 @@
 // Expects these variables passed in from the controller:
 // $currentProjectId = 1
 // $userProjects     = [['project_id'=>.., 'name'=>..], ...]  // projects this user belongs to
-// $activeRole       = 'team_lead'                             // currently active role context
-// $userRoles        = ['team_lead', 'developer']               // ALL roles this user holds on current project
+// $activeRole       = 'manager'                               // this user's one role on the current project
 // $currentUser      = ['name' => 'User One', 'profile_picture' => null]
 // $unreadCount      = 3
 ?>
@@ -33,35 +32,9 @@
                 </div>
             </div>
 
-            <!-- Role Switcher — placeholder data for now, wire to real ProjectMember lookup later -->
-            <?php if (count($userRoles ?? []) > 1): ?>
-                <div class="dropdown" data-dropdown>
-                    <button class="role-badge" data-dropdown-trigger>
-                        <?php 
-                        if ($currentProjectName === 'Select Project'){
-                            $activeRole = 'User';
-                        }; ?>
-                        <?= htmlspecialchars(strtoupper(str_replace('_', ' ', $activeRole ?? ''))) ?>
-                        <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none">
-                            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-
-                    <div class="dropdown__menu" data-dropdown-menu>
-                        <?php foreach ($userRoles as $role): ?>
-                            <a href="?switch_role=<?= urlencode($role) ?>"
-                            class="dropdown__item <?= $role === $activeRole ? 'is-active' : '' ?>">
-                                <?= htmlspecialchars(strtoupper(str_replace('_', ' ', $role))) ?>
-                            </a>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            <?php else: ?>
-                    <!-- Single role  -->
-                    <span class="role-badge role-badge--static">
-                        <?= htmlspecialchars(strtoupper(str_replace('_', ' ', $activeRole ?? ''))) ?>
-                    </span>
-            <?php endif; ?>
+            <span class="role-badge role-badge--static">
+                <?= htmlspecialchars(strtoupper(str_replace('_', ' ', $activeRole ?? 'User'))) ?>
+            </span>
         <?php endif; ?>
     </div>
 

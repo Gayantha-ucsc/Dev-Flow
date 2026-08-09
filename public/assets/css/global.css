@@ -20,6 +20,14 @@
     --color-warning-border: #F0C9A8;
     --color-primary-bg-tint: #FCEEE8;
 
+    /* Extra muted tones */
+    --color-slate: #47536B;
+    --color-slate-bg: #E1E4EA;
+    --color-info: #2F6159;
+    --color-info-bg: #D9E8E6;
+    --color-wine: #7A2D42;
+    --color-wine-bg: #EAD6DA;
+
     /* Spacing */
     --space-xs: 4px;
     --space-sm: 8px;

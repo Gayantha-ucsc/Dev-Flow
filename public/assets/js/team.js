@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         rows.forEach(function (row) {
             var matchesSearch = !query || row.dataset.name.indexOf(query) !== -1;
-            var matchesRole   = activeRole === 'all' || (' ' + row.dataset.roles + ' ').indexOf(' ' + activeRole + ' ') !== -1;
+            var matchesRole   = activeRole === 'all' || row.dataset.role === activeRole;
             var matchesStatus = status === 'all' || row.dataset.status === status;
             var visible = matchesSearch && matchesRole && matchesStatus;
             row.style.display = visible ? '' : 'none';

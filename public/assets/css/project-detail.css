@@ -1,3 +1,7 @@
+/* Project Overview / main page (reference doc 23.11) - project header +
+   collapsed stage list only. The expand-in-place task strip is a
+   follow-up and isn't styled here yet. */
+
 .project-overview {
     padding: var(--space-lg);
     max-width: 1280px;
@@ -90,17 +94,22 @@
 
 .stage-list { display: flex; flex-direction: column; gap: var(--space-md); }
 
-/* ---- Stage row ---- */
+/* ---- Stage item: card wrapper around the header row + expand section ---- */
+.stage-item--current {
+    border-color: var(--color-primary);
+    box-shadow: 0 1px 3px rgba(166, 64, 31, 0.08);
+}
+
 .stage-row {
     display: flex;
     align-items: center;
     gap: var(--space-md);
     padding: var(--space-md) var(--space-lg);
+    cursor: pointer;
 }
-.stage-row--current {
-    border-color: var(--color-primary);
-    box-shadow: 0 1px 3px rgba(166, 64, 31, 0.08);
-}
+.stage-row:hover { background: var(--color-sidebar-bg); }
+.stage-item--expanded .stage-row { border-bottom: 1px solid var(--color-border); }
+.stage-item--expanded .stage-row:hover { background: none; }
 
 .stage-row__reorder {
     display: flex;
@@ -187,8 +196,107 @@
 .icon-btn--danger:hover { color: var(--color-danger); }
 .icon-btn svg { width: 16px; height: 16px; }
 
+.stage-row__expand-toggle svg { transition: transform 0.15s ease; }
+.stage-item--expanded .stage-row__expand-toggle svg { transform: rotate(180deg); }
+
+/* Expand section: task strip, revealed downward */
+.stage-expand {
+    padding: var(--space-lg) var(--space-lg) var(--space-lg) 94px;
+}
+
+.task-strip {
+    display: flex;
+    gap: var(--space-md);
+    overflow-x: auto;
+    padding-bottom: var(--space-sm);
+}
+
+.task-card {
+    flex: 0 0 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+}
+.task-card .badge { align-self: flex-start; }
+.task-card .badge svg { width: 13px; height: 13px; }
+
+.task-card__name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+}
+
+.task-card__depends {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+}
+.task-card__depends svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+.task-card__footer {
+    margin-top: auto;
+    padding-top: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.task-card__assignees { display: flex; align-items: center; }
+.task-card__assignees .avatar--sm { margin-right: -8px; border: 2px solid var(--color-white); }
+.task-card__more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--color-tint-3);
+    color: var(--color-text);
+    font-size: 0.7rem;
+    font-weight: 700;
+    border: 2px solid var(--color-white);
+    margin-left: -8px;
+}
+.task-card__unassigned {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+.task-card__deadline {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+}
+
+.task-card--locked {
+    border-style: dashed;
+    background: var(--color-sidebar-bg);
+}
+
+.task-card--add {
+    flex: 0 0 140px;
+    align-items: center;
+    justify-content: center;
+    border-style: dashed;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.task-card--add:hover { background: var(--color-sidebar-bg); color: var(--color-primary); }
+.task-card--add svg { width: 18px; height: 18px; }
+
 @media (max-width: 700px) {
     .project-overview__meta { flex-wrap: wrap; gap: var(--space-sm); }
     .stage-row { flex-wrap: wrap; }
     .stage-row__actions { margin-left: 44px; }
+    .stage-expand { padding-left: var(--space-lg); }
 }

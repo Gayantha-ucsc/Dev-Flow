@@ -1,6 +1,6 @@
 <?php
 // Expects: 
-    // $project (one row from config/mock/projects-list.php)
+    // $project (one row from config/mock/projects-list.php),
     // $stages (config/mock/project-detail.php)
 ?>
 <div class="project-overview">
@@ -46,32 +46,89 @@
                         };
                         $isCurrent = in_array($stage['status'], ['in_progress', 'pending_completion'], true);
                     ?>
-                    <div class="card stage-row <?= $isCurrent ? 'stage-row--current' : '' ?>">
-                        <button type="button" class="stage-row__reorder" aria-label="Reorder <?= htmlspecialchars($stage['name']) ?>">
-                            <?= renderIcon('chevrons-up-down') ?>
-                        </button>
+                    <div class="card stage-item <?= $isCurrent ? 'stage-item--current stage-item--expanded' : '' ?>">
+                        <div class="stage-row">
+                            <button type="button" class="stage-row__reorder" aria-label="Reorder <?= htmlspecialchars($stage['name']) ?>">
+                                <?= renderIcon('chevrons-up-down') ?>
+                            </button>
 
-                        <span class="stage-row__number <?= $isCurrent ? 'stage-row__number--current' : '' ?>">
-                            <?= $i + 1 ?>
-                        </span>
+                            <span class="stage-row__number <?= $isCurrent ? 'stage-row__number--current' : '' ?>">
+                                <?= $i + 1 ?>
+                            </span>
 
-                        <div class="stage-row__body">
-                            <h3 class="stage-row__name"><?= htmlspecialchars($stage['name']) ?></h3>
-                            <div class="stage-row__meta">
-                                <span class="stage-row__status stage-row__status--<?= $statusMeta['tone'] ?>">
-                                    <?php if ($statusMeta['icon']): ?><?= renderIcon($statusMeta['icon']) ?><?php endif; ?>
-                                    <?= $statusMeta['label'] ?>
-                                </span>
-                                <?php if ($stage['tasksTotal'] > 0): ?>
-                                    <span class="stage-row__sep">&bull;</span>
-                                    <span class="stage-row__tasks"><?= (int) $stage['tasksApproved'] ?>/<?= (int) $stage['tasksTotal'] ?> tasks approved</span>
-                                <?php endif; ?>
+                            <div class="stage-row__body">
+                                <h3 class="stage-row__name"><?= htmlspecialchars($stage['name']) ?></h3>
+                                <div class="stage-row__meta">
+                                    <span class="stage-row__status stage-row__status--<?= $statusMeta['tone'] ?>">
+                                        <?php if ($statusMeta['icon']): ?><?= renderIcon($statusMeta['icon']) ?><?php endif; ?>
+                                        <?= $statusMeta['label'] ?>
+                                    </span>
+                                    <?php if ($stage['tasksTotal'] > 0): ?>
+                                        <span class="stage-row__sep">&bull;</span>
+                                        <span class="stage-row__tasks"><?= (int) $stage['tasksApproved'] ?>/<?= (int) $stage['tasksTotal'] ?> tasks approved</span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+
+                            <div class="stage-row__actions">
+                                <button type="button" class="icon-btn" aria-label="Edit <?= htmlspecialchars($stage['name']) ?>"><?= renderIcon('pencil') ?></button>
+                                <button type="button" class="icon-btn icon-btn--danger" aria-label="Delete <?= htmlspecialchars($stage['name']) ?>"><?= renderIcon('trash-2') ?></button>
+                                <button type="button" class="icon-btn stage-row__expand-toggle" aria-expanded="<?= $isCurrent ? 'true' : 'false' ?>" aria-label="<?= $isCurrent ? 'Collapse' : 'Expand' ?> <?= htmlspecialchars($stage['name']) ?> tasks">
+                                    <?= renderIcon('chevron-down') ?>
+                                </button>
                             </div>
                         </div>
 
-                        <div class="stage-row__actions">
-                            <button type="button" class="icon-btn" aria-label="Edit <?= htmlspecialchars($stage['name']) ?>"><?= renderIcon('pencil') ?></button>
-                            <button type="button" class="icon-btn icon-btn--danger" aria-label="Delete <?= htmlspecialchars($stage['name']) ?>"><?= renderIcon('trash-2') ?></button>
+                        <div class="stage-expand" <?= $isCurrent ? '' : 'hidden' ?>>
+                            <div class="task-strip">
+                                <?php foreach ($stage['tasks'] as $task): ?>
+                                    <?php
+                                        $taskMeta = taskStatusMeta($task['status']);
+                                        $isLocked = $task['status'] === 'locked';
+                                        $shownAssignees = array_slice($task['assignees'], 0, 2);
+                                        $extraCount = count($task['assignees']) - count($shownAssignees);
+                                    ?>
+                                    <div class="task-card <?= $isLocked ? 'task-card--locked' : '' ?>">
+                                        <span class="badge badge--<?= $taskMeta['tone'] ?>">
+                                            <?php if ($taskMeta['icon']): ?><?= renderIcon($taskMeta['icon']) ?><?php endif; ?>
+                                            <?= htmlspecialchars($taskMeta['label']) ?>
+                                        </span>
+
+                                        <h4 class="task-card__name"><?= htmlspecialchars($task['name']) ?></h4>
+
+                                        <?php if ($task['dependsOn']): ?>
+                                            <div class="task-card__depends">
+                                                <?= renderIcon('lock') ?> Depends on: <?= htmlspecialchars($task['dependsOn']) ?>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <div class="task-card__footer">
+                                            <div class="task-card__assignees">
+                                                <?php if (empty($task['assignees'])): ?>
+                                                    <span class="task-card__unassigned">Unassigned</span>
+                                                <?php else: ?>
+                                                    <?php foreach ($shownAssignees as $person): ?>
+                                                        <?php
+                                                            $personInitials = strtoupper(substr($person, 0, 1) . substr(strrchr($person, ' ') ?: '', 1, 1));
+                                                        ?>
+                                                        <span class="avatar avatar--sm avatar--<?= avatarColorClass($person) ?>" title="<?= htmlspecialchars($person) ?>"><?= htmlspecialchars($personInitials) ?></span>
+                                                    <?php endforeach; ?>
+                                                    <?php if ($extraCount > 0): ?>
+                                                        <span class="task-card__more">+<?= $extraCount ?></span>
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
+                                            </div>
+                                            <span class="task-card__deadline"><?= htmlspecialchars(date('M j', strtotime($task['deadline']))) ?></span>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+
+                                <!-- Task creation (FR-3.1) isn't wired up yet - visual only for now. -->
+                                <div class="task-card task-card--add">
+                                    <?= renderIcon('plus') ?>
+                                    <span>Add Task</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 <?php endforeach; ?>

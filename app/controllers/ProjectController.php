@@ -1,4 +1,5 @@
 <?php
+
 class ProjectController extends Controller {
 
     public function index(): void {
@@ -6,8 +7,6 @@ class ProjectController extends Controller {
         $projectContext = currentProjectContext();
         $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
         $projectsList   = require __DIR__ . '/../../config/mock/projects-list.php';
-
-        usort($projectsList, fn($a, $b) => strtotime($a['deadline']) <=> strtotime($b['deadline']));
 
         usort($projectsList, fn($a, $b) => strtotime($a['deadline']) <=> strtotime($b['deadline']));
 
@@ -48,6 +47,12 @@ class ProjectController extends Controller {
 
         $detail = require __DIR__ . '/../../config/mock/project-detail.php';
         $stages = $detail[$id]['stages'] ?? [];
+
+        $taskData = require __DIR__ . '/../../config/mock/project-tasks.php';
+        foreach ($stages as $i => &$stage) {
+            $stage['tasks'] = $taskData[$id][$i] ?? [];
+        }
+        unset($stage);
 
         $user           = require __DIR__ . '/../../config/mock/users.php';
         $projectContext = currentProjectContext();
