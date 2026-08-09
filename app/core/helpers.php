@@ -115,6 +115,39 @@ function avatarColorClass(string $seed): string {
     return $palette[crc32($seed) % count($palette)];
 }
 
+// @param array $tasks One stage's task list (each with 'name' and 'dependsOn' => string[] of task names).
+// @return array[] Ordered list of columns; each column is a list of tasks (in original order) that should be stacked vertically.
+function computeTaskColumns(array $tasks): array {
+    $namesInStage = [];
+    foreach ($tasks as $task) {
+        $namesInStage[$task['name']] = true;
+    }
+
+    $columnOf = [];
+    foreach ($tasks as $task) {
+        $localDeps = array_filter($task['dependsOn'] ?? [], fn($name) => isset($namesInStage[$name]));
+
+        if (empty($localDeps)) {
+            $columnOf[$task['name']] = 0;
+            continue;
+        }
+
+        $maxDepColumn = -1;
+        foreach ($localDeps as $depName) {
+            $maxDepColumn = max($maxDepColumn, $columnOf[$depName] ?? 0);
+        }
+        $columnOf[$task['name']] = $maxDepColumn + 1;
+    }
+
+    $columns = [];
+    foreach ($tasks as $task) {
+        $columns[$columnOf[$task['name']]][] = $task;
+    }
+    ksort($columns);
+
+    return array_values($columns);
+}
+
 function taskStatusMeta(string $status): array {
     return match ($status) {
         'locked'         => ['tone' => 'slate',   'icon' => 'lock',           'label' => 'Locked'],

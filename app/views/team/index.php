@@ -131,7 +131,7 @@ $soloNoRequests = count($members) <= 1 && empty($pendingApprovals);
                                 <td class="team-table__muted"><?= htmlspecialchars(date('M j, Y', strtotime($member['joinedAt']))) ?></td>
                                 <td>
                                     <!-- Role changes/deactivation aren't wired up yet. -->
-                                    <button type="button" class="icon-btn" aria-label="Manage <?= htmlspecialchars($member['name']) ?>">
+                                    <button type="button" class="icon-btn-sm" aria-label="Manage <?= htmlspecialchars($member['name']) ?>">
                                         <?= renderIcon('ellipsis-vertical') ?>
                                     </button>
                                 </td>
