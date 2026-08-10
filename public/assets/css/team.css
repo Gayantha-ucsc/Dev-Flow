@@ -156,7 +156,7 @@
     margin: 0;
 }
 
-/* ---- Avatars: deterministic color per name, reusing badge tones ---- */
+/* Avatars */
 .avatar {
     display: flex;
     align-items: center;
@@ -167,11 +167,22 @@
     font-size: 0.8rem;
     font-weight: 700;
     flex-shrink: 0;
+    overflow: hidden;
+}
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 .avatar--sm {
     width: 24px;
     height: 24px;
     font-size: 0.65rem;
+}
+.avatar--lg {
+    width: 96px;
+    height: 96px;
+    font-size: 2rem;
 }
 .avatar--primary { background: var(--color-primary-bg-tint); color: var(--color-primary); }
 .avatar--pink    { background: var(--color-accent-pink); color: var(--color-accent-pink-text); }

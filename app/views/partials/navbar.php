@@ -57,16 +57,15 @@
         <div class="dropdown" data-dropdown>
             <button class="user-menu-trigger" data-dropdown-trigger>
                 <span class="user-name"><?= htmlspecialchars($currentUser['name'] ?? 'User') ?></span>
-                <span class="user-avatar">
+                <span class="avatar avatar--<?= avatarColorClass($currentUser['name'] ?? 'User') ?>">
                     <?php if (!empty($currentUser['profile_picture'])): ?>
                         <img src="<?= htmlspecialchars($currentUser['profile_picture']) ?>" alt="">
                     <?php else: ?>
-                        <img src="<?= url('assets/img/default-avatar.png') ?>" alt="">
+                        <?= htmlspecialchars(initials($currentUser['name'] ?? 'User')) ?>
                     <?php endif; ?>
                 </span>
             </button>
             <div class="dropdown__menu dropdown__menu--right" data-dropdown-menu>
-                <a href="<?= url('/profile')  ?>" class="dropdown__item">Profile</a>
                 <a href="<?= url('/settings') ?>" class="dropdown__item">Settings</a>
                 <a href="<?= url('/logout')   ?>" class="dropdown__item dropdown__item--danger">Log out</a>
             </div>

@@ -28,7 +28,6 @@
     <div class="project-overview__workflow">
         <div class="project-overview__workflow-header">
             <h2>Project Workflow</h2>
-            <!-- Stage CRUD (FR-2.3.1) isn't wired up yet - visual only for now. -->
             <button type="button" class="btn-add-stage"><?= renderIcon('plus') ?> Add Stage</button>
         </div>
 
@@ -88,8 +87,6 @@
                         ?>
                         <div class="stage-expand" <?= $isCurrent ? '' : 'hidden' ?>>
                             <div class="task-strip" data-task-strip>
-                                <!-- Filled in by project-overview.js once the strip is
-                                     visible and cards have real positions to measure. -->
                                 <svg class="connector-layer" data-connector-layer></svg>
 
                                 <?php foreach ($taskColumns as $column): ?>
@@ -137,7 +134,7 @@
                                                         <?php else: ?>
                                                             <?php foreach ($shownAssignees as $person): ?>
                                                                 <?php
-                                                                    $personInitials = strtoupper(substr($person, 0, 1) . substr(strrchr($person, ' ') ?: '', 1, 1));
+                                                                    $personInitials = initials($person);
                                                                 ?>
                                                                 <span class="avatar avatar--sm avatar--<?= avatarColorClass($person) ?>" title="<?= htmlspecialchars($person) ?>"><?= htmlspecialchars($personInitials) ?></span>
                                                             <?php endforeach; ?>
@@ -153,7 +150,6 @@
                                     </div>
                                 <?php endforeach; ?>
 
-                                <!-- Task creation (FR-3.1) isn't wired up yet - visual only for now. -->
                                 <div class="task-card task-card--add">
                                     <?= renderIcon('plus') ?>
                                     <span>Add Task</span>

@@ -15,9 +15,8 @@ return [
         '/chat'           => ['PageController', 'chat'],
         '/reports'        => ['PageController', 'reports'],
         '/payment'        => ['PageController', 'payment'],
-        '/settings'       => ['PageController', 'settings'],
+        '/settings'       => ['ProfileController', 'settings'],
         '/notifications'  => ['PageController', 'notifications'],
-        '/profile'        => ['PageController', 'profile'],
         '/logout'         => ['AuthController', 'logout'],
     ],
 

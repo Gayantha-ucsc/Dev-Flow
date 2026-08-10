@@ -143,20 +143,6 @@
     font-size: 0.95rem;
 }
 
-.user-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--color-border);
-    overflow: hidden;
-}
-
-.user-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
 /* Nav-bar dropdown */
 .dropdown__menu--notifications {
     width: 360px;
