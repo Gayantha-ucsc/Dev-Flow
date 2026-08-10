@@ -28,6 +28,7 @@
     <script src="<?= url('assets/js/wizard.js') ?>"></script>
     <script src="<?= url('assets/js/projects.js') ?>"></script>
     <script src="<?= url('assets/js/team.js') ?>"></script>
+    <script src="<?= url('assets/js/project-overview.js') ?>"></script>
 
 </head>
 <body>

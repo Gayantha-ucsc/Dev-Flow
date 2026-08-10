@@ -44,7 +44,6 @@ function currentProjectContext(): array {
             'currentProjectId'   => null,
             'currentProjectName' => null,
             'userProjects'       => [],
-            'userRoles'          => [],
             'activeRole'         => null,
         ];
     }
@@ -76,19 +75,8 @@ function currentProjectContext(): array {
             fn($row) => ['project_id' => $row['id'], 'name' => $row['name']],
             $projectsList
         ),
-        'userRoles'  => $current['roles'],
-        'activeRole' => selectActiveRole($current['roles']),
+        'activeRole' => $current['role'],
     ];
-}
-
-function selectActiveRole(array $roles): ?string {
-    $precedence = ['manager', 'team_lead', 'developer', 'designer', 'client'];
-    foreach ($precedence as $role) {
-        if (in_array($role, $roles, true)) {
-            return $role;
-        }
-    }
-    return $roles[0] ?? null;
 }
 
 function setCurrentProjectId(int $id): void {
@@ -98,7 +86,7 @@ function setCurrentProjectId(int $id): void {
 function userHasRoleAnywhere(string $role): bool {
     $projectsList = require __DIR__ . '/../../config/mock/projects-list.php';
     foreach ($projectsList as $row) {
-        if (in_array($role, $row['roles'], true)) {
+        if ($row['role'] === $role) {
             return true;
         }
     }
@@ -115,7 +103,6 @@ function memberRoleTone(string $role): string {
         default     => 'neutral',
     };
 }
-
 function memberRoleLabel(string $role): string {
     return match ($role) {
         'team_lead' => 'Team Lead',
@@ -126,4 +113,51 @@ function memberRoleLabel(string $role): string {
 function avatarColorClass(string $seed): string {
     $palette = ['primary', 'pink', 'success', 'warning', 'danger', 'neutral'];
     return $palette[crc32($seed) % count($palette)];
+}
+
+// @param array $tasks One stage's task list (each with 'name' and 'dependsOn' => string[] of task names).
+// @return array[] Ordered list of columns; each column is a list of tasks (in original order) that should be stacked vertically.
+function computeTaskColumns(array $tasks): array {
+    $namesInStage = [];
+    foreach ($tasks as $task) {
+        $namesInStage[$task['name']] = true;
+    }
+
+    $columnOf = [];
+    foreach ($tasks as $task) {
+        $localDeps = array_filter($task['dependsOn'] ?? [], fn($name) => isset($namesInStage[$name]));
+
+        if (empty($localDeps)) {
+            $columnOf[$task['name']] = 0;
+            continue;
+        }
+
+        $maxDepColumn = -1;
+        foreach ($localDeps as $depName) {
+            $maxDepColumn = max($maxDepColumn, $columnOf[$depName] ?? 0);
+        }
+        $columnOf[$task['name']] = $maxDepColumn + 1;
+    }
+
+    $columns = [];
+    foreach ($tasks as $task) {
+        $columns[$columnOf[$task['name']]][] = $task;
+    }
+    ksort($columns);
+
+    return array_values($columns);
+}
+
+function taskStatusMeta(string $status): array {
+    return match ($status) {
+        'locked'         => ['tone' => 'slate',   'icon' => 'lock',           'label' => 'Locked'],
+        'not_started'    => ['tone' => 'neutral', 'icon' => 'circle-dashed',  'label' => 'Not Started'],
+        'in_progress'    => ['tone' => 'primary', 'icon' => 'circle-dot',     'label' => 'In Progress'],
+        'pending_review' => ['tone' => 'info',    'icon' => 'eye',            'label' => 'Ready for Review'],
+        'approved'       => ['tone' => 'success', 'icon' => 'circle-check',   'label' => 'Approved'],
+        'rejected'       => ['tone' => 'wine',    'icon' => 'circle-x',       'label' => 'Rejected'],
+        'blocked'        => ['tone' => 'pink',    'icon' => 'ban',            'label' => 'Blocked'],
+        'overdue'        => ['tone' => 'danger',  'icon' => 'circle-alert',   'label' => 'Overdue'],
+        default          => ['tone' => 'neutral', 'icon' => null,             'label' => ucfirst($status)],
+    };
 }

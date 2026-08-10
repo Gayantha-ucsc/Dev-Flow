@@ -1,11 +1,5 @@
 <?php
 // Expects: $projectsList (see config/mock/projects-list.php)
-
-$statusToneMap = [
-    'active'   => 'primary',
-    'archived' => 'neutral',
-    'closed'   => 'pink',
-];
 ?>
 <div class="projects-page">
 
@@ -36,7 +30,7 @@ $statusToneMap = [
             <div class="projects-sort">
                 <label for="projectSort">Sort by:</label>
                 <select id="projectSort">
-                    <option value="deadline" selected>Deadline (Earliest)</option>
+                    <option value="deadline" selected>Deadline (Soonest)</option>
                     <option value="name">Name (A-Z)</option>
                     <option value="updated">Recently Updated</option>
                 </select>
@@ -56,12 +50,9 @@ $statusToneMap = [
                     // meaningful to whoever holds manager/team_lead ON THIS
                     // PROJECT - a Designer row for the same project simply
                     // won't render them.
-                    $isApprover = (bool) array_intersect($project['roles'], ['manager', 'team_lead']);
+                    $isApprover = in_array($project['role'], ['manager', 'team_lead'], true);
                     $stages     = $project['stages'];
-                    $roleLabel  = implode(' + ', array_map(
-                        fn($r) => ucwords(str_replace('_', ' ', $r)),
-                        $project['roles']
-                    ));
+                    $roleLabel  = memberRoleLabel($project['role']);
                 ?>
                 <a href="<?= url('projects/' . $project['id']) ?>"
                    class="card project-row"

@@ -61,7 +61,7 @@
 .btn-add-member:hover { background: var(--color-primary-hover); }
 .btn-add-member svg { width: 16px; height: 16px; }
 
-/* ---- Pending approvals - always above the (possibly long) member table so it never ends up scrolled out of view ---- */
+/* Pending approvals */
 .team-pending { margin-bottom: var(--space-lg); }
 .pending-count {
     display: inline-flex;
@@ -149,12 +149,6 @@
     font-size: 0.8rem;
 }
 
-.role-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
 .team-table__no-results {
     text-align: center;
     color: var(--color-text-muted);
@@ -173,6 +167,11 @@
     font-size: 0.8rem;
     font-weight: 700;
     flex-shrink: 0;
+}
+.avatar--sm {
+    width: 24px;
+    height: 24px;
+    font-size: 0.65rem;
 }
 .avatar--primary { background: var(--color-primary-bg-tint); color: var(--color-primary); }
 .avatar--pink    { background: var(--color-accent-pink); color: var(--color-accent-pink-text); }
