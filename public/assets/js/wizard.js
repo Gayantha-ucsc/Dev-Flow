@@ -29,6 +29,8 @@
             }
         }
 
+        window.wizardGoToStep = showStep;
+
         function updateFooter() {
             const continueLabel = continueBtn.querySelector('[data-continue-label]');
             continueLabel.textContent = currentStep === 4 ? 'Create Project' : 'Continue';
@@ -115,7 +117,6 @@
             if (currentStep === 4) {
                 if (window.showToast) window.showToast('success', 'Project created successfully!');
                 closeModal(modal);
-                resetWizard();
             }
         });
 
@@ -154,14 +155,11 @@
             }
         }
 
-        function closeModal(modalEl) {
-            modalEl.classList.remove('is-open');
-            setTimeout(() => modalEl.setAttribute('hidden', ''), 200);
-        }
-
         modal.addEventListener('modal:opened', function () {
             showStep(1);
             setPhase('select');
         });
+
+        modal.addEventListener('modal:closed', resetWizard);
     });
 })();

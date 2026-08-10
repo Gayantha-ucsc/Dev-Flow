@@ -144,7 +144,6 @@
                         <option value="developer">Developer</option>
                         <option value="designer">Designer</option>
                         <option value="team_lead">Team Lead</option>
-                        <option value="manager">Manager</option>
                     </select>
                     <button type="button" class="team-add-row__btn" data-add-member>
                         <?= renderIcon('plus') ?> <span>Add</span>
@@ -186,7 +185,7 @@
 
         <!-- footer -->
         <div class="wizard-footer">
-            <button type="button" class="btn-cancel" data-modal-close data-wizard-back>Cancel</button>
+            <button type="button" class="btn-cancel" data-wizard-back>Cancel</button>
             <div class="wizard-footer__right">
                 <button type="button" class="btn-skip" data-wizard-skip hidden>Skip</button>
                 <button type="button" class="btn-continue" data-wizard-continue>

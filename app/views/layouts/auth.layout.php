@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="<?= url('assets/css/components/toast.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/auth.css') ?>">
 
-    <script src="<?= url('assets/js/toast.js') ?>"></script>
+    <script src="<?= url('assets/js/toast.js') ?>" defer></script>
 </head>
 <body class="auth-body">
     <?php include __DIR__ . '/../partials/flash-message.php'; ?>
