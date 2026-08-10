@@ -15,20 +15,22 @@
     <link rel="stylesheet" href="<?= url('assets/css/projects.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/project-detail.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/team.css') ?>">
+    <link rel="stylesheet" href="<?= url('assets/css/settings.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/modal.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/wizard.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/datepicker.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/toast.css') ?>">
 
-    <script src="<?= url('assets/js/datepicker.js') ?>"></script>
-    <script src="<?= url('assets/js/workflow-step.js') ?>"></script>
-    <script src="<?= url('assets/js/team-step.js') ?>"></script>
-    <script src="<?= url('assets/js/review-step.js') ?>"></script>
-    <script src="<?= url('assets/js/toast.js') ?>"></script>
-    <script src="<?= url('assets/js/wizard.js') ?>"></script>
-    <script src="<?= url('assets/js/projects.js') ?>"></script>
-    <script src="<?= url('assets/js/team.js') ?>"></script>
-    <script src="<?= url('assets/js/project-overview.js') ?>"></script>
+    <script src="<?= url('assets/js/datepicker.js') ?>" defer></script>
+    <script src="<?= url('assets/js/workflow-step.js') ?>" defer></script>
+    <script src="<?= url('assets/js/team-step.js') ?>" defer></script>
+    <script src="<?= url('assets/js/review-step.js') ?>" defer></script>
+    <script src="<?= url('assets/js/toast.js') ?>" defer></script>
+    <script src="<?= url('assets/js/wizard.js') ?>" defer></script>
+    <script src="<?= url('assets/js/projects.js') ?>" defer></script>
+    <script src="<?= url('assets/js/team.js') ?>" defer></script>
+    <script src="<?= url('assets/js/project-overview.js') ?>" defer></script>
+    <script src="<?= url('assets/js/settings.js') ?>" defer></script>
 
 </head>
 <body>
@@ -42,6 +44,6 @@
             </main>
         </div>
     </div>
-    <script src="<?= url('assets/js/global.js') ?>"></script>
+    <script src="<?= url('assets/js/global.js') ?>" defer></script>
 </body>
 </html>
