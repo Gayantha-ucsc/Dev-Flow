@@ -125,7 +125,8 @@
 
                                                 <?php if ($crossStageDepends): ?>
                                                     <div class="task-card__depends">
-                                                        <?= renderIcon('lock') ?> Depends on: <?= htmlspecialchars(implode(', ', $crossStageDepends)) ?>
+                                                        <?= renderIcon('lock') ?>
+                                                        <span class="task-card__depends-text">Depends on: <?= htmlspecialchars(implode(', ', $crossStageDepends)) ?></span>
                                                     </div>
                                                 <?php endif; ?>
 

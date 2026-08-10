@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
-    var stageList = document.querySelector('.stage-list');
+    var workflow = document.querySelector('.project-overview__workflow');
+    if (!workflow) return;
+
+    var stageList = workflow.querySelector('.stage-list');
     if (!stageList) return;
 
     stageList.querySelectorAll('.stage-item--expanded').forEach(drawConnectorsFor);
@@ -17,6 +20,13 @@ document.addEventListener('DOMContentLoaded', function () {
         var toggleBtn = row.querySelector('.stage-row__expand-toggle');
         var willOpen = expand.hasAttribute('hidden');
 
+        if (willOpen) {
+            stageList.querySelectorAll('.stage-item--expanded').forEach(function (openItem) {
+                if (openItem === item) return;
+                collapseStage(openItem);
+            });
+        }
+
         expand.hidden = !willOpen;
         item.classList.toggle('stage-item--expanded', willOpen);
         if (toggleBtn) toggleBtn.setAttribute('aria-expanded', String(willOpen));
@@ -32,6 +42,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 150);
     });
 });
+
+function collapseStage(item) {
+    var expand = item.querySelector('.stage-expand');
+    var toggleBtn = item.querySelector('.stage-row__expand-toggle');
+
+    expand.hidden = true;
+    item.classList.remove('stage-item--expanded');
+    if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+}
 
 function drawConnectorsFor(stageItem) {
     var strip = stageItem.querySelector('[data-task-strip]');
@@ -55,7 +74,7 @@ function drawConnectorsFor(stageItem) {
 
         dependsAttr.split(',').filter(Boolean).forEach(function (fromId) {
             var fromCard = document.getElementById(fromId);
-            if (!fromCard) return;
+            if (!fromCard) return; // defensive: id should always exist, but never let a bad id break the whole strip
 
             drawOneConnector(svg, rectRelativeTo(fromCard, strip), toRect);
         });

@@ -238,6 +238,8 @@
 
 .task-card {
     flex: 0 0 220px;
+    width: 220px;
+    height: 148px;
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -245,8 +247,9 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     padding: var(--space-md);
+    overflow: hidden;
 }
-.task-card .badge { align-self: flex-start; }
+.task-card .badge { align-self: flex-start; flex-shrink: 0; }
 .task-card .badge svg { width: 13px; height: 13px; }
 
 .task-card__name {
@@ -254,6 +257,11 @@
     font-weight: 700;
     color: var(--color-text);
     margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .task-card__depends {
@@ -262,8 +270,16 @@
     gap: 5px;
     font-size: 0.78rem;
     color: var(--color-text-muted);
+    min-width: 0;
 }
+
 .task-card__depends svg { width: 13px; height: 13px; flex-shrink: 0; }
+.task-card__depends-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
 
 .task-card__footer {
     margin-top: auto;
@@ -289,6 +305,7 @@
     border: 2px solid var(--color-white);
     margin-left: -8px;
 }
+
 .task-card__unassigned {
     font-size: 0.78rem;
     color: var(--color-text-muted);
