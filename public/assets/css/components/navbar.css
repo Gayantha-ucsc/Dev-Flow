@@ -90,6 +90,39 @@
 .chevron { transition: transform 0.15s ease; }
 .dropdown.is-open .chevron { transform: rotate(180deg); }
 
+/* ---- Project switcher search ---- */
+.dropdown__menu--project-switcher {
+    width: 260px;
+    max-height: 340px;
+    overflow-y: auto;
+}
+.project-switcher-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    margin-bottom: 4px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+}
+.project-switcher-search svg { width: 15px; height: 15px; flex-shrink: 0; }
+.project-switcher-search input {
+    border: none;
+    outline: none;
+    background: none;
+    width: 100%;
+    font-size: 0.85rem;
+    color: var(--color-text);
+    font-family: var(--font-family);
+}
+.project-switcher-empty {
+    padding: var(--space-sm) var(--space-md);
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
 /* ---- Notification Bell ---- */
 .icon-btn {
     position: relative;
@@ -142,6 +175,9 @@
     color: var(--color-text);
     font-size: 0.95rem;
 }
+
+/* Avatar sizing lives in team.css (.avatar is a shared component used
+   here, in task cards, and on the settings page). */
 
 /* Nav-bar dropdown */
 .dropdown__menu--notifications {

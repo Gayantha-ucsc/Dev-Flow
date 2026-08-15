@@ -110,7 +110,7 @@
                     <h3>Arrange your stages</h3>
                     <p class="wizard-subtext" data-arrange-subtext>Reorder, rename, add, or remove stages.</p>
 
-                    <div class="stage-list" data-stage-list></div>
+                    <div class="wizard-stage-list" data-wizard-stage-list></div>
 
                     <button type="button" class="stage-add-btn" data-add-stage>
                         <span><?= renderIcon('plus') ?></span>

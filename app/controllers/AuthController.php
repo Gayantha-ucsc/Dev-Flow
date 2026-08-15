@@ -25,7 +25,11 @@ class AuthController extends Controller {
         $user = Auth::attempt($username, $password);
 
         if (!$user) {
-            Session::flash('error', 'Incorrect username or password.');
+            if (Auth::isDeactivated($username, $password)) {
+                Session::flash('error', 'This account has been deactivated. Contact your administrator.');
+            } else {
+                Session::flash('error', 'Incorrect username or password.');
+            }
             header('Location: ' . url('login'));
             exit;
         }

@@ -4,7 +4,7 @@
     margin: 0 auto;
 }
 
-/* ---- Header ---- */
+/* Header */
 .project-overview__header {
     position: relative;
     margin-bottom: var(--space-lg);
@@ -57,6 +57,46 @@
     gap: 6px;
 }
 .project-overview__meta svg { width: 16px; height: 16px; }
+
+/* Small per-project stats row */
+.project-overview__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+.project-stat-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.project-stat-card__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.project-stat-card__icon svg { width: 18px; height: 18px; }
+.project-stat-card__value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--color-text);
+}
+.project-stat-card__label {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    font-weight: 600;
+}
+
+@media (max-width: 700px) {
+    .project-overview__stats { grid-template-columns: repeat(2, 1fr); }
+}
 
 /* ---- Workflow section ---- */
 .project-overview__workflow-header {
@@ -272,7 +312,6 @@
     color: var(--color-text-muted);
     min-width: 0;
 }
-
 .task-card__depends svg { width: 13px; height: 13px; flex-shrink: 0; }
 .task-card__depends-text {
     overflow: hidden;
@@ -305,7 +344,6 @@
     border: 2px solid var(--color-white);
     margin-left: -8px;
 }
-
 .task-card__unassigned {
     font-size: 0.78rem;
     color: var(--color-text-muted);

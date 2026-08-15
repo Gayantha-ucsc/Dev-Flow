@@ -62,7 +62,7 @@ class ProjectController extends Controller {
             [
                 'pageTitle'     => $project['name'],
                 'currentUser'   => $user,
-                'currentRoute'  => '/projects',
+                'currentRoute'  => '/projects/' . $id,
                 'unreadCount'   => $notifications['unreadCount'],
                 'notifications' => $notifications['items'],
                 'project'       => $project,

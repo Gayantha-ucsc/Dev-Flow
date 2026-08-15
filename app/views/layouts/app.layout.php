@@ -31,6 +31,7 @@
     <script src="<?= url('assets/js/team.js') ?>" defer></script>
     <script src="<?= url('assets/js/project-overview.js') ?>" defer></script>
     <script src="<?= url('assets/js/settings.js') ?>" defer></script>
+    <script src="<?= url('assets/js/navbar.js') ?>" defer></script>
 
 </head>
 <body>

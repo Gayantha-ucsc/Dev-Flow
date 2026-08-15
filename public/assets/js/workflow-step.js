@@ -4,7 +4,7 @@
     let nextStageId = 1;
     let draggedIndex = null;
 
-    // ---------- Template selection ----------
+    // Template selection 
 
     document.querySelectorAll('[data-template-radio]').forEach(radio => {
         radio.addEventListener('change', function () {
@@ -82,18 +82,18 @@
     };
 
     // ---------- Stage list rendering + editing ----------
-    const listEl = document.querySelector('[data-stage-list]');
+    const listEl = document.querySelector('[data-wizard-stage-list]');
 
     function renderStages() {
         listEl.innerHTML = stages.map((s, i) => `
-            <div class="stage-row" draggable="true" data-stage-id="${s.id}">
-                <span class="stage-row__grip">${window.WIZARD_ICONS.grip}</span>
-                <span class="stage-row__badge">${i + 1}</span>
-                <span class="stage-row__name" data-name-display>${escapeHtml(s.name)}</span>
-                <input type="text" class="stage-row__name-input" data-name-input value="${escapeHtml(s.name)}" draggable="false" hidden>
-                <span class="stage-row__actions">
-                    <button type="button" class="stage-row__action" data-edit-stage draggable="false">${window.WIZARD_ICONS.pencil}</button>
-                    <button type="button" class="stage-row__action stage-row__action--danger" data-delete-stage draggable="false">${window.WIZARD_ICONS.trash}</button>
+            <div class="wizard-stage-row" draggable="true" data-stage-id="${s.id}">
+                <span class="wizard-stage-row__grip">${window.WIZARD_ICONS.grip}</span>
+                <span class="wizard-stage-row__badge">${i + 1}</span>
+                <span class="wizard-stage-row__name" data-name-display>${escapeHtml(s.name)}</span>
+                <input type="text" class="wizard-stage-row__name-input" data-name-input value="${escapeHtml(s.name)}" draggable="false" hidden>
+                <span class="wizard-stage-row__actions">
+                    <button type="button" class="wizard-stage-row__action" data-edit-stage draggable="false">${window.WIZARD_ICONS.pencil}</button>
+                    <button type="button" class="wizard-stage-row__action wizard-stage-row__action--danger" data-delete-stage draggable="false">${window.WIZARD_ICONS.trash}</button>
                 </span>
             </div>
         `).join('');
@@ -107,14 +107,14 @@
     }
 
     function updateStageBadges() {
-        listEl.querySelectorAll('.stage-row').forEach((row, i) => {
-            const badge = row.querySelector('.stage-row__badge');
+        listEl.querySelectorAll('.wizard-stage-row').forEach((row, i) => {
+            const badge = row.querySelector('.wizard-stage-row__badge');
             if (badge) badge.textContent = i + 1;
         });
     }
 
     function attachRowHandlers() {
-        listEl.querySelectorAll('.stage-row').forEach(row => {
+        listEl.querySelectorAll('.wizard-stage-row').forEach(row => {
             const id = parseInt(row.dataset.stageId, 10);
 
             // Edit
@@ -143,9 +143,6 @@
                 const moved = stages.splice(draggedIndex, 1)[0];
                 stages.splice(overIndex, 0, moved);
 
-                // Move the existing row nodes instead of rebuilding the list, so the
-                // node currently mid-drag (and its dragend listener) never gets
-                // replaced — that's what left rows stuck grayed out before.
                 const draggedRow = listEl.querySelector(`[data-stage-id="${moved.id}"]`);
                 const rows = Array.from(listEl.children);
                 const targetRow = rows[overIndex];

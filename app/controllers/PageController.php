@@ -3,51 +3,25 @@
 
 class PageController extends Controller {
 
-    private function mockContext(string $currentRoute, string $pageTitle): array {
-        $user           = require __DIR__ . '/../../config/mock/users.php';
-        $projectContext = currentProjectContext();
-        $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
-
-        return array_merge(
-            [
-                'pageTitle'    => $pageTitle,
-                'currentUser'  => $user,
-                'currentRoute' => $currentRoute,
-                'unreadCount'  => $notifications['unreadCount'],
-                'notifications' => $notifications['items'],
-            ],
-            $projectContext
-        );
-    }
-
     public function tasks(): void {
-        $this->render('pages/placeholder', array_merge(
-            $this->mockContext('/tasks', 'Tasks'), ['heading' => 'Tasks']
-        ));
+        $this->render('pages/placeholder', mockPageContext('/tasks', 'Tasks', ['heading' => 'Tasks']));
     }
     public function review(): void {
-        $this->render('pages/placeholder', array_merge(
-            $this->mockContext('/review', 'Review & Approval'), ['heading' => 'Review & Approval']
-        ));
+        $this->render('pages/placeholder', mockPageContext('/review', 'Review & Approval', ['heading' => 'Review & Approval']));
     }
     public function chat(): void {
-        $this->render('pages/placeholder', array_merge(
-            $this->mockContext('/chat', 'Chat'), ['heading' => 'Chat']
-        ));
+        $this->render('pages/placeholder', mockPageContext('/chat', 'Chat', ['heading' => 'Chat']));
     }
     public function reports(): void {
-        $this->render('pages/placeholder', array_merge(
-            $this->mockContext('/reports', 'Reports & Monitoring'), ['heading' => 'Reports & Monitoring']
-        ));
+        $this->render('pages/placeholder', mockPageContext('/reports', 'Reports & Monitoring', ['heading' => 'Reports & Monitoring']));
     }
     public function payment(): void {
-        $this->render('pages/placeholder', array_merge(
-            $this->mockContext('/payment', 'Payment'), ['heading' => 'Payment']
-        ));
+        $this->render('pages/placeholder', mockPageContext('/payment', 'Payment', ['heading' => 'Payment']));
     }
     public function notifications(): void {
-        $this->render('pages/placeholder', array_merge(
-            $this->mockContext('/notifications', 'Notifications'), ['heading' => 'Notifications']
-        ));
+        $this->render('pages/placeholder', mockPageContext('/notifications', 'Notifications', ['heading' => 'Notifications']));
+    }
+    public function clientPortalReviews(): void {
+        $this->render('pages/placeholder', mockPageContext('/client-portal/reviews', 'Approvals', ['heading' => 'Approvals']));
     }
 }

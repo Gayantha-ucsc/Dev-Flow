@@ -21,13 +21,36 @@
 
         <div class="project-overview__meta">
             <span><?= renderIcon('calendar') ?> Deadline: <?= htmlspecialchars(date('M j, Y', strtotime($project['deadline']))) ?></span>
-            <span><?= renderIcon('loader-circle') ?> <?= (int) $project['percent'] ?>% Complete</span>
+        </div>
+    </div>
+
+    <div class="project-overview__stats">
+        <div class="project-stat-card">
+            <span class="project-stat-card__icon badge--primary"><?= renderIcon('loader-circle') ?></span>
+            <span class="project-stat-card__value"><?= (int) $project['percent'] ?>%</span>
+            <span class="project-stat-card__label">Progress</span>
+        </div>
+        <div class="project-stat-card">
+            <span class="project-stat-card__icon badge--pink"><?= renderIcon('ban') ?></span>
+            <span class="project-stat-card__value"><?= (int) $project['blockedCount'] ?></span>
+            <span class="project-stat-card__label">Blocked</span>
+        </div>
+        <div class="project-stat-card">
+            <span class="project-stat-card__icon badge--danger"><?= renderIcon('circle-alert') ?></span>
+            <span class="project-stat-card__value"><?= (int) $project['overdueCount'] ?></span>
+            <span class="project-stat-card__label">Overdue</span>
+        </div>
+        <div class="project-stat-card">
+            <span class="project-stat-card__icon badge--warning"><?= renderIcon('clock') ?></span>
+            <span class="project-stat-card__value"><?= (int) $project['pendingCount'] ?></span>
+            <span class="project-stat-card__label">Pending Approvals</span>
         </div>
     </div>
 
     <div class="project-overview__workflow">
         <div class="project-overview__workflow-header">
             <h2>Project Workflow</h2>
+            <!-- Stage CRUD isn't wired up yet -->
             <button type="button" class="btn-add-stage"><?= renderIcon('plus') ?> Add Stage</button>
         </div>
 
@@ -150,6 +173,7 @@
                                     </div>
                                 <?php endforeach; ?>
 
+                                <!-- Task creation isn't wired up yet -->
                                 <div class="task-card task-card--add">
                                     <?= renderIcon('plus') ?>
                                     <span>Add Task</span>

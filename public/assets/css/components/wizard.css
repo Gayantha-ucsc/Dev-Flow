@@ -37,6 +37,8 @@
 .wizard-step.is-active .wizard-step__label { color: var(--color-text); }
 .wizard-step__line { flex: 1; height: 2px; background: var(--color-border); margin: 0 var(--space-sm); margin-bottom: 18px; }
 
+/* Body — this is the flex item that actually scrolls, sized by whatever
+   space remains after the header and footer, never a fixed vh number */
 .wizard-body {
     padding: var(--space-md) var(--space-lg);
     flex: 1;
@@ -49,6 +51,8 @@
 .wizard-subtext { color: var(--color-text-muted); margin: 0 0 var(--space-md); font-size: 0.9rem; }
 .wizard-placeholder { color: var(--color-text-muted); text-align: center; padding: 60px 0; }
 
+/* Step 2 (Workflow) fills the full body height so its arrange sub-phase can
+   give the stage list its own internal scroll region below. */
 .wizard-panel[data-panel-index="2"].is-active {
     display: flex;
     flex-direction: column;
@@ -56,14 +60,17 @@
     min-height: 0;
 }
 
+/* Workflow sub-phases — only one shows at a time */
 .workflow-phase { display: none; min-height: 0; }
 .workflow-phase.is-active { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 
+/* Arrange sub-phase: header text stays put, the stage list scrolls in its
+   own region, and the "+ Add Stage" button stays pinned below the list. */
 .workflow-phase[data-phase="arrange"] h3,
 .workflow-phase[data-phase="arrange"] .wizard-subtext {
     flex-shrink: 0;
 }
-.workflow-phase[data-phase="arrange"] .stage-list {
+.workflow-phase[data-phase="arrange"] .wizard-stage-list {
     flex: 1;
     overflow-y: auto;
     min-height: 60px;
@@ -181,42 +188,42 @@
 }
 
 /* Stage list */
-.stage-list { display: flex; flex-direction: column; gap: var(--space-xs); padding-bottom: 4px; }
+.wizard-stage-list { display: flex; flex-direction: column; gap: var(--space-xs); padding-bottom: 4px; }
 
-.stage-row {
+.wizard-stage-row {
     display: flex; align-items: center; gap: var(--space-sm);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     padding: 8px var(--space-sm);
     background: var(--color-white);
 }
-.stage-row.is-dragging { opacity: 0.4; }
+.wizard-stage-row.is-dragging { opacity: 0.4; }
 
-.stage-row__grip { color: var(--color-text-muted); cursor: grab; display: flex; }
-.stage-row__grip svg { width: 16px; height: 16px; }
-.stage-row__badge {
+.wizard-stage-row__grip { color: var(--color-text-muted); cursor: grab; display: flex; }
+.wizard-stage-row__grip svg { width: 16px; height: 16px; }
+.wizard-stage-row__badge {
     width: 24px; height: 24px; border-radius: 50%;
     background: var(--color-sidebar-bg); color: var(--color-text);
     display: flex; align-items: center; justify-content: center;
     font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
 }
-.stage-row__name { flex: 1; font-weight: 600; color: var(--color-text); font-size: 0.9rem; }
-.stage-row__name-input {
+.wizard-stage-row__name { flex: 1; font-weight: 600; color: var(--color-text); font-size: 0.9rem; }
+.wizard-stage-row__name-input {
     flex: 1; padding: 5px 8px; border: 1px solid var(--color-primary);
     border-radius: var(--radius-sm); font: inherit; font-size: 0.9rem;
 }
 
-.stage-row__actions { display: flex; gap: 2px; opacity: 0; transition: opacity 0.15s ease; }
-.stage-row:hover .stage-row__actions { opacity: 1; }
-.stage-row__action {
+.wizard-stage-row__actions { display: flex; gap: 2px; opacity: 0; transition: opacity 0.15s ease; }
+.wizard-stage-row:hover .wizard-stage-row__actions { opacity: 1; }
+.wizard-stage-row__action {
     background: none; border: none; cursor: pointer;
     width: 26px; height: 26px; border-radius: var(--radius-sm);
     display: flex; align-items: center; justify-content: center;
     color: var(--color-text-muted);
 }
-.stage-row__action svg { width: 14px; height: 14px; }
-.stage-row__action:hover { background: var(--color-sidebar-bg); }
-.stage-row__action--danger:hover { background: rgba(192, 57, 43, 0.1); color: var(--color-danger); }
+.wizard-stage-row__action svg { width: 14px; height: 14px; }
+.wizard-stage-row__action:hover { background: var(--color-sidebar-bg); }
+.wizard-stage-row__action--danger:hover { background: rgba(192, 57, 43, 0.1); color: var(--color-danger); }
 
 .stage-add-btn {
     width: 100%; box-sizing: border-box;

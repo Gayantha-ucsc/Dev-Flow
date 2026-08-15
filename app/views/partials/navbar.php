@@ -6,14 +6,21 @@
 // $currentUser      = ['name' => 'User One', 'profile_picture' => null]
 // $unreadCount      = 3
 ?>
+
+<?php
+$nonProjectRoutes = ['/dashboard', '/projects', '/settings'];
+$isProjectScopedPage = !in_array($currentRoute ?? '', $nonProjectRoutes, true)
+    && !str_starts_with($currentRoute ?? '', '/admin');
+$showSwitcher = !empty($currentProjectId) && $isProjectScopedPage;
+?>
 <header class="navbar">
     <!-- Project Switcher -->
     <div class="navbar-left">
-        <?php if (!empty($currentProjectId)): ?>
+        <?php if ($showSwitcher): ?>
             <?php $projectNames = array_column($userProjects ?? [], 'name', 'project_id'); ?>
             <?php $currentProjectName = $projectNames[$currentProjectId] ?? 'Select Project'; ?>
 
-            <div class="dropdown" data-dropdown>
+            <div class="dropdown" data-dropdown data-project-switcher>
                 <button class="project-switcher" data-dropdown-trigger>
                     <span><?= htmlspecialchars($currentProjectName) ?></span>
                     <!-- TODO: make the svg images assets -->
@@ -22,13 +29,23 @@
                     </svg>
                 </button>
 
-                <div class="dropdown__menu" data-dropdown-menu>
+                <div class="dropdown__menu dropdown__menu--project-switcher" data-dropdown-menu>
+                    <?php if (count($userProjects ?? []) > 5): ?>
+                        <div class="project-switcher-search">
+                            <?= renderIcon('search') ?>
+                            <input type="text" placeholder="Search projects..." data-project-search aria-label="Search projects">
+                        </div>
+                    <?php endif; ?>
+
                     <?php foreach (($userProjects ?? []) as $project): ?>
                         <a href="<?= url('/projects/' . (int)$project['project_id']) ?>"
-                        class="dropdown__item <?= $project['project_id'] === ($currentProjectId ?? null) ? 'is-active' : '' ?>">
+                        class="dropdown__item <?= $project['project_id'] === ($currentProjectId ?? null) ? 'is-active' : '' ?>"
+                        data-name="<?= htmlspecialchars(strtolower($project['name'])) ?>">
                         <?= htmlspecialchars($project['name']) ?>
                         </a>
                     <?php endforeach; ?>
+
+                    <p class="project-switcher-empty" data-project-search-empty hidden>No projects match your search.</p>
                 </div>
             </div>
 
