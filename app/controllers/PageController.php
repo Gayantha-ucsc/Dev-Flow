@@ -45,19 +45,9 @@ class PageController extends Controller {
             $this->mockContext('/payment', 'Payment'), ['heading' => 'Payment']
         ));
     }
-    public function settings(): void {
-        $this->render('pages/placeholder', array_merge(
-            $this->mockContext('/settings', 'Settings'), ['heading' => 'Settings']
-        ));
-    }
     public function notifications(): void {
         $this->render('pages/placeholder', array_merge(
             $this->mockContext('/notifications', 'Notifications'), ['heading' => 'Notifications']
-        ));
-    }
-    public function profile(): void {
-        $this->render('pages/placeholder', array_merge(
-            $this->mockContext('/profile', 'Profile'), ['heading' => 'Profile']
         ));
     }
 }

@@ -115,8 +115,20 @@ function avatarColorClass(string $seed): string {
     return $palette[crc32($seed) % count($palette)];
 }
 
-// @param array $tasks One stage's task list (each with 'name' and 'dependsOn' => string[] of task names).
-// @return array[] Ordered list of columns; each column is a list of tasks (in original order) that should be stacked vertically.
+function initials(string $name): string {
+    $name = trim($name);
+    if ($name === '') {
+        return '';
+    }
+
+    $first = substr($name, 0, 1);
+    $lastWord = strrchr($name, ' ');
+    $last = $lastWord !== false ? substr($lastWord, 1, 1) : '';
+
+    return strtoupper($first . $last);
+}
+
+// @param array $tasks One stage's task list 
 function computeTaskColumns(array $tasks): array {
     $namesInStage = [];
     foreach ($tasks as $task) {

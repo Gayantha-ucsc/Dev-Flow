@@ -37,8 +37,6 @@
 .wizard-step.is-active .wizard-step__label { color: var(--color-text); }
 .wizard-step__line { flex: 1; height: 2px; background: var(--color-border); margin: 0 var(--space-sm); margin-bottom: 18px; }
 
-/* Body — this is the flex item that actually scrolls, sized by whatever
-   space remains after the header and footer, never a fixed vh number */
 .wizard-body {
     padding: var(--space-md) var(--space-lg);
     flex: 1;
@@ -51,8 +49,6 @@
 .wizard-subtext { color: var(--color-text-muted); margin: 0 0 var(--space-md); font-size: 0.9rem; }
 .wizard-placeholder { color: var(--color-text-muted); text-align: center; padding: 60px 0; }
 
-/* Step 2 (Workflow) fills the full body height so its arrange sub-phase can
-   give the stage list its own internal scroll region below. */
 .wizard-panel[data-panel-index="2"].is-active {
     display: flex;
     flex-direction: column;
@@ -60,12 +56,9 @@
     min-height: 0;
 }
 
-/* Workflow sub-phases — only one shows at a time */
 .workflow-phase { display: none; min-height: 0; }
 .workflow-phase.is-active { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 
-/* Arrange sub-phase: header text stays put, the stage list scrolls in its
-   own region, and the "+ Add Stage" button stays pinned below the list. */
 .workflow-phase[data-phase="arrange"] h3,
 .workflow-phase[data-phase="arrange"] .wizard-subtext {
     flex-shrink: 0;
@@ -85,6 +78,8 @@
 .required { color: var(--color-danger); }
 
 .form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
 .form-group textarea {
     width: 100%; box-sizing: border-box;
     padding: 10px 12px;
@@ -97,6 +92,7 @@
 }
 .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--color-primary); }
 .form-group textarea { resize: vertical; min-height: 70px; }
+.form-group input:disabled { color: var(--color-text-muted); cursor: not-allowed; }
 
 .field-error { display: none; color: var(--color-danger); font-size: 0.78rem; margin-top: 4px; }
 .field-error.is-visible { display: block; }
