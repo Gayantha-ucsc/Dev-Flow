@@ -127,3 +127,136 @@ function avatarColorClass(string $seed): string {
     $palette = ['primary', 'pink', 'success', 'warning', 'danger', 'neutral'];
     return $palette[crc32($seed) % count($palette)];
 }
+
+function projectHasTeamLead(array $members): bool {
+    foreach ($members as $member) {
+        if (in_array('team_lead', $member['roles'] ?? [], true)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function qualifyingApproverLabel(string $requestedByRole): string {
+    return match ($requestedByRole) {
+        'manager'   => 'Team Lead',
+        'team_lead' => 'Manager',
+        default     => 'Project Lead',
+    };
+}
+
+function taskStatusTone(string $status): string {
+    return match ($status) {
+        'not_started'     => 'neutral',
+        'in_progress'     => 'primary',
+        'blocked'         => 'danger',
+        'pending_review'  => 'warning',
+        'completed'       => 'success',
+        default           => 'neutral',
+    };
+}
+
+function taskStatusLabel(string $status): string {
+    return match ($status) {
+        'not_started'     => 'Not Started',
+        'in_progress'     => 'In Progress',
+        'blocked'         => 'Blocked',
+        'pending_review'  => 'Pending Review',
+        'completed'       => 'Completed',
+        default           => ucfirst(str_replace('_', ' ', $status)),
+    };
+}
+
+function taskPriorityTone(string $priority): string {
+    return match ($priority) {
+        'high'   => 'danger',
+        'medium' => 'warning',
+        'low'    => 'neutral',
+        default  => 'neutral',
+    };
+}
+
+/**
+ * Task UI permissions — single source for backend role checks later.
+ * Views wrap sections with data-task-perm keys matching these flags.
+ */
+function taskPermissions(?string $activeRole, array $currentUser = [], ?array $task = null): array {
+    $isLead = in_array($activeRole, ['manager', 'team_lead'], true);
+    $isContributor = in_array($activeRole, ['developer', 'designer'], true);
+
+    $isAssignee = false;
+    if ($task && !empty($task['assignees'])) {
+        foreach ($task['assignees'] as $a) {
+            if (($a['user_id'] ?? null) === ($currentUser['user_id'] ?? null)) {
+                $isAssignee = true;
+                break;
+            }
+        }
+    }
+
+    return [
+        'canCreateTask'         => $isLead,
+        'canEditTask'           => $isLead,
+        'canDeleteTask'         => $isLead,
+        'canAssign'             => $isLead,
+        'canManageDependencies' => $isLead,
+        'canSetAnyStatus'       => $isLead,
+        'canUpdateStatus'       => $isLead || $isContributor,
+        'canAddProgressNote'    => $isLead || $isContributor,
+        'canComment'            => $isLead || $isContributor,
+        'canViewRevisions'      => true,
+        'canManageRevisions'    => $isLead,
+        'canSubmitRevision'     => $isLead || $isContributor,
+        'isAssignee'            => $isAssignee,
+        'roleLabel'             => memberRoleLabel($activeRole ?? 'member'),
+    ];
+}
+
+/** UI milestone: show all task sections while backend wiring is pending. */
+function taskPermissionsUiDemo(array $perms): array {
+    foreach (array_keys($perms) as $key) {
+        if ($key === 'roleLabel' || $key === 'isAssignee') {
+            continue;
+        }
+        if (is_bool($perms[$key])) {
+            $perms[$key] = true;
+        }
+    }
+    return $perms;
+}
+
+/** UI milestone: show all chat sections while backend wiring is pending. */
+function chatPermissionsUiDemo(array $perms): array {
+    foreach (array_keys($perms) as $key) {
+        if ($key === 'roleLabel') {
+            continue;
+        }
+        if (is_bool($perms[$key])) {
+            $perms[$key] = true;
+        }
+    }
+    return $perms;
+}
+
+/**
+ * Chat UI permissions — wrap sections with data-chat-perm keys for backend.
+ */
+function chatPermissions(?string $activeRole, bool $hasApprovedClientAccess = false): array {
+    $isLead = in_array($activeRole, ['manager', 'team_lead'], true);
+    $isContributor = in_array($activeRole, ['developer', 'designer'], true);
+    $isClient = $activeRole === 'client';
+
+    return [
+        'canViewProjectChat'      => $isLead || $isContributor || $isClient,
+        'canPostProjectChat'      => $isLead || $isContributor,
+        'canViewStageChat'        => $isLead || $isContributor,
+        'canPostStageChat'        => $isLead || $isContributor,
+        'canViewTaskChat'         => $isLead || $isContributor,
+        'canPostTaskChat'         => $isLead || $isContributor,
+        'canViewClientChat'       => $isLead || $isClient || $hasApprovedClientAccess,
+        'canPostClientChat'       => $isLead || $isClient || $hasApprovedClientAccess,
+        'canRequestClientAccess'  => $isContributor,
+        'canApproveClientAccess'  => $isLead,
+        'roleLabel'               => memberRoleLabel($activeRole ?? 'member'),
+    ];
+}

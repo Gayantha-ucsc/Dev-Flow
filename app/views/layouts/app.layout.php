@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="<?= url('assets/css/projects.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/project-detail.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/team.css') ?>">
+    <link rel="stylesheet" href="<?= url('assets/css/task.css') ?>">
+    <link rel="stylesheet" href="<?= url('assets/css/chat.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/modal.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/wizard.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/datepicker.css') ?>">
@@ -28,6 +30,8 @@
     <script src="<?= url('assets/js/wizard.js') ?>"></script>
     <script src="<?= url('assets/js/projects.js') ?>"></script>
     <script src="<?= url('assets/js/team.js') ?>"></script>
+    <script src="<?= url('assets/js/task.js') ?>"></script>
+    <script src="<?= url('assets/js/chat.js') ?>"></script>
 
 </head>
 <body>

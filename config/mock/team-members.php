@@ -152,6 +152,14 @@ return [
                 'roles' => ['client'], 
                 'status' => 'active', 
                 'joinedAt' => '2026-01-25'
+            ],
+            [
+                'user_id' => 31,
+                'name' => 'User Thirty-One',
+                'email' => 'user_31@gmail.com',
+                'roles' => ['client'],
+                'status' => 'active',
+                'joinedAt' => '2026-02-01'
             ]
         ],
         'pendingApprovals' => [
