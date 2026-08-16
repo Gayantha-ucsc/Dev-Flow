@@ -54,6 +54,12 @@ class ProjectController extends Controller {
         }
         unset($stage);
 
+        $teamData = require __DIR__ . '/../../config/mock/team-members.php';
+        $members  = array_values(array_filter(
+            $teamData[$id]['members'] ?? [],
+            fn($m) => $m['status'] === 'active'
+        ));
+
         $user           = require __DIR__ . '/../../config/mock/users.php';
         $projectContext = currentProjectContext();
         $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
@@ -67,6 +73,7 @@ class ProjectController extends Controller {
                 'notifications' => $notifications['items'],
                 'project'       => $project,
                 'stages'        => $stages,
+                'members'       => $members,
             ],
             $projectContext
         );

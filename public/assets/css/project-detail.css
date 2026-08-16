@@ -58,44 +58,139 @@
 }
 .project-overview__meta svg { width: 16px; height: 16px; }
 
-/* Small per-project stats row */
-.project-overview__stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-md);
-    margin-bottom: var(--space-lg);
-}
-.project-stat-card {
-    background: var(--color-white);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    padding: var(--space-md);
+/* Team row (avatars under the meta line) */
+.project-overview__team {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    align-items: center;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
 }
-.project-stat-card__icon {
+.project-overview__team-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+}
+.avatar-stack { display: flex; align-items: center; }
+.avatar--stacked {
+    margin-right: -10px;
+    border: 2px solid var(--color-bg);
+}
+.avatar--overflow {
     width: 36px;
     height: 36px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-.project-stat-card__icon svg { width: 18px; height: 18px; }
-.project-stat-card__value {
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: var(--color-text);
-}
-.project-stat-card__label {
     font-size: 0.8rem;
-    color: var(--color-text-muted);
-    font-weight: 600;
+    font-weight: 700;
+    background: var(--color-tint-3);
+    color: var(--color-text);
+    border: 2px solid var(--color-bg);
 }
 
+/* Pipeline card: segmented stage progress bar + at-a-glance pills */
+.project-pipeline {
+    padding: var(--space-lg);
+    margin-bottom: var(--space-md);
+}
+.project-pipeline__track {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+.project-pipeline__segment {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+.project-pipeline__label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.project-pipeline__track-bg {
+    height: 8px;
+    border-radius: var(--radius-pill);
+    background: var(--color-tint-1);
+    overflow: hidden;
+}
+.project-pipeline__fill {
+    height: 100%;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary);
+}
+.project-pipeline__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+.pill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+}
+
+/* Payment milestones summary card */
+.project-payment-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    margin-bottom: var(--space-lg);
+    text-decoration: none;
+}
+.project-payment-card:hover { background: var(--color-sidebar-bg); }
+.project-payment-card__icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+    background: var(--color-sidebar-bg);
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.project-payment-card__icon svg { width: 20px; height: 20px; }
+.project-payment-card__body { flex: 1; min-width: 0; }
+.project-payment-card__label {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 6px;
+}
+.project-payment-card__bar {
+    width: 160px;
+    height: 6px;
+    border-radius: var(--radius-pill);
+    background: var(--color-tint-1);
+    overflow: hidden;
+}
+.project-payment-card__bar-fill {
+    height: 100%;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary);
+}
+.project-payment-card__chevron {
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+    display: flex;
+}
+.project-payment-card__chevron svg { width: 18px; height: 18px; }
+
 @media (max-width: 700px) {
-    .project-overview__stats { grid-template-columns: repeat(2, 1fr); }
+    .project-pipeline__track { flex-wrap: wrap; }
+    .project-pipeline__segment { min-width: 40%; }
 }
 
 /* ---- Workflow section ---- */

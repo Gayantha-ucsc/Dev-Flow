@@ -27,6 +27,15 @@ function iconJson(string $name): string {
     return json_encode(renderIcon($name));
 }
 
+function projectStatusLabel(string $status): string {
+    return match ($status) {
+        'active'   => 'In progress',
+        'archived' => 'Archived',
+        'closed'   => 'Delivered',
+        default    => ucfirst($status),
+    };
+}
+
 function projectStatusTone(string $status): string {
     return match ($status) {
         'active'   => 'primary',

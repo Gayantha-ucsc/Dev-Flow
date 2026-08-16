@@ -20,32 +20,72 @@
         <p class="project-overview__description"><?= htmlspecialchars($project['description']) ?></p>
 
         <div class="project-overview__meta">
-            <span><?= renderIcon('calendar') ?> Deadline: <?= htmlspecialchars(date('M j, Y', strtotime($project['deadline']))) ?></span>
+            <span><?= renderIcon('calendar') ?> <?= htmlspecialchars(date('M j, Y', strtotime($project['deadline']))) ?></span>
+            <span><?= renderIcon('trending-up') ?> <?= htmlspecialchars(projectStatusLabel($project['status'])) ?> &mdash; <?= (int) $project['percent'] ?>% complete</span>
+        </div>
+
+        <?php if (!empty($members)): ?>
+            <div class="project-overview__team">
+                <span class="project-overview__team-label">Team</span>
+                <div class="avatar-stack">
+                    <?php foreach (array_slice($members, 0, 4) as $member): ?>
+                        <span class="avatar avatar--stacked avatar--<?= avatarColorClass($member['name']) ?>" title="<?= htmlspecialchars($member['name']) ?>">
+                            <?= htmlspecialchars(initials($member['name'])) ?>
+                        </span>
+                    <?php endforeach; ?>
+                    <?php $extraMembers = count($members) - 4; ?>
+                    <?php if ($extraMembers > 0): ?>
+                        <span class="avatar avatar--stacked avatar--overflow">+<?= $extraMembers ?></span>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <div class="project-pipeline card">
+        <div class="project-pipeline__track">
+            <?php foreach ($stages as $stage):
+                $fraction = $stage['tasksTotal'] > 0 ? $stage['tasksApproved'] / $stage['tasksTotal'] : 0;
+                $fillPct  = match (true) {
+                    $stage['status'] === 'completed' => 100,
+                    in_array($stage['status'], ['in_progress', 'pending_completion'], true) => round($fraction * 100),
+                    default => 0,
+                };
+            ?>
+                <div class="project-pipeline__segment">
+                    <span class="project-pipeline__label"><?= htmlspecialchars($stage['name']) ?></span>
+                    <div class="project-pipeline__track-bg">
+                        <div class="project-pipeline__fill" style="width: <?= $fillPct ?>%"></div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <div class="project-pipeline__pills">
+            <span class="badge badge--outline badge--neutral">
+                <span class="pill-dot"></span> <?= (int) $project['blockedCount'] ?> Blocked
+            </span>
+            <span class="badge badge--outline <?= $project['overdueCount'] > 0 ? 'badge--danger' : 'badge--neutral' ?>">
+                <span class="pill-dot"></span> <?= (int) $project['overdueCount'] ?> Overdue
+            </span>
+            <span class="badge badge--outline <?= $project['pendingCount'] > 0 ? 'badge--pink' : 'badge--neutral' ?>">
+                <span class="pill-dot"></span> <?= (int) $project['pendingCount'] ?> Pending Approvals
+            </span>
         </div>
     </div>
 
-    <div class="project-overview__stats">
-        <div class="project-stat-card">
-            <span class="project-stat-card__icon badge--primary"><?= renderIcon('loader-circle') ?></span>
-            <span class="project-stat-card__value"><?= (int) $project['percent'] ?>%</span>
-            <span class="project-stat-card__label">Progress</span>
-        </div>
-        <div class="project-stat-card">
-            <span class="project-stat-card__icon badge--pink"><?= renderIcon('ban') ?></span>
-            <span class="project-stat-card__value"><?= (int) $project['blockedCount'] ?></span>
-            <span class="project-stat-card__label">Blocked</span>
-        </div>
-        <div class="project-stat-card">
-            <span class="project-stat-card__icon badge--danger"><?= renderIcon('circle-alert') ?></span>
-            <span class="project-stat-card__value"><?= (int) $project['overdueCount'] ?></span>
-            <span class="project-stat-card__label">Overdue</span>
-        </div>
-        <div class="project-stat-card">
-            <span class="project-stat-card__icon badge--warning"><?= renderIcon('clock') ?></span>
-            <span class="project-stat-card__value"><?= (int) $project['pendingCount'] ?></span>
-            <span class="project-stat-card__label">Pending Approvals</span>
-        </div>
-    </div>
+    <?php if (($project['milestonesTotal'] ?? 0) > 0): ?>
+        <a href="<?= url('/payment') ?>" class="project-payment-card card">
+            <span class="project-payment-card__icon"><?= renderIcon('payment') ?></span>
+            <div class="project-payment-card__body">
+                <span class="project-payment-card__label"><?= (int) $project['milestonesPaid'] ?>/<?= (int) $project['milestonesTotal'] ?> milestones paid</span>
+                <div class="project-payment-card__bar">
+                    <div class="project-payment-card__bar-fill" style="width: <?= round(($project['milestonesPaid'] / $project['milestonesTotal']) * 100) ?>%"></div>
+                </div>
+            </div>
+            <span class="project-payment-card__chevron"><?= renderIcon('chevron-right') ?></span>
+        </a>
+    <?php endif; ?>
 
     <div class="project-overview__workflow">
         <div class="project-overview__workflow-header">
