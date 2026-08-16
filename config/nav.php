@@ -5,21 +5,9 @@
 return [
     'project' => [
         [
-            'label' => 'Project Overview',
-            'icon'  => 'folder',
-            'href'  => '/projects/{id}',
-            'roles' => ['manager', 'team_lead', 'developer', 'designer'],
-        ],
-        [
             'label' => 'Team & Roles',
             'icon'  => 'team',
             'href'  => '/team',
-            'roles' => ['manager', 'team_lead'],
-        ],
-        [
-            'label' => 'Workflow Stages',
-            'icon'  => 'layout-template',
-            'href'  => '/projects/{id}',
             'roles' => ['manager', 'team_lead'],
         ],
         [
@@ -48,6 +36,12 @@ return [
             'roles' => ['manager', 'team_lead', 'developer', 'designer', 'client'],
         ],
         [
+            'label' => 'Reports & Monitoring',
+            'icon'  => 'reports',
+            'href'  => '/reports',
+            'roles' => ['manager', 'team_lead'],
+        ],
+        [
             'label' => 'Payment',
             'icon'  => 'payment',
             'href'  => '/payment',
@@ -59,12 +53,6 @@ return [
             'icon'  => 'payment',
             'href'  => '/payment',
             'roles' => ['client'],
-        ],
-        [
-            'label' => 'Reports & Monitoring',
-            'icon'  => 'reports',
-            'href'  => '/reports',
-            'roles' => ['manager', 'team_lead'],
         ],
     ],
 

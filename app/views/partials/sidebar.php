@@ -52,10 +52,6 @@ if ($hasProject) {
         <div class="sidebar__spacer"></div>
 
         <div class="sidebar__footer">
-            <a href="<?= url('/dashboard') ?>" class="sidebar__nav-item">
-                <?= renderIcon('arrow-left') ?>
-                <span>Back to projects</span>
-            </a>
             <a href="<?= url('/settings') ?>" class="sidebar__nav-item">
                 <?= renderIcon('settings') ?>
                 <span>Settings</span>
@@ -69,18 +65,22 @@ if ($hasProject) {
             <span>Create a Project</span>
         </button>
 
+        <?php if ($hasProject): ?>
+            <div class="sidebar__section-label">
+                <?= htmlspecialchars(strtoupper($currentProjectName)) ?>
+            </div>
+        <?php endif; ?>
+
         <nav class="sidebar__nav">
             <a href="<?= url('/dashboard') ?>" class="sidebar__nav-item <?= $route === '/dashboard' ? 'is-active' : '' ?>">
                 <?= renderIcon('dashboard') ?>
                 <span>Dashboard</span>
             </a>
-        </nav>
-
-        <?php if ($hasProject): ?>
-            <div class="sidebar__section-label">
-                <?= htmlspecialchars(strtoupper($currentProjectName)) ?>
-            </div>
-            <nav class="sidebar__nav">
+            <a href="<?= url('/projects') ?>" class="sidebar__nav-item <?= $route === '/projects' ? 'is-active' : '' ?>">
+                <?= renderIcon('folder') ?>
+                <span>Projects</span>
+            </a>
+            <?php if ($hasProject): ?>
                 <?php foreach ($visibleProjectItems as $item): ?>
                     <a href="<?= sidebarHref($item['href'], $currentProjectId) ?>"
                        class="sidebar__nav-item <?= $route === str_replace('{id}', (string) $currentProjectId, $item['href']) ? 'is-active' : '' ?>">
@@ -88,8 +88,8 @@ if ($hasProject) {
                         <span><?= htmlspecialchars($item['label']) ?></span>
                     </a>
                 <?php endforeach; ?>
-            </nav>
-        <?php endif; ?>
+            <?php endif; ?>
+        </nav>
 
         <div class="sidebar__spacer"></div>
 
