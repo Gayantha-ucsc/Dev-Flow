@@ -69,7 +69,7 @@
                     <div class="review-card__body">
                         ${members.map(m => `
                             <div class="review-row">
-                                <span class="review-row__label">${escapeHtml(m.email)}</span>
+                                <span class="review-row__label">${escapeHtml(m.identifier)}</span>
                                 <span class="review-row__value">${roleLabel(m.role)}</span>
                             </div>
                         `).join('')}
