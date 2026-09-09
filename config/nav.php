@@ -14,7 +14,7 @@ return [
             'label' => 'Tasks',
             'icon'  => 'tasks',
             'href'  => '/tasks',
-            'roles' => ['team_lead', 'developer', 'designer'],
+            'roles' => ['team_lead', 'manager', 'developer', 'designer'],
         ],
         [
             'label' => 'Review & Approval',

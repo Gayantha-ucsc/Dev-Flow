@@ -208,6 +208,16 @@
 }
 .btn-sm--text-danger:hover { text-decoration: underline; background: none; }
 
+.btn-sm--danger-outline {
+    background: var(--color-white);
+    border: 1px solid var(--color-danger);
+    color: var(--color-danger);
+}
+.btn-sm--danger-outline:hover {
+    background: var(--color-danger-bg);
+    text-decoration: none;
+}
+
 /* ---- Recent Activity ---- */
 .activity-list {
     list-style: none;

@@ -130,6 +130,7 @@ function memberRoleTone(string $role): string {
         default     => 'neutral',
     };
 }
+
 function memberRoleLabel(string $role): string {
     return match ($role) {
         'team_lead' => 'Team Lead',
@@ -159,7 +160,7 @@ function initials(string $name): string {
     return strtoupper($first . $last);
 }
 
-// @param array $tasks One stage's task list 
+// @param array $tasks One stage's task list
 function computeTaskColumns(array $tasks): array {
     $namesInStage = [];
     foreach ($tasks as $task) {
@@ -203,4 +204,129 @@ function taskStatusMeta(string $status): array {
         'overdue'        => ['tone' => 'danger',  'icon' => 'circle-alert',   'label' => 'Overdue'],
         default          => ['tone' => 'neutral', 'icon' => null,             'label' => ucfirst($status)],
     };
+}
+
+function projectHasTeamLead(array $members): bool {
+    foreach ($members as $member) {
+        if (($member['role'] ?? null) === 'team_lead') {
+            return true;
+        }
+    }
+    return false;
+}
+
+function qualifyingApproverLabel(string $requestedByRole): string {
+    return match ($requestedByRole) {
+        'manager'   => 'Team Lead',
+        'team_lead' => 'Manager',
+        default     => 'Project Lead',
+    };
+}
+
+function taskStatusTone(string $status): string {
+    return match ($status) {
+        'not_started'     => 'neutral',
+        'in_progress'     => 'primary',
+        'blocked'         => 'danger',
+        'pending_review'  => 'warning',
+        'completed'       => 'success',
+        default           => 'neutral',
+    };
+}
+
+function taskStatusLabel(string $status): string {
+    return match ($status) {
+        'not_started'     => 'Not Started',
+        'in_progress'     => 'In Progress',
+        'blocked'         => 'Blocked',
+        'pending_review'  => 'Pending Review',
+        'completed'       => 'Completed',
+        default           => ucfirst(str_replace('_', ' ', $status)),
+    };
+}
+
+function taskPriorityTone(string $priority): string {
+    return match ($priority) {
+        'high'   => 'danger',
+        'medium' => 'warning',
+        'low'    => 'neutral',
+        default  => 'neutral',
+    };
+}
+
+function taskPermissions(?string $activeRole, array $currentUser = [], ?array $task = null): array {
+    $isLead = in_array($activeRole, ['manager', 'team_lead'], true);
+    $isContributor = in_array($activeRole, ['developer', 'designer'], true);
+
+    $isAssignee = false;
+    if ($task && !empty($task['assignees'])) {
+        foreach ($task['assignees'] as $a) {
+            if (($a['user_id'] ?? null) === ($currentUser['user_id'] ?? null)) {
+                $isAssignee = true;
+                break;
+            }
+        }
+    }
+
+    return [
+        'canCreateTask'         => $isLead,
+        'canEditTask'           => $isLead,
+        'canDeleteTask'         => $isLead,
+        'canAssign'             => $isLead,
+        'canManageDependencies' => $isLead,
+        'canSetAnyStatus'       => $isLead,
+        'canUpdateStatus'       => $isLead || $isContributor,
+        'canAddProgressNote'    => $isLead || $isContributor,
+        'canComment'            => $isLead || $isContributor,
+        'canViewRevisions'      => true,
+        'canManageRevisions'    => $isLead,
+        'canSubmitRevision'     => $isLead || $isContributor,
+        'isAssignee'            => $isAssignee,
+        'roleLabel'             => memberRoleLabel($activeRole ?? 'member'),
+    ];
+}
+
+function taskPermissionsUiDemo(array $perms): array {
+    foreach (array_keys($perms) as $key) {
+        if ($key === 'roleLabel' || $key === 'isAssignee') {
+            continue;
+        }
+        if (is_bool($perms[$key])) {
+            $perms[$key] = true;
+        }
+    }
+    return $perms;
+}
+
+function chatPermissionsUiDemo(array $perms): array {
+    foreach (array_keys($perms) as $key) {
+        if ($key === 'roleLabel') {
+            continue;
+        }
+        if (is_bool($perms[$key])) {
+            $perms[$key] = true;
+        }
+    }
+    return $perms;
+}
+
+//  Chat UI permissions
+function chatPermissions(?string $activeRole, bool $hasApprovedClientAccess = false): array {
+    $isLead = in_array($activeRole, ['manager', 'team_lead'], true);
+    $isContributor = in_array($activeRole, ['developer', 'designer'], true);
+    $isClient = $activeRole === 'client';
+
+    return [
+        'canViewProjectChat'      => $isLead || $isContributor || $isClient,
+        'canPostProjectChat'      => $isLead || $isContributor,
+        'canViewStageChat'        => $isLead || $isContributor,
+        'canPostStageChat'        => $isLead || $isContributor,
+        'canViewTaskChat'         => $isLead || $isContributor,
+        'canPostTaskChat'         => $isLead || $isContributor,
+        'canViewClientChat'       => $isLead || $isClient || $hasApprovedClientAccess,
+        'canPostClientChat'       => $isLead || $isClient || $hasApprovedClientAccess,
+        'canRequestClientAccess'  => $isContributor,
+        'canApproveClientAccess'  => $isLead,
+        'roleLabel'               => memberRoleLabel($activeRole ?? 'member'),
+    ];
 }
