@@ -1,6 +1,6 @@
 <?php
 // Expects: $members, $currentProjectName
-$projectClients = array_values(array_filter($members, fn($m) => in_array('client', $m['roles'], true)));
+$projectClients = array_values(array_filter($members, fn($m) => $m['role'] === 'client'));
 $clientCount    = count($projectClients);
 ?>
 <div class="team-page team-form-page invite-client-page">

@@ -116,7 +116,7 @@ function renderCommentThread(array $comments, ?int $parentId = null): void {
                         <p class="form-hint">Select multiple assignees for this task.</p>
                         <div class="picker-list">
                             <?php foreach ($teamMembers as $member):
-                                if (in_array('client', $member['roles'], true)) continue;
+                                if ($member['role'] === 'client') continue;
                                 $checked = in_array($member['user_id'], array_column($task['assignees'], 'user_id'), true);
                             ?>
                                 <label class="picker-item">

@@ -78,14 +78,14 @@ $prereqOptions = array_filter($tasks ?? [], fn($t) => !$isEdit || $t['id'] !== (
                     <?php
                         $selectedIds = array_column($formTask['assignees'] ?? [], 'user_id');
                         foreach ($teamMembers ?? [] as $member):
-                            if (in_array('client', $member['roles'], true)) continue;
+                            if ($member['role'] === 'client') continue;
                             $checked = in_array($member['user_id'], $selectedIds, true);
                     ?>
                         <label class="picker-item">
                             <input type="checkbox" name="assignees[]" value="<?= (int) $member['user_id'] ?>" <?= $checked ? 'checked' : '' ?>>
                             <span class="avatar avatar--<?= avatarColorClass($member['name']) ?>"><?= htmlspecialchars(strtoupper(substr($member['name'], 0, 1))) ?></span>
                             <span class="picker-item__label"><?= htmlspecialchars($member['name']) ?></span>
-                            <span class="badge badge--<?= memberRoleTone($member['roles'][0]) ?>"><?= memberRoleLabel($member['roles'][0]) ?></span>
+                            <span class="badge badge--<?= memberRoleTone($member['role']) ?>"><?= memberRoleLabel($member['role']) ?></span>
                         </label>
                     <?php endforeach; ?>
                 </div>
