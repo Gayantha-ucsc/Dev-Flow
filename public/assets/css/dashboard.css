@@ -17,7 +17,7 @@
     font-size: 1rem;
 }
 
-/* ---- Stat cards ---- */
+/* Stat cards */
 .dash-stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -95,7 +95,7 @@
 .stat-card--pink .stat-card__icon { background: var(--color-white); color: var(--color-accent-pink-text); }
 .stat-card--pink .stat-card__meta { color: var(--color-accent-pink-text); opacity: 0.85; }
 
-/* ---- Two-column: Needs Attention + Recent Activity ---- */
+/* Two-column: Needs Attention + Recent Activity */
 .dash-columns {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -103,6 +103,34 @@
     align-items: start;
     margin-bottom: var(--space-lg);
 }
+
+.dash-panel {
+    display: flex;
+    flex-direction: column;
+    height: 420px;
+    overflow: hidden;
+}
+.dash-panel .card__header { flex-shrink: 0; }
+.dash-panel .attention-list,
+.dash-panel .activity-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+.dash-panel .activity-footer { flex-shrink: 0; }
+
+.dash-panel__empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+.dash-panel__empty svg { width: 28px; height: 28px; opacity: 0.6; }
 
 .attention-list { list-style: none; margin: 0; padding: 0; }
 
@@ -254,7 +282,7 @@
 }
 .activity-footer a:hover { color: var(--color-primary); }
 
-/* ---- Your Projects ---- */
+/* Your Projects */
 .dash-projects__header {
     display: flex;
     align-items: center;

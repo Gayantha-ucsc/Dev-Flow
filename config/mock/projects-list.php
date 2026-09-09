@@ -14,6 +14,8 @@ return [
         'pendingCount' => 1,
         'overdueCount' => 2,
         'blockedCount' => 3,
+        'milestonesPaid' => 1,
+        'milestonesTotal' => 3,
     ],
     [
         'id'          => 4,
@@ -29,6 +31,8 @@ return [
         'pendingCount' => 1,
         'overdueCount' => 1,
         'blockedCount' => 0,
+        'milestonesPaid' => 0,
+        'milestonesTotal' => 2,
     ],
     [
         'id'          => 1,
@@ -44,6 +48,8 @@ return [
         'pendingCount' => 0,
         'overdueCount' => 0,
         'blockedCount' => 0,
+        'milestonesPaid' => 2,
+        'milestonesTotal' => 4,
     ],
     [
         'id'          => 3,
@@ -59,6 +65,8 @@ return [
         'pendingCount' => 1,
         'overdueCount' => 0,
         'blockedCount' => 0,
+        'milestonesPaid' => 2,
+        'milestonesTotal' => 3,
     ],
     [
         'id'          => 5,
@@ -74,6 +82,8 @@ return [
         'pendingCount' => 0,
         'overdueCount' => 0,
         'blockedCount' => 0,
+        'milestonesPaid' => 3,
+        'milestonesTotal' => 3,
     ],
     [
         'id'          => 6,
@@ -89,5 +99,7 @@ return [
         'pendingCount' => 0,
         'overdueCount' => 0,
         'blockedCount' => 0,
+        'milestonesPaid' => 2,
+        'milestonesTotal' => 2,
     ],
 ];

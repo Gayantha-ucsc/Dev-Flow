@@ -35,6 +35,7 @@
     <script src="<?= url('assets/js/settings.js') ?>" defer></script>
     <script src="<?= url('assets/js/task.js') ?>" defer></script>
     <script src="<?= url('assets/js/chat.js') ?>" defer></script>
+    <script src="<?= url('assets/js/navbar.js') ?>" defer></script>
 
 </head>
 <body>

@@ -57,7 +57,7 @@ $soloNoRequests = count($members) <= 1 && empty($pendingApprovals);
                     ?>
                     <div class="pending-item">
                         <span class="avatar avatar--<?= avatarColorClass($req['name']) ?>">
-                            <?= htmlspecialchars(strtoupper(substr($req['name'], 0, 1) . substr(strrchr($req['name'], ' ') ?: '', 1, 1))) ?>
+                            <?= htmlspecialchars(initials($req['name'])) ?>
                         </span>
                         <div class="pending-item__body">
                             <div class="pending-item__name"><?= htmlspecialchars($req['name']) ?></div>
@@ -119,7 +119,7 @@ $soloNoRequests = count($members) <= 1 && empty($pendingApprovals);
                     <tbody>
                         <?php foreach ($members as $member): ?>
                             <?php
-                                $initials = strtoupper(substr($member['name'], 0, 1) . substr(strrchr($member['name'], ' ') ?: '', 1, 1));
+                                $memberInitials = initials($member['name']);
                             ?>
                             <tr data-name="<?= htmlspecialchars(strtolower($member['name'] . ' ' . $member['email'])) ?>"
                                 data-role="<?= htmlspecialchars($member['role']) ?>"
@@ -129,7 +129,7 @@ $soloNoRequests = count($members) <= 1 && empty($pendingApprovals);
                                 data-member-role="<?= htmlspecialchars($member['role']) ?>">
                                 <td>
                                     <div class="member-cell">
-                                        <span class="avatar avatar--<?= avatarColorClass($member['name']) ?>"><?= htmlspecialchars($initials) ?></span>
+                                        <span class="avatar avatar--<?= avatarColorClass($member['name']) ?>"><?= htmlspecialchars($memberInitials) ?></span>
                                         <span class="member-cell__name">
                                             <?= htmlspecialchars($member['name']) ?>
                                             <?php if ($member['user_id'] === $currentUser['user_id']): ?>

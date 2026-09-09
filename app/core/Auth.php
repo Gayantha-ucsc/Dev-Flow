@@ -5,15 +5,16 @@ class Auth {
     public static function attempt(string $username, string $password): ?array {
         $user = User::findByUsername($username);
 
-        if (!$user || !password_verify($password, $user['password_hash'])) {
-            return null;
-        }
-
-        if (!$user['is_active']) {
+        if (!$user || !password_verify($password, $user['password_hash']) || !$user['is_active']) {
             return null;
         }
 
         return User::withoutPassword($user);
+    }
+
+    public static function isDeactivated(string $username, string $password): bool {
+        $user = User::findByUsername($username);
+        return $user && password_verify($password, $user['password_hash']) && !$user['is_active'];
     }
 
     public static function login(array $user): void {

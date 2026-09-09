@@ -44,7 +44,11 @@ class Router {
         self::$params = $params;
 
         [$controllerName, $action] = $handler;
-        require_once __DIR__ . "/../controllers/{$controllerName}.php";
+
+        $path1 = __DIR__ . "/../controllers/{$controllerName}.php";
+        $path2 = __DIR__ . "/../controllers/admin/{$controllerName}.php";
+        require_once file_exists($path1) ? $path1 : $path2;
+
         (new $controllerName())->$action();
     }
 

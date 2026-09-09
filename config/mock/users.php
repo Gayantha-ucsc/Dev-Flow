@@ -6,4 +6,5 @@ return [
     'name'            => 'User One',
     'email'           => 'user.one@example.com',
     'profile_picture' => null,
+    'is_admin'        => true,
 ];

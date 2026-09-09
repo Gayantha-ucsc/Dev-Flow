@@ -18,12 +18,20 @@ return [
         '/tasks/:id'           => ['TaskController', 'detail'],
         '/tasks/:id/edit'      => ['TaskController', 'edit'],
         '/review'              => ['PageController', 'review'],
+        '/client-portal/reviews' => ['PageController', 'clientPortalReviews'],
         '/chat'                => ['ChatController', 'index'],
         '/reports'             => ['PageController', 'reports'],
         '/payment'             => ['PageController', 'payment'],
         '/settings'            => ['ProfileController', 'settings'],
         '/notifications'       => ['PageController', 'notifications'],
         '/logout'              => ['AuthController', 'logout'],
+
+        // System Administration (Admin only, project-agnostic)
+        '/admin/users'       => ['AdminUserController', 'index'],
+        '/admin/permissions' => ['AdminPermissionController', 'index'],
+        '/admin/templates'   => ['AdminTemplateController', 'index'],
+        '/admin/settings'    => ['AdminSettingsController', 'index'],
+        '/admin/audit'       => ['AdminAuditController', 'index'],
     ],
 
     'POST' => [

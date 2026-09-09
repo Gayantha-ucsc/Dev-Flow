@@ -27,6 +27,15 @@ function iconJson(string $name): string {
     return json_encode(renderIcon($name));
 }
 
+function projectStatusLabel(string $status): string {
+    return match ($status) {
+        'active'   => 'In progress',
+        'archived' => 'Archived',
+        'closed'   => 'Delivered',
+        default    => ucfirst($status),
+    };
+}
+
 function projectStatusTone(string $status): string {
     return match ($status) {
         'active'   => 'primary',
@@ -34,6 +43,24 @@ function projectStatusTone(string $status): string {
         'closed'   => 'pink',
         default    => 'neutral',
     };
+}
+
+function mockPageContext(string $currentRoute, string $pageTitle, array $extra = []): array {
+    $user           = require __DIR__ . '/../../config/mock/users.php';
+    $projectContext = currentProjectContext();
+    $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
+
+    return array_merge(
+        [
+            'pageTitle'     => $pageTitle,
+            'currentUser'   => $user,
+            'currentRoute'  => $currentRoute,
+            'unreadCount'   => $notifications['unreadCount'],
+            'notifications' => $notifications['items'],
+        ],
+        $projectContext,
+        $extra
+    );
 }
 
 function currentProjectContext(): array {
@@ -109,6 +136,10 @@ function memberRoleLabel(string $role): string {
         'team_lead' => 'Team Lead',
         default     => ucfirst($role),
     };
+}
+
+function sidebarHref(string $href, ?int $projectId): string {
+    return url(str_replace('{id}', (string) $projectId, $href));
 }
 
 function avatarColorClass(string $seed): string {

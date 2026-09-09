@@ -110,7 +110,7 @@
                     <h3>Arrange your stages</h3>
                     <p class="wizard-subtext" data-arrange-subtext>Reorder, rename, add, or remove stages.</p>
 
-                    <div class="stage-list" data-stage-list></div>
+                    <div class="wizard-stage-list" data-wizard-stage-list></div>
 
                     <button type="button" class="stage-add-btn" data-add-stage>
                         <span><?= renderIcon('plus') ?></span>
@@ -119,7 +119,6 @@
                 </div>
             </div>
 
-            <!-- Icon + template data handed to JS once -->
             <script>
                 window.WORKFLOW_TEMPLATES = <?= json_encode($workflowTemplates) ?>;
                 window.WIZARD_ICONS = {
@@ -129,7 +128,8 @@
                     arrowLeft:      <?= iconJson('arrow-left') ?>,
                     layoutTemplate: <?= iconJson('layout-template') ?>,
                     info:           <?= iconJson('info') ?>,
-                    user:           <?= iconJson('user') ?>
+                    user:           <?= iconJson('user') ?>,
+                    x:              <?= iconJson('x') ?>
                 };
             </script>
 
@@ -139,7 +139,7 @@
                 <p class="wizard-subtext">Invite people to collaborate on this project. You can always add more later.</p>
 
                 <div class="team-add-row">
-                    <input type="email" id="team-email" class="team-add-row__input" placeholder="Enter email address">
+                    <input type="text" id="team-identifier" class="team-add-row__input" placeholder="Enter username or email" autocomplete="off">
                     <select id="team-role" class="team-add-row__select">
                         <option value="developer">Developer</option>
                         <option value="designer">Designer</option>
@@ -149,7 +149,7 @@
                         <?= renderIcon('plus') ?> <span>Add</span>
                     </button>
                 </div>
-                <span class="field-error" data-error-for="team-email"></span>
+                <span class="field-error" data-error-for="team-identifier"></span>
 
                 <div class="team-members" data-team-members-section hidden>
                     <div class="team-members__label">TEAM MEMBERS</div>

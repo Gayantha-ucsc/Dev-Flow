@@ -5,7 +5,7 @@ return [
         [
             'key'   => 'active_projects',
             'label' => 'Active Projects',
-            'value' => 6,
+            'value' => 4,
             'icon'  => 'folder',
             'tone'  => 'neutral',
             'meta'  => '+1 since last week',
@@ -13,7 +13,7 @@ return [
         [
             'key'   => 'pending_approvals',
             'label' => 'Pending Approvals',
-            'value' => 5,
+            'value' => 3,
             'icon'  => 'review',
             'tone'  => 'primary',
             'meta'  => 'Require your sign-off',
@@ -21,7 +21,7 @@ return [
         [
             'key'   => 'overdue_tasks',
             'label' => 'Overdue Tasks',
-            'value' => 4,
+            'value' => 3,
             'icon'  => 'circle-alert',
             'tone'  => 'danger',
             'meta'  => 'Across 2 projects',
