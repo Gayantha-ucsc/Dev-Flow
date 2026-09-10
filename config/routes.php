@@ -11,6 +11,7 @@ return [
         '/projects/:id'        => ['ProjectController', 'overview'],
         '/team'                => ['TeamController', 'index'],
         '/team/add-member'     => ['TeamController', 'addMember'],
+        '/team/search-users'   => ['TeamController', 'searchUsers'],
         '/team/approvals'      => ['TeamController', 'approvals'],
         '/team/invite-client'  => ['TeamController', 'inviteClient'],
         '/tasks'               => ['TaskController', 'index'],

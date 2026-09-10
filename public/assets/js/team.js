@@ -128,11 +128,64 @@ document.addEventListener('DOMContentLoaded', function () {
     var userSearch = document.getElementById('userSearch');
     var userResults = document.getElementById('userSearchResults');
     if (userSearch && userResults) {
-        var userBtns = userResults.querySelectorAll('.user-result');
+        var searchIdle = document.getElementById('userSearchIdle');
+        var searchLoading = document.getElementById('userSearchLoading');
         var searchEmpty = document.getElementById('userSearchEmpty');
         var selectedUser = document.getElementById('selectedUser');
         var selectedPlaceholder = document.getElementById('selectedUserPlaceholder');
         var submitBtn = document.getElementById('submitAddMember');
+        var MIN_QUERY_LENGTH = 3;
+        var DEBOUNCE_MS = 300;
+        var debounceTimer = null;
+        var currentRequestId = 0;
+
+        function setState(state) {
+            // state: 'idle' | 'loading' | 'empty' | 'results'
+            if (searchIdle) searchIdle.hidden = state !== 'idle';
+            if (searchLoading) searchLoading.hidden = state !== 'loading';
+            if (searchEmpty) searchEmpty.hidden = state !== 'empty';
+        }
+
+        function clearRenderedResults() {
+            userResults.querySelectorAll('.user-result').forEach(function (el) { el.remove(); });
+        }
+
+        function avatarClass(name) {
+            var sum = 0;
+            for (var i = 0; i < name.length; i++) sum += name.charCodeAt(i);
+            var classes = ['primary', 'pink', 'teal', 'amber'];
+            return classes[sum % classes.length];
+        }
+
+        function renderResults(users) {
+            clearRenderedResults();
+            users.forEach(function (user) {
+                var btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'user-result';
+                btn.dataset.userId = user.user_id;
+                btn.dataset.userName = user.name;
+                btn.dataset.userEmail = user.email;
+                btn.innerHTML =
+                    '<span class="avatar avatar--' + avatarClass(user.name) + '">' +
+                        user.name.charAt(0).toUpperCase() +
+                    '</span>' +
+                    '<span class="user-result__body">' +
+                        '<span class="user-result__name"></span>' +
+                        '<span class="user-result__email"></span>' +
+                    '</span>';
+                btn.querySelector('.user-result__name').textContent = user.name;
+                btn.querySelector('.user-result__email').textContent = user.email;
+                btn.addEventListener('click', function () {
+                    userResults.querySelectorAll('.user-result').forEach(function (b) {
+                        b.classList.remove('is-selected');
+                    });
+                    btn.classList.add('is-selected');
+                    showSelectedUser(user.name, user.email);
+                });
+                userResults.appendChild(btn);
+            });
+        }
 
         function showSelectedUser(name, email) {
             if (selectedPlaceholder) selectedPlaceholder.hidden = true;
@@ -148,34 +201,54 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         function clearSelectedUser() {
-            userBtns.forEach(function (b) { b.classList.remove('is-selected'); });
+            userResults.querySelectorAll('.user-result').forEach(function (b) { b.classList.remove('is-selected'); });
             if (selectedUser) selectedUser.hidden = true;
             if (selectedPlaceholder) selectedPlaceholder.hidden = false;
             if (submitBtn) submitBtn.disabled = true;
         }
 
-        userSearch.addEventListener('input', function () {
-            var q = userSearch.value.trim().toLowerCase();
-            var visible = 0;
-            userBtns.forEach(function (btn) {
-                var text = (
-                    (btn.dataset.userName || '') + ' ' +
-                    (btn.dataset.userEmail || '') + ' ' +
-                    (btn.dataset.userSkills || '')
-                ).toLowerCase();
-                var match = !q || text.indexOf(q) !== -1;
-                btn.style.display = match ? '' : 'none';
-                if (match) visible++;
-            });
-            if (searchEmpty) searchEmpty.hidden = visible !== 0;
-        });
+        function searchEndpoint(query) {
+            var base = (window.APP_BASE_URL || '/').replace(/\/$/, '');
+            return base + '/team/search-users?q=' + encodeURIComponent(query);
+        }
 
-        userBtns.forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                userBtns.forEach(function (b) { b.classList.remove('is-selected'); });
-                btn.classList.add('is-selected');
-                showSelectedUser(btn.dataset.userName, btn.dataset.userEmail);
-            });
+        function runSearch(query) {
+            var requestId = ++currentRequestId;
+            setState('loading');
+            fetch(searchEndpoint(query))
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (requestId !== currentRequestId) return; // stale response, a newer query superseded it
+                    var results = data.results || [];
+                    if (results.length === 0) {
+                        clearRenderedResults();
+                        setState('empty');
+                    } else {
+                        renderResults(results);
+                        setState('results');
+                    }
+                })
+                .catch(function () {
+                    if (requestId !== currentRequestId) return;
+                    clearRenderedResults();
+                    setState('empty');
+                    if (window.showToast) window.showToast('error', 'Could not search users right now.');
+                });
+        }
+
+        userSearch.addEventListener('input', function () {
+            var q = userSearch.value.trim();
+            clearTimeout(debounceTimer);
+            clearSelectedUser();
+
+            if (q.length < MIN_QUERY_LENGTH) {
+                currentRequestId++; // invalidate any in-flight request
+                clearRenderedResults();
+                setState('idle');
+                return;
+            }
+
+            debounceTimer = setTimeout(function () { runSearch(q); }, DEBOUNCE_MS);
         });
 
         var clearBtn = document.getElementById('clearSelectedUser');

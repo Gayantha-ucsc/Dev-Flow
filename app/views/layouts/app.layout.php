@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="<?= url('assets/css/components/datepicker.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/toast.css') ?>">
 
+    <script>window.APP_BASE_URL = <?= json_encode(url('')) ?>;</script>
     <script src="<?= url('assets/js/datepicker.js') ?>" defer></script>
     <script src="<?= url('assets/js/workflow-step.js') ?>" defer></script>
     <script src="<?= url('assets/js/team-step.js') ?>" defer></script>

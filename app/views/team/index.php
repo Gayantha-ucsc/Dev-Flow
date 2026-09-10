@@ -34,7 +34,7 @@ $soloNoRequests = count($members) <= 1 && empty($pendingApprovals);
             $heading  = 'Build your team';
             $subtext  = 'Invite your first collaborator to start delivering together. Set roles, assign tasks, and watch the project grow.';
             $ctaText  = 'Add Member';
-            $ctaHref  = url('team/add-member');
+            $ctaHref  = 'team/add-member';
         ?>
         <?php include __DIR__ . '/../partials/empty-state.php'; ?>
 

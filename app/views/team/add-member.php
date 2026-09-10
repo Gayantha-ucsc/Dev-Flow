@@ -1,5 +1,6 @@
 <?php
-// Expects: $searchableUsers, $hasTeamLead, $currentProjectName
+// Expects: $hasTeamLead, $currentProjectName
+// Users are looked up on demand by name/email, not browsed.
 ?>
 <div class="team-page team-form-page">
 
@@ -39,27 +40,14 @@
             <div class="team-form-card__body">
                 <div class="projects-search team-form-search">
                     <?= renderIcon('search') ?>
-                    <input type="text" id="userSearch" placeholder="Search by name, email, or skill..." autocomplete="off">
+                    <input type="text" id="userSearch" placeholder="Search by name or email..." autocomplete="off" minlength="3">
                 </div>
+                <p class="form-hint">Type at least 3 characters of a name or email to look someone up.</p>
 
                 <div class="user-search-results" id="userSearchResults">
-                    <?php foreach ($searchableUsers as $user): ?>
-                        <button type="button" class="user-result"
-                                data-user-id="<?= (int) $user['user_id'] ?>"
-                                data-user-name="<?= htmlspecialchars($user['name']) ?>"
-                                data-user-email="<?= htmlspecialchars($user['email']) ?>"
-                                data-user-skills="<?= htmlspecialchars(strtolower(implode(' ', $user['skills']))) ?>">
-                            <span class="avatar avatar--<?= avatarColorClass($user['name']) ?>">
-                                <?= htmlspecialchars(strtoupper(substr($user['name'], 0, 1))) ?>
-                            </span>
-                            <span class="user-result__body">
-                                <span class="user-result__name"><?= htmlspecialchars($user['name']) ?></span>
-                                <span class="user-result__email"><?= htmlspecialchars($user['email']) ?></span>
-                                <span class="user-result__skills"><?= htmlspecialchars(implode(' · ', $user['skills'])) ?></span>
-                            </span>
-                        </button>
-                    <?php endforeach; ?>
-                    <p class="user-search-empty" id="userSearchEmpty" hidden>No users match your search.</p>
+                    <p class="user-search-empty" id="userSearchIdle">Start typing a name or email above to find a user.</p>
+                    <p class="user-search-empty" id="userSearchLoading" hidden>Searching…</p>
+                    <p class="user-search-empty" id="userSearchEmpty" hidden>No user found matching that name or email.</p>
                 </div>
             </div>
         </div>
