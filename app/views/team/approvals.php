@@ -30,7 +30,7 @@
             $heading  = 'No pending approvals';
             $subtext  = 'All member requests have been processed. New requests will appear here for the qualifying approver.';
             $ctaText  = 'Back to Team';
-            $ctaHref  = url('team');
+            $ctaHref  = 'team';
         ?>
         <?php include __DIR__ . '/../partials/empty-state.php'; ?>
     <?php else: ?>

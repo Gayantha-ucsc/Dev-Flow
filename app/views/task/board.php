@@ -51,7 +51,7 @@
             $heading  = 'No tasks yet';
             $subtext  = 'Create your first task to start tracking work across project stages.';
             $ctaText  = 'Create Task';
-            $ctaHref  = url('tasks/create');
+            $ctaHref  = 'tasks/create';
         ?>
         <?php include __DIR__ . '/../partials/empty-state.php'; ?>
     <?php else: ?>
