@@ -27,6 +27,23 @@ function iconJson(string $name): string {
     return json_encode(renderIcon($name));
 }
 
+function csrfToken(): string {
+    if (empty($_SESSION['_csrf_token'])) {
+        $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['_csrf_token'];
+}
+
+function csrfField(): string {
+    return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars(csrfToken()) . '">';
+}
+
+function verifyCsrf(): bool {
+    $submitted = $_POST['csrf_token'] ?? '';
+    return isset($_SESSION['_csrf_token']) && $submitted !== ''
+        && hash_equals($_SESSION['_csrf_token'], $submitted);
+}
+
 function projectStatusLabel(string $status): string {
     return match ($status) {
         'active'   => 'In progress',

@@ -74,7 +74,7 @@ class Session {
         session_regenerate_id(true);
     }
 
-    // ---------------- Flash messages ----------------
+    // Flash messages
     public static function flash(string $key, string $message): void {
         $_SESSION['_flash'][$key][] = $message;
     }
@@ -84,5 +84,18 @@ class Session {
         $messages = $_SESSION['_flash'][$key] ?? [];
         unset($_SESSION['_flash'][$key]);
         return $messages;
+    }
+
+    public static function flashOld(array $data): void {
+        $_SESSION['_old'] = $data;
+    }
+
+    // One-time read, same pattern as flash messages.
+    public static function getOld(string $key, $default = '') {
+        return $_SESSION['_old'][$key] ?? $default;
+    }
+
+    public static function clearOld(): void {
+        unset($_SESSION['_old']);
     }
 }
