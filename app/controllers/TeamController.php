@@ -39,6 +39,27 @@ class TeamController extends Controller {
     public function addMember(): void {
         $projectId = currentProjectContext()['currentProjectId'];
         $team      = $this->teamForProject($projectId);
+
+        $context = array_merge($this->baseContext('/team', 'Add Member'), [
+            'members'     => $team['members'],
+            'hasTeamLead' => projectHasTeamLead($team['members']),
+        ]);
+
+        $this->render('team/add-member', $context);
+    }
+
+    public function searchUsers(): void {
+        $query = trim($_GET['q'] ?? '');
+
+        header('Content-Type: application/json');
+
+        if (mb_strlen($query) < 3) {
+            echo json_encode(['results' => []]);
+            return;
+        }
+
+        $projectId = currentProjectContext()['currentProjectId'];
+        $team      = $this->teamForProject($projectId);
         $directory = require __DIR__ . '/../../config/mock/user-directory.php';
 
         $existingIds = array_column($team['members'], 'user_id');
@@ -46,18 +67,22 @@ class TeamController extends Controller {
             $existingIds[] = $pending['user_id'];
         }
 
-        $searchable = array_values(array_filter(
+        $needle = mb_strtolower($query);
+        $matches = array_values(array_filter(
             $directory,
-            fn($u) => !in_array($u['user_id'], $existingIds, true)
+            function ($u) use ($needle, $existingIds) {
+                if (in_array($u['user_id'], $existingIds, true)) {
+                    return false;
+                }
+                return str_contains(mb_strtolower($u['name']), $needle)
+                    || str_contains(mb_strtolower($u['email']), $needle);
+            }
         ));
 
-        $context = array_merge($this->baseContext('/team', 'Add Member'), [
-            'members'          => $team['members'],
-            'hasTeamLead'      => projectHasTeamLead($team['members']),
-            'searchableUsers'  => $searchable,
-        ]);
+        // Capped, not the full result set — a targeted lookup, not a browse.
+        $matches = array_slice($matches, 0, 8);
 
-        $this->render('team/add-member', $context);
+        echo json_encode(['results' => $matches]);
     }
 
     public function approvals(): void {
