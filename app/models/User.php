@@ -16,6 +16,23 @@ class User {
         return DB::getInstance()->select('User', ['user_id' => $userId]);
     }
 
+    public static function usernameExists(string $username): bool {
+        return DB::getInstance()->exists('User', ['username' => $username]);
+    }
+
+    public static function emailExists(string $email): bool {
+        return DB::getInstance()->exists('User', ['email' => $email]);
+    }
+
+    public static function create(array $data): int {
+        return DB::getInstance()->insert('User', [
+            'name'          => $data['name'],
+            'username'      => $data['username'],
+            'email'         => $data['email'],
+            'password_hash' => $data['password_hash'],
+        ]);
+    }
+
     // Strip password_hash
     public static function withoutPassword(array $user): array {
         unset($user['password_hash']);

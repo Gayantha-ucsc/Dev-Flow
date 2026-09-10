@@ -1,11 +1,12 @@
 <?php
 return [
     // Routes that skip Middleware::requireAuth() in Router::dispatch().
-    'public' => ['/login'],
+    'public' => ['/login', '/register'],
 
     'GET' => [
         '/'                    => ['DashboardController', 'index'],
         '/login'               => ['AuthController', 'showLogin'],
+        '/register'            => ['AuthController', 'showRegister'],
         '/dashboard'           => ['DashboardController', 'index'],
         '/projects'            => ['ProjectController', 'index'],
         '/projects/:id'        => ['ProjectController', 'overview'],
@@ -37,5 +38,6 @@ return [
 
     'POST' => [
         '/login'          => ['AuthController', 'login'],
+        '/register'       => ['AuthController', 'register'],
     ],
 ];
