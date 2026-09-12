@@ -87,7 +87,11 @@
 .dropdown__item.is-active { color: var(--color-primary); font-weight: 600; }
 .dropdown__item--danger { color: var(--color-danger); }
 
-.chevron { transition: transform 0.15s ease; }
+.chevron {
+    display: inline-flex;
+    transition: transform 0.15s ease;
+}
+.chevron svg { width: 14px; height: 14px; }
 .dropdown.is-open .chevron { transform: rotate(180deg); }
 
 /* ---- Project switcher search ---- */

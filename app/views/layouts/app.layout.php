@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="<?= url('assets/css/task.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/chat.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/settings.css') ?>">
+    <link rel="stylesheet" href="<?= url('assets/css/reports.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/modal.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/wizard.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/datepicker.css') ?>">
@@ -36,6 +37,7 @@
     <script src="<?= url('assets/js/settings.js') ?>" defer></script>
     <script src="<?= url('assets/js/task.js') ?>" defer></script>
     <script src="<?= url('assets/js/chat.js') ?>" defer></script>
+    <script src="<?= url('assets/js/reports.js') ?>" defer></script>
     <script src="<?= url('assets/js/navbar.js') ?>" defer></script>
 
 </head>

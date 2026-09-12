@@ -22,7 +22,7 @@ return [
         '/review'              => ['PageController', 'review'],
         '/client-portal/reviews' => ['PageController', 'clientPortalReviews'],
         '/chat'                => ['ChatController', 'index'],
-        '/reports'             => ['PageController', 'reports'],
+        '/reports'             => ['ReportController', 'index'],
         '/payment'             => ['PageController', 'payment'],
         '/settings'            => ['ProfileController', 'settings'],
         '/notifications'       => ['PageController', 'notifications'],
