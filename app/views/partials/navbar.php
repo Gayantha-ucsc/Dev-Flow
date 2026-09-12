@@ -23,10 +23,7 @@ $showSwitcher = !empty($currentProjectId) && $isProjectScopedPage;
             <div class="dropdown" data-dropdown data-project-switcher>
                 <button class="project-switcher" data-dropdown-trigger>
                     <span><?= htmlspecialchars($currentProjectName) ?></span>
-                    <!-- TODO: make the svg images assets -->
-                    <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none">
-                        <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
+                    <span class="chevron"><?= renderIcon('chevron-down') ?></span>
                 </button>
 
                 <div class="dropdown__menu dropdown__menu--project-switcher" data-dropdown-menu>
