@@ -29,7 +29,7 @@ $decisionTone = fn($d) => match ($d) {
         </div>
     </div>
 
-    <!-- Stat cards -->
+    <!-- Stat cards: same fields/tones the dashboard and project list use for this project -->
     <div class="dash-stats reports-stats">
         <div class="card stat-card">
             <div class="stat-card__top">
@@ -86,7 +86,7 @@ $decisionTone = fn($d) => match ($d) {
     </div>
 
     <!-- Team workload -->
-    <div class="card dash-panel reports-panel reports-panel--workload">
+    <div class="card reports-panel reports-panel--workload">
         <div class="card__header">
             <h2 class="card__title"><?= renderIcon('users') ?> Team Workload</h2>
             <span class="reports-panel__count"><?= count($teamWorkload) ?> contributor<?= count($teamWorkload) === 1 ? '' : 's' ?></span>
@@ -193,7 +193,7 @@ $decisionTone = fn($d) => match ($d) {
     <?php endif; ?>
 
     <!-- Stage progress -->
-    <div class="card dash-panel reports-panel reports-panel--stages" id="stage-progress">
+    <div class="card reports-panel reports-panel--stages" id="stage-progress">
         <div class="card__header">
             <h2 class="card__title"><?= renderIcon('workflow') ?> Stage Progress</h2>
             <span class="reports-panel__count"><?= count($stageProgress) ?> stage<?= count($stageProgress) === 1 ? '' : 's' ?></span>
