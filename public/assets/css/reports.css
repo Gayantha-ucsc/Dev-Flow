@@ -1,0 +1,195 @@
+.reports-page {
+    padding: var(--space-lg);
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.reports-header { margin-bottom: var(--space-lg); }
+.reports-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-text);
+    margin: 0 0 4px;
+}
+.reports-header p {
+    color: var(--color-text-muted);
+    margin: 0;
+    font-size: 1rem;
+}
+
+.reports-stats { margin-bottom: var(--space-lg); }
+
+.reports-stat-progress { margin-bottom: 0; margin-top: 10px; }
+
+/* Team workload / Stage progress two-up row */
+.reports-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    align-items: start;
+    margin-bottom: var(--space-lg);
+}
+
+.reports-panel { height: 420px; }
+.reports-panel .card__header { flex-shrink: 0; }
+
+.reports-panel__count {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+}
+
+/* Team workload rows */
+.workload-list {
+    list-style: none;
+    margin: 0;
+    padding: var(--space-md) var(--space-lg);
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.workload-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.workload-row__body { flex: 1; min-width: 0; }
+
+.workload-row__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.workload-row__name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--color-text);
+}
+
+.workload-row__count {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    white-space: nowrap;
+}
+
+.workload-row__badge { padding: 2px 8px; font-size: 0.68rem; }
+
+.workload-row__bar { margin-bottom: 0; height: 6px; }
+
+/* ---- Stage progress rows ---- */
+.stage-progress-list {
+    list-style: none;
+    margin: 0;
+    padding: var(--space-md) var(--space-lg);
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.stage-progress-row__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.stage-progress-row__name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--color-text);
+}
+
+.stage-progress-row__percent {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+}
+
+.stage-progress-row__bar { margin-bottom: 0; height: 6px; }
+
+/* Approval history / contribution table cards */
+.reports-table-card { padding: 0; overflow: hidden; margin-bottom: var(--space-lg); }
+.reports-table-card__empty { height: 200px; }
+
+.reports-toolbar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+    flex-wrap: wrap;
+}
+
+.reports-table-scroll {
+    max-height: 480px;
+    overflow-y: auto;
+}
+
+.reports-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.reports-table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    background: var(--color-white);
+    padding: var(--space-sm) var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+}
+.reports-table td {
+    padding: var(--space-sm) var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+    font-size: 0.9rem;
+    vertical-align: middle;
+    color: var(--color-text);
+}
+.reports-table tbody tr:last-child td { border-bottom: none; }
+.reports-table__muted { color: var(--color-text-muted); }
+.reports-table__item { font-weight: 700; }
+.reports-table__feedback {
+    color: var(--color-text-muted);
+    max-width: 320px;
+}
+.reports-table__no-results {
+    text-align: center;
+    color: var(--color-text-muted);
+    padding: var(--space-lg);
+    margin: 0;
+}
+
+.approval-rate { display: flex; flex-direction: column; gap: 4px; min-width: 90px; }
+.approval-rate__bar { margin-bottom: 0; height: 5px; width: 90px; }
+
+.reports-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-lg);
+}
+
+@media (max-width: 1100px) {
+    .reports-stats { grid-template-columns: repeat(2, 1fr); }
+    .reports-columns { grid-template-columns: 1fr; }
+}
