@@ -21,16 +21,18 @@
 
 .reports-stat-progress { margin-bottom: 0; margin-top: 10px; }
 
-/* Team workload / Stage progress two-up row */
-.reports-columns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-md);
-    align-items: start;
-    margin-bottom: var(--space-lg);
+.reports-stat-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-decoration: none;
 }
+.reports-stat-link:hover { text-decoration: underline; }
 
-.reports-panel { height: 420px; }
+/* Shared panel chrome (Team workload / Stage progress) */
+.reports-panel { margin-bottom: var(--space-lg); }
 .reports-panel .card__header { flex-shrink: 0; }
 
 .reports-panel__count {
@@ -39,15 +41,16 @@
     color: var(--color-text-muted);
     white-space: nowrap;
 }
+.reports-panel__flag {
+    padding: 4px 12px;
+    font-size: 0.75rem;
+}
 
-/* Team workload rows */
+/* Team workload: default list rows (Manager) */
 .workload-list {
     list-style: none;
     margin: 0;
     padding: var(--space-md) var(--space-lg);
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: var(--space-md);
@@ -66,12 +69,19 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 6px;
+    gap: var(--space-sm);
 }
+
+.workload-row__name-block { display: flex; flex-direction: column; }
 
 .workload-row__name {
     font-weight: 700;
     font-size: 0.9rem;
     color: var(--color-text);
+}
+.workload-row__role {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
 }
 
 .workload-row__count {
@@ -87,14 +97,26 @@
 
 .workload-row__bar { margin-bottom: 0; height: 6px; }
 
-/* ---- Stage progress rows ---- */
+/* Team workload: card grid (Team Lead) */
+.workload-list--grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-md);
+}
+.workload-list--grid .workload-row {
+    align-items: flex-start;
+    padding: var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+}
+.workload-list--grid .workload-row__top { flex-direction: column; align-items: flex-start; gap: 4px; }
+.workload-list--grid .workload-row__count { font-weight: 700; color: var(--color-text); }
+
+/* Stage progress rows */
 .stage-progress-list {
     list-style: none;
     margin: 0;
     padding: var(--space-md) var(--space-lg);
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: var(--space-md);
@@ -102,9 +124,10 @@
 
 .stage-progress-row__top {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: space-between;
     margin-bottom: 6px;
+    gap: var(--space-sm);
 }
 
 .stage-progress-row__name {
@@ -112,18 +135,31 @@
     font-size: 0.9rem;
     color: var(--color-text);
 }
+.stage-progress-row__detail {
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin-left: 6px;
+}
 
 .stage-progress-row__percent {
     font-size: 0.8rem;
     font-weight: 700;
     color: var(--color-text-muted);
+    white-space: nowrap;
 }
 
 .stage-progress-row__bar { margin-bottom: 0; height: 6px; }
 
-/* Approval history / contribution table cards */
+/* Approval history / bottleneck / contribution table cards */
 .reports-table-card { padding: 0; overflow: hidden; margin-bottom: var(--space-lg); }
 .reports-table-card__empty { height: 200px; }
+.reports-table-card__subtext {
+    margin: -4px 0 0;
+    padding: 0 var(--space-lg) var(--space-md);
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+}
 
 .reports-toolbar {
     display: flex;
@@ -171,6 +207,14 @@
     color: var(--color-text-muted);
     max-width: 320px;
 }
+.reports-table__action {
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.reports-table__action:hover { text-decoration: underline; }
 .reports-table__no-results {
     text-align: center;
     color: var(--color-text-muted);
@@ -189,7 +233,15 @@
     padding: var(--space-md) var(--space-lg);
 }
 
+.reports-footnote {
+    text-align: right;
+    font-style: italic;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
 @media (max-width: 1100px) {
     .reports-stats { grid-template-columns: repeat(2, 1fr); }
-    .reports-columns { grid-template-columns: 1fr; }
+    .workload-list--grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
 }

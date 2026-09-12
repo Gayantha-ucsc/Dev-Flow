@@ -32,8 +32,28 @@ class ReportController extends Controller {
         };
     }
 
+    private function statusLabel(string $status): string {
+        return match ($status) {
+            'pending_review' => 'Pending Review',
+            'blocked'        => 'Blocked',
+            'overdue'        => 'Overdue',
+            default          => ucfirst($status),
+        };
+    }
+
+    private function statusTone(string $status): string {
+        return match ($status) {
+            'blocked'        => 'danger',
+            'overdue'        => 'warning',
+            'pending_review' => 'primary',
+            default          => 'neutral',
+        };
+    }
+
     public function index(): void {
-        $projectId = currentProjectContext()['currentProjectId'];
+        $projectContext = currentProjectContext();
+        $projectId      = $projectContext['currentProjectId'];
+        $isTeamLead     = $projectContext['activeRole'] === 'team_lead';
 
         $projectsList = require __DIR__ . '/../../config/mock/projects-list.php';
         $projectMeta  = null;
@@ -51,26 +71,41 @@ class ReportController extends Controller {
 
         // Top stat cards
         $stats = [
-            'percent'  => $projectMeta['percent']      ?? 0,
-            'blocked'  => $projectMeta['blockedCount']  ?? 0,
-            'overdue'  => $projectMeta['overdueCount']  ?? 0,
-            'pending'  => $projectMeta['pendingCount']  ?? 0,
+            'percent' => $projectMeta['percent']     ?? 0,
+            'blocked' => $projectMeta['blockedCount'] ?? 0,
+            'overdue' => $projectMeta['overdueCount'] ?? 0,
+            'pending' => $projectMeta['pendingCount'] ?? 0,
         ];
 
-        // ---- Stage progress panel: percent = tasksApproved / tasksTotal.
-        $stageProgress = array_map(function ($stage) {
+        // Stage progress panel: percent = tasksApproved / tasksTotal,
+        $stageProgress = [];
+        foreach ($stageDetail as $index => $stage) {
             $total   = $stage['tasksTotal'] ?? 0;
             $percent = $total > 0 ? (int) round(($stage['tasksApproved'] / $total) * 100) : 0;
-            return [
-                'name'    => $stage['name'],
-                'percent' => $percent,
-                'status'  => $stage['status'],
+
+            $blockedInStage = 0;
+            $overdueInStage = 0;
+            foreach (($taskData[$index] ?? []) as $task) {
+                if ($task['status'] === 'blocked') $blockedInStage++;
+                if ($task['status'] === 'overdue') $overdueInStage++;
+            }
+
+            $stageProgress[] = [
+                'name'       => $stage['name'],
+                'percent'    => $percent,
+                'status'     => $stage['status'],
+                'approved'   => $stage['tasksApproved'] ?? 0,
+                'total'      => $total,
+                'blockedTag' => $blockedInStage,
+                'overdueTag' => $overdueInStage,
             ];
-        }, $stageDetail);
+        }
 
         // Team workload + contribution summary
         $agg = [];
-        foreach ($taskData as $stageTasks) {
+        $bottlenecks = [];
+        foreach ($taskData as $stageIndex => $stageTasks) {
+            $stageName = $stageDetail[$stageIndex]['name'] ?? '';
             foreach ($stageTasks as $task) {
                 foreach ($task['assignees'] as $name) {
                     if ($name === $currentUser['name']) {
@@ -87,8 +122,22 @@ class ReportController extends Controller {
                     }
                     $agg[$name]['types'][$task['type']] = ($agg[$name]['types'][$task['type']] ?? 0) + 1;
                 }
+
+                // Bottleneck drill-down (Team Lead only)
+                if (in_array($task['status'], ['blocked', 'overdue', 'pending_review'], true)) {
+                    $bottlenecks[] = [
+                        'name'       => $task['name'],
+                        'assignee'   => $task['assignees'][0] ?? 'Unassigned',
+                        'stage'      => $stageName,
+                        'status'     => $task['status'],
+                        'statusLabel' => $this->statusLabel($task['status']),
+                        'statusTone'  => $this->statusTone($task['status']),
+                        'days'       => $reportsMock['bottleneckDays'][$projectId][$task['name']] ?? 1,
+                    ];
+                }
             }
         }
+        usort($bottlenecks, fn($a, $b) => $b['days'] <=> $a['days']);
 
         $maxTotal = 1;
         foreach ($agg as $row) {
@@ -99,23 +148,25 @@ class ReportController extends Controller {
         $contribution = [];
         foreach ($agg as $name => $row) {
             arsort($row['types']);
-            $topType = array_key_first($row['types']) ?? 'other';
+            $topType   = array_key_first($row['types']) ?? 'other';
+            $roleLabel = $this->roleLabelFromType($topType);
 
             $teamWorkload[] = [
-                'name'        => $name,
-                'total'       => $row['total'],
-                'open'        => $row['open'],
-                'barPercent'  => (int) round(($row['total'] / $maxTotal) * 100),
+                'name'       => $name,
+                'role'       => $roleLabel,
+                'total'      => $row['total'],
+                'open'       => $row['open'],
+                'barPercent' => (int) round(($row['total'] / $maxTotal) * 100),
             ];
 
             $decided = $row['completed']; // approved + rejected, rejected = 0
             $contribution[] = [
-                'name'           => $name,
-                'role'           => $this->roleLabelFromType($topType),
-                'completed'      => $row['completed'],
-                'inProgress'     => $row['open'],
-                'avgRevision'    => 1.0,
-                'approvalRate'   => $decided > 0 ? 100 : null,
+                'name'         => $name,
+                'role'         => $roleLabel,
+                'completed'    => $row['completed'],
+                'inProgress'   => $row['open'],
+                'avgRevision'  => 1.0,
+                'approvalRate' => $decided > 0 ? 100 : null,
             ];
         }
 
@@ -126,12 +177,14 @@ class ReportController extends Controller {
         $approvalHistory = $reportsMock[$projectId]['approvalHistory'] ?? [];
 
         $context = array_merge($this->baseContext('/reports', 'Reports & Monitoring'), [
-            'projectName'     => $projectMeta['name'] ?? currentProjectContext()['currentProjectName'],
+            'projectName'     => $projectMeta['name'] ?? $projectContext['currentProjectName'],
+            'isTeamLead'      => $isTeamLead,
             'stats'           => $stats,
             'stageProgress'   => $stageProgress,
             'teamWorkload'    => $teamWorkload,
             'contribution'    => $contribution,
             'approvalHistory' => $approvalHistory,
+            'bottlenecks'     => $bottlenecks,
         ]);
 
         $this->render('reports/dashboard', $context);

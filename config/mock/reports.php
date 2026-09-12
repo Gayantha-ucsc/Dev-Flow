@@ -51,4 +51,18 @@ return [
         ],
     ],
 
+    'bottleneckDays' => [
+        1 => [ // Project Beta
+            'Settings Page'   => 3, // pending_review
+            'Email Templates' => 5, // blocked
+        ],
+        2 => [ // Project Gamma
+            'Regression Suite' => 6, // overdue
+            'Load Testing'     => 2, // blocked
+        ],
+        3 => [ // Project Alpha
+            'Client Training Session' => 2, // pending_review
+        ],
+    ],
+
 ];

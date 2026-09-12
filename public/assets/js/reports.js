@@ -1,42 +1,48 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    /* Approval history: search + decision filter */
-    var table = document.getElementById('historyTable');
-    if (table) {
-        var searchInput = document.getElementById('historySearch');
-        var filters      = document.getElementById('decisionFilters');
-        var noResults    = document.getElementById('historyNoResults');
+    function wireTableFilter(tableId, searchId, filtersId, noResultsId, attr) {
+        var table = document.getElementById(tableId);
+        if (!table) return;
 
-        if (searchInput && filters) {
-            var rows = Array.prototype.slice.call(table.querySelectorAll('tbody tr'));
-            var activeDecision = 'all';
+        var searchInput = document.getElementById(searchId);
+        var filters      = document.getElementById(filtersId);
+        var noResults    = document.getElementById(noResultsId);
+        if (!searchInput || !filters) return;
 
-            function applyFilters() {
-                var query = (searchInput.value || '').trim().toLowerCase();
-                var visibleCount = 0;
+        var rows = Array.prototype.slice.call(table.querySelectorAll('tbody tr'));
+        var active = 'all';
 
-                rows.forEach(function (row) {
-                    var matchesSearch   = !query || row.dataset.search.indexOf(query) !== -1;
-                    var matchesDecision = activeDecision === 'all' || row.dataset.decision === activeDecision;
-                    var visible = matchesSearch && matchesDecision;
-                    row.style.display = visible ? '' : 'none';
-                    if (visible) visibleCount++;
-                });
+        function applyFilters() {
+            var query = (searchInput.value || '').trim().toLowerCase();
+            var visibleCount = 0;
 
-                if (noResults) noResults.hidden = visibleCount !== 0;
-            }
-
-            searchInput.addEventListener('input', applyFilters);
-            filters.addEventListener('click', function (e) {
-                var btn = e.target.closest('[data-filter]');
-                if (!btn) return;
-                filters.querySelectorAll('.filter-pill').forEach(function (p) { p.classList.remove('is-active'); });
-                btn.classList.add('is-active');
-                activeDecision = btn.dataset.filter;
-                applyFilters();
+            rows.forEach(function (row) {
+                var matchesSearch = !query || row.dataset.search.indexOf(query) !== -1;
+                var matchesFilter = active === 'all' || row.dataset[attr] === active;
+                var visible = matchesSearch && matchesFilter;
+                row.style.display = visible ? '' : 'none';
+                if (visible) visibleCount++;
             });
+
+            if (noResults) noResults.hidden = visibleCount !== 0;
         }
+
+        searchInput.addEventListener('input', applyFilters);
+        filters.addEventListener('click', function (e) {
+            var btn = e.target.closest('[data-filter]');
+            if (!btn) return;
+            filters.querySelectorAll('.filter-pill').forEach(function (p) { p.classList.remove('is-active'); });
+            btn.classList.add('is-active');
+            active = btn.dataset.filter;
+            applyFilters();
+        });
     }
+
+    /* Approval history (Manager): search + decision filter */
+    wireTableFilter('historyTable', 'historySearch', 'decisionFilters', 'historyNoResults', 'decision');
+
+    /* Bottleneck details (Team Lead): search + status filter */
+    wireTableFilter('bottleneckTable', 'bottleneckSearch', 'bottleneckFilters', 'bottleneckNoResults', 'status');
 
     /* CSV export helpers */
     function downloadCsv(filename, rows) {
