@@ -1,7 +1,7 @@
 <?php
 // Expects these variables passed in from the controller:
 // $currentProjectId = 1
-// $userProjects     = [['project_id'=>.., 'name'=>..], ...]  // projects this user belongs to
+// $userProjects     = [['project_id'=>.., 'name'=>.., 'role'=>..], ...]  // projects this user belongs to
 // $activeRole       = 'manager'                               // this user's one role on the current project
 // $currentUser      = ['name' => 'User One', 'profile_picture' => null]
 // $unreadCount      = 3
@@ -35,7 +35,12 @@ $showSwitcher = !empty($currentProjectId) && $isProjectScopedPage;
                     <?php endif; ?>
 
                     <?php foreach (($userProjects ?? []) as $project): ?>
-                        <a href="<?= url('/projects/' . (int)$project['project_id']) ?>"
+                        <?php
+                            $switcherHref = ($project['role'] ?? null) === 'client'
+                                ? url('client-portal/overview?id=' . (int) $project['project_id'])
+                                : url('/projects/' . (int) $project['project_id']);
+                        ?>
+                        <a href="<?= $switcherHref ?>"
                         class="dropdown__item <?= $project['project_id'] === ($currentProjectId ?? null) ? 'is-active' : '' ?>"
                         data-name="<?= htmlspecialchars(strtolower($project['name'])) ?>">
                         <?= htmlspecialchars($project['name']) ?>

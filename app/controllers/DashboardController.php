@@ -30,14 +30,31 @@ class DashboardController extends Controller {
             return;
         }
 
+        $projectsList = require __DIR__ . '/../../config/mock/projects-list.php';
+        $roles        = splitProjectRolesByClient($projectsList);
+
+        if (empty($roles['other']) && !empty($roles['client'])) {
+            $this->render('dashboard/client', array_merge($context, [
+                'clientProjects' => buildClientProjectBundles($roles['client']),
+            ]));
+            return;
+        }
+
+        $clientProjects = !empty($roles['client'])
+            ? buildClientProjectBundles($roles['client'])
+            : [];
+
         if (userHasRoleAnywhere('manager')) {
             $managerData = require __DIR__ . '/../../config/mock/manager-dashboard.php';
-            $this->render('dashboard/manager', array_merge($context, $managerData));
+            $this->render('dashboard/manager', array_merge($context, $managerData, [
+                'clientProjects' => $clientProjects,
+            ]));
             return;
         }
 
         $this->render('pages/placeholder', array_merge($context, [
-            'heading' => 'Dashboard',
+            'heading'        => 'Dashboard',
+            'clientProjects' => $clientProjects,
         ]));
     }
 }
