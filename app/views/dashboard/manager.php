@@ -1,5 +1,5 @@
 <?php
-// Expects: $currentUser, $stats, $needsAttention, $projects, $activity
+// Expects: $currentUser, $stats, $needsAttention, $projects, $activity, $clientProjects
 
 ?>
 <div class="dash-page">
@@ -139,5 +139,7 @@
             <?php endforeach; ?>
         </div>
     </div>
+
+    <?php include __DIR__ . '/../partials/client-projects-widget.php'; ?>
 
 </div>

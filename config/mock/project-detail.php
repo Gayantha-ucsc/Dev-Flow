@@ -56,4 +56,23 @@ return [
             ['name' => 'Delivery and Handoff', 'status' => 'completed', 'tasksApproved' => 2, 'tasksTotal' => 2],
         ],
     ],
+
+    7 => [ // Project Alpha (client-facing copy)
+        'stages' => [
+            ['name' => 'Discovery',       'status' => 'completed',   'tasksApproved' => 3, 'tasksTotal' => 3],
+            ['name' => 'Design',          'status' => 'completed',   'tasksApproved' => 5, 'tasksTotal' => 5],
+            ['name' => 'Development',     'status' => 'in_progress', 'tasksApproved' => 6, 'tasksTotal' => 9],
+            ['name' => 'Testing',         'status' => 'not_started', 'tasksApproved' => 0, 'tasksTotal' => 0],
+            ['name' => 'Final Delivery',  'status' => 'not_started', 'tasksApproved' => 0, 'tasksTotal' => 0],
+        ],
+    ],
+
+    8 => [ // Retainer Site Refresh
+        'stages' => [
+            ['name' => 'Requirements', 'status' => 'completed',   'tasksApproved' => 2, 'tasksTotal' => 2],
+            ['name' => 'Design',       'status' => 'in_progress', 'tasksApproved' => 1, 'tasksTotal' => 4],
+            ['name' => 'Development',  'status' => 'not_started', 'tasksApproved' => 0, 'tasksTotal' => 0],
+            ['name' => 'Delivery',     'status' => 'not_started', 'tasksApproved' => 0, 'tasksTotal' => 0],
+        ],
+    ],
 ];

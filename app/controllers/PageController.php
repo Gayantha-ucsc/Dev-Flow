@@ -21,7 +21,4 @@ class PageController extends Controller {
     public function notifications(): void {
         $this->render('pages/placeholder', mockPageContext('/notifications', 'Notifications', ['heading' => 'Notifications']));
     }
-    public function clientPortalReviews(): void {
-        $this->render('pages/placeholder', mockPageContext('/client-portal/reviews', 'Approvals', ['heading' => 'Approvals']));
-    }
 }

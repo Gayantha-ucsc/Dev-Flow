@@ -95,6 +95,12 @@
         </div>
 
         <?php if (empty($stages)): ?>
+            <?php
+                $icon     = 'layout-template';
+                $heading  = 'No stages yet';
+                $subtext  = 'Add a stage above, or pick a workflow template to get started.';
+                $variant  = 'card';
+            ?>
             <?php include __DIR__ . '/../partials/empty-state.php'; ?>
         <?php else: ?>
             <div class="stage-list">

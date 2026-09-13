@@ -43,6 +43,11 @@ class ProjectController extends Controller {
             return;
         }
 
+        if ($project['role'] === 'client') {
+            header('Location: ' . url('client-portal/overview?id=' . $id));
+            exit;
+        }
+
         setCurrentProjectId($id);
 
         $detail = require __DIR__ . '/../../config/mock/project-detail.php';

@@ -116,7 +116,7 @@ function currentProjectContext(): array {
         'currentProjectId'   => $current['id'],
         'currentProjectName' => $current['name'],
         'userProjects'       => array_map(
-            fn($row) => ['project_id' => $row['id'], 'name' => $row['name']],
+            fn($row) => ['project_id' => $row['id'], 'name' => $row['name'], 'role' => $row['role']],
             $projectsList
         ),
         'activeRole' => $current['role'],
@@ -135,6 +135,57 @@ function userHasRoleAnywhere(string $role): bool {
         }
     }
     return false;
+}
+
+// @return array{client: array, other: array}
+function splitProjectRolesByClient(array $projectsList): array {
+    $client = [];
+    $other  = [];
+    foreach ($projectsList as $row) {
+        if ($row['role'] === 'client') {
+            $client[] = $row;
+        } else {
+            $other[] = $row;
+        }
+    }
+    return ['client' => $client, 'other' => $other];
+}
+
+function buildClientProjectBundles(array $clientRows): array {
+    $extraByProjectId = require __DIR__ . '/../../config/mock/client-dashboard.php';
+    $detailByProjectId = require __DIR__ . '/../../config/mock/project-detail.php';
+
+    return array_map(function ($row) use ($extraByProjectId, $detailByProjectId) {
+        $extra = $extraByProjectId[$row['id']] ?? ['needsReview' => [], 'payment' => null, 'hero' => null];
+        return [
+            'id'           => $row['id'],
+            'name'         => $row['name'],
+            'description'  => $row['description'],
+            'percent'      => $row['percent'],
+            'currentStage' => $row['stageLabel'],
+            'stages'       => $detailByProjectId[$row['id']]['stages'] ?? [],
+            'needsReview'  => $extra['needsReview'],
+            'payment'      => $extra['payment'],
+            'hero'         => $extra['hero'] ?? null,
+        ];
+    }, $clientRows);
+}
+
+function clientStageIcon(string $stageName): string {
+    $name = strtolower($stageName);
+
+    return match (true) {
+        str_contains($name, 'discover')    => 'search',
+        str_contains($name, 'requirement') => 'file-text',
+        str_contains($name, 'design')      => 'palette',
+        str_contains($name, 'develop')     => 'code',
+        str_contains($name, 'test')        => 'bug',
+        str_contains($name, 'review')      => 'eye',
+        str_contains($name, 'deliver'),
+        str_contains($name, 'handoff'),
+        str_contains($name, 'launch')      => 'rocket',
+        default                            => 'circle-dot',
+    };
 }
 
 function memberRoleTone(string $role): string {
