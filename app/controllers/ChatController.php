@@ -3,7 +3,7 @@
 class ChatController extends Controller {
 
     public function index(): void {
-        $user           = require __DIR__ . '/../../config/mock/users.php';
+        $user           = currentUserContext();
         $projectContext = currentProjectContext();
         $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
         $chatData       = require __DIR__ . '/../../config/mock/chat.php';

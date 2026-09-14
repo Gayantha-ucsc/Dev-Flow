@@ -3,7 +3,7 @@
 class TaskController extends Controller {
 
     private function baseContext(string $currentRoute, string $pageTitle): array {
-        $user           = require __DIR__ . '/../../config/mock/users.php';
+        $user           = currentUserContext();
         $projectContext = currentProjectContext();
         $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
 
@@ -26,7 +26,7 @@ class TaskController extends Controller {
 
     private function taskPerms(?array $task = null): array {
         $ctx = currentProjectContext();
-        $user = require __DIR__ . '/../../config/mock/users.php';
+        $user = currentUserContext();
         return taskPermissionsUiDemo(taskPermissions($ctx['activeRole'], $user, $task));
     }
 

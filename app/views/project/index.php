@@ -1,5 +1,5 @@
 <?php
-// Expects: $projectsList (see config/mock/projects-list.php)
+// Expects: $projectsList
 ?>
 <div class="projects-page">
 
@@ -40,6 +40,13 @@
     </div>
 
     <?php if (empty($projectsList)): ?>
+        <?php
+            $icon       = 'folder';
+            $heading    = "You're not part of any project yet";
+            $subtext    = 'Create a project to start managing tasks, tracking progress, and collaborating with your team.';
+            $ctaText    = 'Create a Project';
+            $ctaTrigger = 'project-wizard';
+        ?>
         <?php include __DIR__ . '/../partials/empty-state.php'; ?>
     <?php else: ?>
 

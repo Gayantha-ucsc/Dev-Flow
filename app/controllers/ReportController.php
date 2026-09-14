@@ -2,7 +2,7 @@
 class ReportController extends Controller {
 
     private function baseContext(string $currentRoute, string $pageTitle): array {
-        $user           = require __DIR__ . '/../../config/mock/users.php';
+        $user           = currentUserContext();
         $projectContext = currentProjectContext();
         $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
 
@@ -55,7 +55,7 @@ class ReportController extends Controller {
         $projectId      = $projectContext['currentProjectId'];
         $isTeamLead     = $projectContext['activeRole'] === 'team_lead';
 
-        $projectsList = require __DIR__ . '/../../config/mock/projects-list.php';
+        $projectsList = projectsListForCurrentUser();
         $projectMeta  = null;
         foreach ($projectsList as $row) {
             if ($row['id'] === $projectId) {
@@ -67,7 +67,7 @@ class ReportController extends Controller {
         $stageDetail = (require __DIR__ . '/../../config/mock/project-detail.php')[$projectId]['stages'] ?? [];
         $taskData    = (require __DIR__ . '/../../config/mock/project-tasks.php')[$projectId] ?? [];
         $reportsMock = require __DIR__ . '/../../config/mock/reports.php';
-        $currentUser = require __DIR__ . '/../../config/mock/users.php';
+        $currentUser = currentUserContext();
 
         // Top stat cards
         $stats = [

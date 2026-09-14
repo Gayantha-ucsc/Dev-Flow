@@ -63,7 +63,7 @@ function projectStatusTone(string $status): string {
 }
 
 function mockPageContext(string $currentRoute, string $pageTitle, array $extra = []): array {
-    $user           = require __DIR__ . '/../../config/mock/users.php';
+    $user           = currentUserContext();
     $projectContext = currentProjectContext();
     $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
 
@@ -80,8 +80,44 @@ function mockPageContext(string $currentRoute, string $pageTitle, array $extra =
     );
 }
 
+function currentUserContext(): array {
+    $user = class_exists('Auth') ? Auth::user() : null;
+
+    if ($user) {
+        return [
+            'user_id'         => (int) $user['user_id'],
+            'name'            => $user['name'],
+            'email'           => $user['email'],
+            'profile_picture' => $user['profile_picture'] ?? null,
+            'is_admin'        => (bool) $user['is_admin'],
+        ];
+    }
+
+    // fallback for any context reached without an authenticated
+    return require __DIR__ . '/../../config/mock/users.php';
+}
+
+function projectsListForCurrentUser(): array {
+    $userId = class_exists('Auth') ? Auth::id() : null;
+
+    $byUser = file_exists(__DIR__ . '/../../config/mock/projects-list-by-user.php')
+        ? require __DIR__ . '/../../config/mock/projects-list-by-user.php'
+        : [];
+
+    if ($userId !== null && array_key_exists($userId, $byUser)) {
+        return $byUser[$userId];
+    }
+
+    // No authenticated user_id available
+    if ($userId === null) {
+        return require __DIR__ . '/../../config/mock/projects-list.php';
+    }
+
+    return [];
+}
+
 function currentProjectContext(): array {
-    $projectsList = require __DIR__ . '/../../config/mock/projects-list.php';
+    $projectsList = projectsListForCurrentUser();
 
     if (empty($projectsList)) {
         return [
@@ -128,7 +164,7 @@ function setCurrentProjectId(int $id): void {
 }
 
 function userHasRoleAnywhere(string $role): bool {
-    $projectsList = require __DIR__ . '/../../config/mock/projects-list.php';
+    $projectsList = projectsListForCurrentUser();
     foreach ($projectsList as $row) {
         if ($row['role'] === $role) {
             return true;
@@ -169,6 +205,39 @@ function buildClientProjectBundles(array $clientRows): array {
             'hero'         => $extra['hero'] ?? null,
         ];
     }, $clientRows);
+}
+
+// Converts rows from projects-list.php (the logged-in user's own project/role
+// rows) into the card shape used by partials/project-rollup-grid.php. Used for
+// the "Your Projects" rollup on dashboards for non-client roles (team lead,
+// manager without a dedicated mock rollup, developer, designer).
+function buildProjectRollupCards(array $projectRows): array {
+    return array_map(function ($row) {
+        $doneCount = count(array_filter($row['stages'] ?? [], fn($s) => $s === 'completed'));
+        $activeCount = count(array_filter($row['stages'] ?? [], fn($s) => $s === 'in_progress'));
+
+        $dangerCount = (int) ($row['overdueCount'] ?? 0);
+        $dangerLabel = 'Overdue';
+        if ($dangerCount === 0 && !empty($row['blockedCount'])) {
+            $dangerCount = (int) $row['blockedCount'];
+            $dangerLabel = 'Blocked';
+        }
+
+        return [
+            'id'          => $row['id'],
+            'name'        => $row['name'],
+            'subtitle'    => $row['description'],
+            'health'      => $row['health'] ?? 'on_track',
+            'percent'     => $row['percent'],
+            'stages'      => $row['stages'] ?? [],
+            'stageLabel'  => $row['stageLabel'],
+            'role'        => $row['role'],
+            'doneCount'   => $doneCount,
+            'activeCount' => $activeCount,
+            'dangerCount' => $dangerCount,
+            'dangerLabel' => $dangerLabel,
+        ];
+    }, $projectRows);
 }
 
 function clientStageIcon(string $stageName): string {
@@ -271,6 +340,15 @@ function taskStatusMeta(string $status): array {
         'blocked'        => ['tone' => 'pink',    'icon' => 'ban',            'label' => 'Blocked'],
         'overdue'        => ['tone' => 'danger',  'icon' => 'circle-alert',   'label' => 'Overdue'],
         default          => ['tone' => 'neutral', 'icon' => null,             'label' => ucfirst($status)],
+    };
+}
+
+function approvalDecisionMeta(string $decision): array {
+    return match ($decision) {
+        'approved'           => ['tone' => 'success', 'label' => 'Approved'],
+        'rejected'           => ['tone' => 'danger',  'label' => 'Rejected'],
+        'changes_requested'  => ['tone' => 'warning', 'label' => 'Changes Requested'],
+        default              => ['tone' => 'neutral', 'label' => ucfirst(str_replace('_', ' ', $decision))],
     };
 }
 
