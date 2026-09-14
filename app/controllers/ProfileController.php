@@ -2,7 +2,7 @@
 class ProfileController extends Controller {
 
     public function settings(): void {
-        $user           = require __DIR__ . '/../../config/mock/users.php';
+        $user           = currentUserContext();
         $projectContext = currentProjectContext();
         $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
 

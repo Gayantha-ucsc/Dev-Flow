@@ -36,6 +36,10 @@ return [
         ],
     ],
 
+    // Cross-project "My Tasks" list. projectId links to a real project in
+    // projects-list.php / project-detail.php so the row action always opens
+    // a working page even though task-level routes are scoped to whichever
+    // project is currently selected.
     'myTasks' => [
         [
             'id'         => 102,

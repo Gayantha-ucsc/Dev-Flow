@@ -3,7 +3,7 @@
 class ClientPortalController extends Controller {
 
     private function resolveClientProject(): ?array {
-        $projectsList = require __DIR__ . '/../../config/mock/projects-list.php';
+        $projectsList = projectsListForCurrentUser();
         $roles        = splitProjectRolesByClient($projectsList);
 
         if (empty($roles['client'])) {
@@ -33,7 +33,7 @@ class ClientPortalController extends Controller {
 
         setCurrentProjectId($project['id']);
 
-        $user           = require __DIR__ . '/../../config/mock/users.php';
+        $user           = currentUserContext();
         $projectContext = currentProjectContext();
         $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
 

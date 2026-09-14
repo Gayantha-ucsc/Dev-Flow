@@ -3,10 +3,10 @@
 class ProjectController extends Controller {
 
     public function index(): void {
-        $user           = require __DIR__ . '/../../config/mock/users.php';
+        $user           = currentUserContext();
         $projectContext = currentProjectContext();
         $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
-        $projectsList   = require __DIR__ . '/../../config/mock/projects-list.php';
+        $projectsList   = projectsListForCurrentUser();
 
         usort($projectsList, fn($a, $b) => strtotime($a['deadline']) <=> strtotime($b['deadline']));
 
@@ -28,7 +28,7 @@ class ProjectController extends Controller {
     public function overview(): void {
         $id = (int) (Router::$params['id'] ?? 0);
 
-        $projectsList = require __DIR__ . '/../../config/mock/projects-list.php';
+        $projectsList = projectsListForCurrentUser();
         $project = null;
         foreach ($projectsList as $row) {
             if ($row['id'] === $id) {
@@ -65,7 +65,7 @@ class ProjectController extends Controller {
             fn($m) => $m['status'] === 'active'
         ));
 
-        $user           = require __DIR__ . '/../../config/mock/users.php';
+        $user           = currentUserContext();
         $projectContext = currentProjectContext();
         $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
 

@@ -3,7 +3,7 @@
 class DashboardController extends Controller {
 
     public function index(): void {
-        $user           = require __DIR__ . '/../../config/mock/users.php';
+        $user           = currentUserContext();
         $projectContext = currentProjectContext();
         $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
 
@@ -30,7 +30,7 @@ class DashboardController extends Controller {
             return;
         }
 
-        $projectsList = require __DIR__ . '/../../config/mock/projects-list.php';
+        $projectsList = projectsListForCurrentUser();
         $roles        = splitProjectRolesByClient($projectsList);
 
         if (empty($roles['other']) && !empty($roles['client'])) {

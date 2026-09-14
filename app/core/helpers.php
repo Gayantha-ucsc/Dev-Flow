@@ -80,8 +80,44 @@ function mockPageContext(string $currentRoute, string $pageTitle, array $extra =
     );
 }
 
+function currentUserContext(): array {
+    $user = class_exists('Auth') ? Auth::user() : null;
+
+    if ($user) {
+        return [
+            'user_id'         => (int) $user['user_id'],
+            'name'            => $user['name'],
+            'email'           => $user['email'],
+            'profile_picture' => $user['profile_picture'] ?? null,
+            'is_admin'        => (bool) $user['is_admin'],
+        ];
+    }
+
+    // fallback for any context reached without an authenticated
+    return require __DIR__ . '/../../config/mock/users.php';
+}
+
+function projectsListForCurrentUser(): array {
+    $userId = class_exists('Auth') ? Auth::id() : null;
+
+    $byUser = file_exists(__DIR__ . '/../../config/mock/projects-list-by-user.php')
+        ? require __DIR__ . '/../../config/mock/projects-list-by-user.php'
+        : [];
+
+    if ($userId !== null && array_key_exists($userId, $byUser)) {
+        return $byUser[$userId];
+    }
+
+    // No authenticated user_id available
+    if ($userId === null) {
+        return require __DIR__ . '/../../config/mock/projects-list.php';
+    }
+
+    return [];
+}
+
 function currentProjectContext(): array {
-    $projectsList = require __DIR__ . '/../../config/mock/projects-list.php';
+    $projectsList = projectsListForCurrentUser();
 
     if (empty($projectsList)) {
         return [
@@ -128,7 +164,7 @@ function setCurrentProjectId(int $id): void {
 }
 
 function userHasRoleAnywhere(string $role): bool {
-    $projectsList = require __DIR__ . '/../../config/mock/projects-list.php';
+    $projectsList = projectsListForCurrentUser();
     foreach ($projectsList as $row) {
         if ($row['role'] === $role) {
             return true;
@@ -171,6 +207,10 @@ function buildClientProjectBundles(array $clientRows): array {
     }, $clientRows);
 }
 
+// Converts rows from projects-list.php (the logged-in user's own project/role
+// rows) into the card shape used by partials/project-rollup-grid.php. Used for
+// the "Your Projects" rollup on dashboards for non-client roles (team lead,
+// manager without a dedicated mock rollup, developer, designer).
 function buildProjectRollupCards(array $projectRows): array {
     return array_map(function ($row) {
         $doneCount = count(array_filter($row['stages'] ?? [], fn($s) => $s === 'completed'));

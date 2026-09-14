@@ -19,7 +19,7 @@ $statusCounts = array_count_values(array_column($myTasks, 'status'));
         <p>Here's what's on your plate across your projects.</p>
     </div>
 
-    <!-- Stat cards -->
+    <!-- Stat cards: Assigned Tasks, In Progress, Ready for Review, Overdue -->
     <div class="dash-stats">
         <?php foreach ($stats as $stat): ?>
             <div class="card stat-card stat-card--<?= htmlspecialchars($stat['tone']) ?>">
@@ -33,7 +33,7 @@ $statusCounts = array_count_values(array_column($myTasks, 'status'));
         <?php endforeach; ?>
     </div>
 
-    <!-- My Tasks -->
+    <!-- My Tasks: cross-project list of everything assigned to me -->
     <div class="card mytasks-panel">
         <div class="mytasks-panel__header">
             <h2 class="card__title">
@@ -153,4 +153,4 @@ $statusCounts = array_count_values(array_column($myTasks, 'status'));
 
     <?php include __DIR__ . '/../partials/client-projects-widget.php'; ?>
 
-</div>
+</div>latest approval decisions on submitted wor
