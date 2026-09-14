@@ -87,9 +87,10 @@ $PERSONA_CLIENT_ONLY = [
     $PERSONA_MANAGER_MIX[7],
 ];
 
-// Map real user_id -> persona 
+// ---- Map real user_id -> persona ----
 return [
-    1 => $PERSONA_TEAM_LEAD_ONLY,
+    1 => $PERSONA_MANAGER_MIX,
+
     // 2 => $PERSONA_CONTRIBUTOR_ONLY,
     // 3 => $PERSONA_TEAM_LEAD_ONLY,
     // 4 => $PERSONA_CONTRIBUTOR_AND_CLIENT,

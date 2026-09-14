@@ -14,7 +14,7 @@ if (empty($clientProjects)) {
     </p>
     <div class="dash-projects__grid">
         <?php foreach ($clientProjects as $cp): ?>
-            <div class="card client-projects-widget__card">
+            <a href="<?= url('client-portal/overview?id=' . $cp['id']) ?>" class="card client-projects-widget__card">
                 <div class="client-projects-widget__top">
                     <h3 class="project-card__name"><?= htmlspecialchars($cp['name']) ?></h3>
                     <?php if (!empty($cp['needsReview'])): ?>
@@ -31,7 +31,7 @@ if (empty($clientProjects)) {
                 <div class="progress-bar">
                     <div class="progress-bar__fill" style="width: <?= (int) $cp['percent'] ?>%;"></div>
                 </div>
-            </div>
+            </a>
         <?php endforeach; ?>
     </div>
 </div>

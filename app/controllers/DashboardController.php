@@ -52,6 +52,15 @@ class DashboardController extends Controller {
             return;
         }
 
+        if (userHasRoleAnywhere('team_lead')) {
+            $teamLeadData = require __DIR__ . '/../../config/mock/teamlead-dashboard.php';
+            $this->render('dashboard/teamlead', array_merge($context, $teamLeadData, [
+                'projects'       => buildProjectRollupCards($roles['other']),
+                'clientProjects' => $clientProjects,
+            ]));
+            return;
+        }
+
         if (!empty($roles['other'])) {
             $contributorData = require __DIR__ . '/../../config/mock/contributor-dashboard.php';
             $this->render('dashboard/contributor', array_merge($context, $contributorData, [

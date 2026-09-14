@@ -63,7 +63,7 @@ function projectStatusTone(string $status): string {
 }
 
 function mockPageContext(string $currentRoute, string $pageTitle, array $extra = []): array {
-    $user           = require __DIR__ . '/../../config/mock/users.php';
+    $user           = currentUserContext();
     $projectContext = currentProjectContext();
     $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
 

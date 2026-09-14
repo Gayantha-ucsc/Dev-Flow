@@ -1,4 +1,3 @@
-
 .client-dash {
     padding: var(--space-lg);
     max-width: 1180px;
@@ -207,7 +206,17 @@
     font-size: 0.88rem;
     margin: -8px 0 var(--space-md);
 }
-.client-projects-widget__card { padding: var(--space-lg); }
+.client-projects-widget__card {
+    padding: var(--space-lg);
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.client-projects-widget__card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 2px 8px rgba(58, 42, 38, 0.08);
+}
 .client-projects-widget__top {
     display: flex;
     align-items: center;
