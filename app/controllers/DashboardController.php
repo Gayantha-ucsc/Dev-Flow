@@ -52,6 +52,15 @@ class DashboardController extends Controller {
             return;
         }
 
+        if (!empty($roles['other'])) {
+            $contributorData = require __DIR__ . '/../../config/mock/contributor-dashboard.php';
+            $this->render('dashboard/contributor', array_merge($context, $contributorData, [
+                'projects'       => buildProjectRollupCards($roles['other']),
+                'clientProjects' => $clientProjects,
+            ]));
+            return;
+        }
+
         $this->render('pages/placeholder', array_merge($context, [
             'heading'        => 'Dashboard',
             'clientProjects' => $clientProjects,

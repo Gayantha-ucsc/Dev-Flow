@@ -171,6 +171,35 @@ function buildClientProjectBundles(array $clientRows): array {
     }, $clientRows);
 }
 
+function buildProjectRollupCards(array $projectRows): array {
+    return array_map(function ($row) {
+        $doneCount = count(array_filter($row['stages'] ?? [], fn($s) => $s === 'completed'));
+        $activeCount = count(array_filter($row['stages'] ?? [], fn($s) => $s === 'in_progress'));
+
+        $dangerCount = (int) ($row['overdueCount'] ?? 0);
+        $dangerLabel = 'Overdue';
+        if ($dangerCount === 0 && !empty($row['blockedCount'])) {
+            $dangerCount = (int) $row['blockedCount'];
+            $dangerLabel = 'Blocked';
+        }
+
+        return [
+            'id'          => $row['id'],
+            'name'        => $row['name'],
+            'subtitle'    => $row['description'],
+            'health'      => $row['health'] ?? 'on_track',
+            'percent'     => $row['percent'],
+            'stages'      => $row['stages'] ?? [],
+            'stageLabel'  => $row['stageLabel'],
+            'role'        => $row['role'],
+            'doneCount'   => $doneCount,
+            'activeCount' => $activeCount,
+            'dangerCount' => $dangerCount,
+            'dangerLabel' => $dangerLabel,
+        ];
+    }, $projectRows);
+}
+
 function clientStageIcon(string $stageName): string {
     $name = strtolower($stageName);
 
@@ -271,6 +300,15 @@ function taskStatusMeta(string $status): array {
         'blocked'        => ['tone' => 'pink',    'icon' => 'ban',            'label' => 'Blocked'],
         'overdue'        => ['tone' => 'danger',  'icon' => 'circle-alert',   'label' => 'Overdue'],
         default          => ['tone' => 'neutral', 'icon' => null,             'label' => ucfirst($status)],
+    };
+}
+
+function approvalDecisionMeta(string $decision): array {
+    return match ($decision) {
+        'approved'           => ['tone' => 'success', 'label' => 'Approved'],
+        'rejected'           => ['tone' => 'danger',  'label' => 'Rejected'],
+        'changes_requested'  => ['tone' => 'warning', 'label' => 'Changes Requested'],
+        default              => ['tone' => 'neutral', 'label' => ucfirst(str_replace('_', ' ', $decision))],
     };
 }
 

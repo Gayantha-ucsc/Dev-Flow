@@ -25,7 +25,7 @@
 
     <div class="dash-columns">
 
-        <!-- Needs Your Attention: joint approvals, member requests, stage-change proposals -->
+        <!-- joint approvals, member requests, stage-change proposals -->
         <div class="card dash-panel">
             <div class="card__header">
                 <h2 class="card__title"><?= renderIcon('bell') ?> Needs Your Attention</h2>
@@ -66,7 +66,7 @@
             <?php endif; ?>
         </div>
 
-        <!-- Recent Activity: cross-project feed, each entry project-tagged -->
+        <!-- Recent Activity -->
         <div class="card dash-panel">
             <div class="card__header">
                 <h2 class="card__title"><?= renderIcon('clock') ?> Recent Activity</h2>
@@ -95,50 +95,8 @@
 
     </div>
 
-    <!-- Your Projects: compact rollup cards, prioritized by urgency -->
-    <div class="dash-projects">
-        <div class="dash-projects__header">
-            <h2>Your Projects</h2>
-            <a class="card__link" href="<?= url('projects') ?>">View All <?= renderIcon('arrow-up-right') ?></a>
-        </div>
-        <div class="dash-projects__grid">
-            <?php foreach ($projects as $project): ?>
-                <div class="card project-card project-card--<?= htmlspecialchars($project['health']) ?>">
-                    <div class="project-card__top">
-                        <div>
-                            <h3 class="project-card__name"><?= htmlspecialchars($project['name']) ?></h3>
-                            <p class="project-card__subtitle"><?= htmlspecialchars($project['subtitle']) ?></p>
-                        </div>
-                        <span class="badge <?= $project['health'] === 'at_risk' ? 'badge--danger' : 'badge--success' ?>">
-                            <?= $project['health'] === 'at_risk' ? 'At Risk' : 'On Track' ?>
-                        </span>
-                    </div>
-
-                    <div class="project-card__pipeline-row">
-                        <?php $stages = $project['stages']; ?>
-                        <?php include __DIR__ . '/../partials/stage-pipeline.php'; ?>
-                        <span class="project-card__stage-label"><?= htmlspecialchars($project['stageLabel']) ?></span>
-                    </div>
-
-                    <div class="project-card__progress-row">
-                        <span>Progress</span>
-                        <strong><?= (int) $project['percent'] ?>%</strong>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-bar__fill" style="width: <?= (int) $project['percent'] ?>%;"></div>
-                    </div>
-
-                    <div class="project-card__footer">
-                        <span class="legend-dot"><?= (int) $project['doneCount'] ?> Done</span>
-                        <span class="legend-dot legend-dot--active"><?= (int) $project['activeCount'] ?> Active</span>
-                        <?php if ($project['dangerCount'] > 0): ?>
-                            <span class="legend-dot legend-dot--danger"><?= (int) $project['dangerCount'] ?> <?= htmlspecialchars($project['dangerLabel']) ?></span>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
+    <!-- Your Projects; prioritized by urgency -->
+    <?php include __DIR__ . '/../partials/project-rollup-grid.php'; ?>
 
     <?php include __DIR__ . '/../partials/client-projects-widget.php'; ?>
 
