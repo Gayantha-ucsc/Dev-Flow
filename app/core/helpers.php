@@ -343,6 +343,32 @@ function taskStatusMeta(string $status): array {
     };
 }
 
+// Renders a short relative timestamp ("2h ago", "Yesterday") for recent datetimes, falling back to an absolute date once it's more than a day old.
+function timeAgo(string $datetime): string {
+    $then = strtotime($datetime);
+    if ($then === false) {
+        return $datetime;
+    }
+
+    $diff = time() - $then;
+
+    if ($diff < 60) {
+        return 'Just now';
+    }
+    if ($diff < 3600) {
+        $mins = (int) floor($diff / 60);
+        return $mins . 'm ago';
+    }
+    if ($diff < 86400) {
+        $hours = (int) floor($diff / 3600);
+        return $hours . 'h ago';
+    }
+    if ($diff < 172800) {
+        return 'Yesterday';
+    }
+    return date('M j, Y', $then);
+}
+
 function approvalDecisionMeta(string $decision): array {
     return match ($decision) {
         'approved'           => ['tone' => 'success', 'label' => 'Approved'],

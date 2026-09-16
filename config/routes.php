@@ -19,7 +19,7 @@ return [
         '/tasks/create'        => ['TaskController', 'create'],
         '/tasks/:id'           => ['TaskController', 'detail'],
         '/tasks/:id/edit'      => ['TaskController', 'edit'],
-        '/review'              => ['PageController', 'review'],
+        '/review'              => ['ReviewController', 'queue'],
         '/client-portal/reviews'  => ['ClientPortalController', 'reviews'],
         '/client-portal/overview' => ['ClientPortalController', 'overview'],
         '/client-portal/history'  => ['ClientPortalController', 'history'],
