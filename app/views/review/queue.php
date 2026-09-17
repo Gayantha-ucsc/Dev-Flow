@@ -14,31 +14,32 @@ if ($canManualReview && $pendingCount > 0) {
     $defaultTab = 'approvals';
 }
 ?>
+
 <div class="review-page">
 
     <div class="review-header">
         <div>
-            <h1>Review &amp; approval queue</h1>
-            <p>Tasks and approval gates awaiting your decision.</p>
+            <h1>Review Queue</h1>
+            <p><?= htmlspecialchars($subtitle) ?></p>
         </div>
     </div>
 
     <div class="review-tabs" role="tablist">
         <?php if ($canManualReview): ?>
             <button type="button" class="review-tab<?= $defaultTab === 'pending' ? ' is-active' : '' ?>" data-tab="pending" role="tab">
-                Pending review <span class="review-tab__count"><?= $pendingCount ?></span>
+                Pending <span class="review-tab__count"><?= $pendingCount ?></span>
             </button>
         <?php endif; ?>
 
         <?php if ($canJointApprove): ?>
             <button type="button" class="review-tab<?= $defaultTab === 'approvals' ? ' is-active' : '' ?>" data-tab="approvals" role="tab">
-                Joint approvals <span class="review-tab__count"><?= $gatesCount ?></span>
+                Approvals <span class="review-tab__count"><?= $gatesCount ?></span>
             </button>
         <?php endif; ?>
 
         <?php if ($canManualReview): ?>
             <button type="button" class="review-tab" data-tab="history" role="tab">
-                Reviewed history
+                History
             </button>
         <?php endif; ?>
     </div>

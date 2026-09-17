@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    /* ---- Review item actions ---- */
+    /* Review item actions */
     function closeFeedback(item) {
         var feedback = item.querySelector('.review-item__feedback');
         var actions  = item.querySelector('.review-item__actions');
@@ -31,19 +31,30 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateTabCount() {
-        var remaining = document.querySelectorAll('.review-item').length;
-        var countEl = page.querySelector('.review-tab__count');
+        var list = document.getElementById('reviewList');
+        var remaining = list ? list.querySelectorAll('.review-item').length : 0;
+        var finalDelivery = document.querySelector('.final-delivery-card');
+        if (finalDelivery) remaining += 1;
+
+        var tab = page.querySelector('.review-tab[data-tab="pending"]');
+        var countEl = tab ? tab.querySelector('.review-tab__count') : null;
         if (countEl) countEl.textContent = remaining;
 
         if (remaining === 0) {
-            var list = document.getElementById('reviewList');
+            var emptyHtml =
+                '<div class="empty-state empty-state--card">' +
+                '<div class="empty-state__icon">' + (window.APP_ICONS ? window.APP_ICONS.circleCheck : '') + '</div>' +
+                '<h1 class="empty-state__heading">Nothing waiting on you</h1>' +
+                '<p class="empty-state__subtext">Every submitted task has been reviewed. New submissions from your team will show up here.</p>' +
+                '</div>';
+
             if (list) {
-                list.outerHTML =
-                    '<div class="empty-state empty-state--card">' +
-                    '<div class="empty-state__icon">' + (window.APP_ICONS ? window.APP_ICONS.circleCheck : '') + '</div>' +
-                    '<h1 class="empty-state__heading">Nothing waiting on you</h1>' +
-                    '<p class="empty-state__subtext">Every submitted task has been reviewed. New submissions from your team will show up here.</p>' +
-                    '</div>';
+                list.outerHTML = emptyHtml;
+            } else {
+                var pendingPanel = page.querySelector('.review-panel[data-panel="pending"]');
+                if (pendingPanel && !pendingPanel.querySelector('.empty-state')) {
+                    pendingPanel.insertAdjacentHTML('beforeend', emptyHtml);
+                }
             }
         }
     }

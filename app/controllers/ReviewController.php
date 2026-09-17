@@ -40,7 +40,7 @@ class ReviewController extends Controller {
     }
 
     public function queue(): void {
-        $context   = $this->baseContext('/review', 'Review & Approval');
+        $context   = $this->baseContext('/review', 'Review Queue');
         $projectId = $context['currentProjectId'] ?? null;
         $activeRole = $context['activeRole'] ?? null;
 
@@ -50,7 +50,12 @@ class ReviewController extends Controller {
         $reviewData = $projectId ? $this->projectReviews((int) $projectId) : ['pending' => [], 'history' => []];
         $gates      = $projectId ? $this->projectGates((int) $projectId) : [];
 
+        $subtitle = $canManualReview
+            ? 'Tasks submitted for your review.'
+            : 'Approval gates awaiting your decision.';
+
         $context = array_merge($context, [
+            'subtitle'        => $subtitle,
             'canManualReview' => $canManualReview,
             'canJointApprove' => $canJointApprove,
             'pendingItems'    => $canManualReview ? $reviewData['pending'] : [],

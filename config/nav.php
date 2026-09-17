@@ -17,7 +17,7 @@ return [
             'roles' => ['team_lead', 'manager', 'developer', 'designer'],
         ],
         [
-            'label' => 'Review & Approval',
+            'label' => 'Review Queue',
             'icon'  => 'review',
             'href'  => '/review',
             'roles' => ['team_lead', 'manager'],

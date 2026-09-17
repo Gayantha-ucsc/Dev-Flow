@@ -369,6 +369,42 @@ function timeAgo(string $datetime): string {
     return date('M j, Y', $then);
 }
 
+function reviewQueueBadgeCount(?string $activeRole, ?int $projectId): int {
+    if ($projectId === null || $activeRole === null) {
+        return 0;
+    }
+
+    $count = 0;
+
+    if ($activeRole === 'team_lead') {
+        $reviews = require __DIR__ . '/../../config/mock/reviews.php';
+        $count  += count($reviews[$projectId]['pending'] ?? []);
+    }
+
+    if (in_array($activeRole, ['manager', 'team_lead'], true)) {
+        $gates = require __DIR__ . '/../../config/mock/joint-approvals.php';
+        foreach ($gates[$projectId] ?? [] as $gate) {
+            foreach (['manager', 'teamLead'] as $key) {
+                $party = $gate[$key];
+                if ($party['roleKey'] === $activeRole && $party['decision'] === 'pending') {
+                    $count++;
+                }
+            }
+        }
+    }
+
+    if ($activeRole === 'client') {
+        $dashboard = require __DIR__ . '/../../config/mock/client-dashboard.php';
+        $bundle    = $dashboard[$projectId] ?? ['needsReview' => [], 'hero' => null];
+        $count    += count($bundle['needsReview']);
+        if (($bundle['hero']['type'] ?? null) === 'final_delivery_ready') {
+            $count++;
+        }
+    }
+
+    return $count;
+}
+
 function approvalDecisionMeta(string $decision): array {
     return match ($decision) {
         'approved'           => ['tone' => 'success', 'label' => 'Approved'],

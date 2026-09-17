@@ -9,7 +9,7 @@ return [
             'context' => 'All 8 tasks in this stage are approved.',
             'manager' => [
                 'roleKey'    => 'manager',
-                'name'       => 'User Three',
+                'name'       => 'User Two',
                 'decision'   => 'approved',
                 'decidedAgo' => '2 days ago',
             ],
@@ -59,7 +59,7 @@ return [
             ],
             'teamLead' => [
                 'roleKey'    => 'team_lead',
-                'name'       => 'User Fourteen',
+                'name'       => 'User Fifteen',
                 'decision'   => 'approved',
                 'decidedAgo' => '6 hours ago',
             ],
