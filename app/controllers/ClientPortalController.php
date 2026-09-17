@@ -53,7 +53,29 @@ class ClientPortalController extends Controller {
     }
 
     public function reviews(): void {
-        $this->render('pages/placeholder', mockPageContext('/client-portal/reviews', 'Approvals', ['heading' => 'Approvals']));
+        $project = $this->resolveClientProject();
+
+        if ($project === null) {
+            http_response_code(404);
+            require __DIR__ . '/../views/errors/404.php';
+            return;
+        }
+
+        setCurrentProjectId($project['id']);
+
+        $history = require __DIR__ . '/../../config/mock/client-approval-history.php';
+
+        $context = array_merge(
+            mockPageContext('/client-portal/reviews', 'Approvals', ['heading' => 'Approvals']),
+            [
+                'project'      => $project,
+                'needsReview'  => $project['needsReview'],
+                'hero'         => $project['hero'],
+                'historyItems' => $history[$project['id']] ?? [],
+            ]
+        );
+
+        $this->render('client-portal/reviews', $context);
     }
 
     public function history(): void {

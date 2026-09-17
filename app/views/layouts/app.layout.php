@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="<?= url('assets/css/project-detail.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/team.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/task.css') ?>">
+    <link rel="stylesheet" href="<?= url('assets/css/review.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/chat.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/settings.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/reports.css') ?>">
@@ -37,6 +38,7 @@
     <script src="<?= url('assets/js/project-overview.js') ?>" defer></script>
     <script src="<?= url('assets/js/settings.js') ?>" defer></script>
     <script src="<?= url('assets/js/task.js') ?>" defer></script>
+    <script src="<?= url('assets/js/review.js') ?>" defer></script>
     <script src="<?= url('assets/js/dashboard-mytasks.js') ?>" defer></script>
     <script src="<?= url('assets/js/chat.js') ?>" defer></script>
     <script src="<?= url('assets/js/reports.js') ?>" defer></script>

@@ -1,6 +1,6 @@
 <?php
 // Expects:
-// $currentProjectId    — null triggers the no-project state
+// $currentProjectId     — null triggers the no-project state
 // $currentProjectName
 // $activeRole           — user's role on the currently selected project
 // $currentRoute         — current URL path
@@ -82,10 +82,19 @@ if ($hasProject) {
             </a>
             <?php if ($hasProject): ?>
                 <?php foreach ($visibleProjectItems as $item): ?>
-                    <a href="<?= sidebarHref($item['href'], $currentProjectId) ?>"
+                    <?php
+                        $itemHref = sidebarHref($item['href'], $currentProjectId);
+                        $badgeCount = in_array($item['href'], ['/review', '/client-portal/reviews'], true)
+                            ? reviewQueueBadgeCount($activeRole, $currentProjectId)
+                            : 0;
+                    ?>
+                    <a href="<?= $itemHref ?>"
                        class="sidebar__nav-item <?= $route === str_replace('{id}', (string) $currentProjectId, $item['href']) ? 'is-active' : '' ?>">
                         <?= renderIcon($item['icon']) ?>
                         <span><?= htmlspecialchars($item['label']) ?></span>
+                        <?php if ($badgeCount > 0): ?>
+                            <span class="sidebar__nav-badge"><?= $badgeCount ?></span>
+                        <?php endif; ?>
                     </a>
                 <?php endforeach; ?>
             <?php endif; ?>
