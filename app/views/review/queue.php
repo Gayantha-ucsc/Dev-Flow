@@ -1,26 +1,50 @@
 <?php
-// Expects: $pendingItems, $historyItems, $currentProjectName
+// Expects: $pendingItems, $historyItems, $gates, $canManualReview, $canJointApprove
 $pendingCount = count($pendingItems);
+$gatesCount   = count($gates);
+
+// Which tab opens by default: prefer whichever queue actually has work in it.
+if ($canManualReview && $pendingCount > 0) {
+    $defaultTab = 'pending';
+} elseif ($canJointApprove && $gatesCount > 0) {
+    $defaultTab = 'approvals';
+} elseif ($canManualReview) {
+    $defaultTab = 'pending';
+} else {
+    $defaultTab = 'approvals';
+}
 ?>
 <div class="review-page">
 
     <div class="review-header">
         <div>
             <h1>Review &amp; approval queue</h1>
-            <p>Tasks submitted for your review.</p>
+            <p>Tasks and approval gates awaiting your decision.</p>
         </div>
     </div>
 
     <div class="review-tabs" role="tablist">
-        <button type="button" class="review-tab is-active" data-tab="pending" role="tab">
-            Pending review <span class="review-tab__count"><?= $pendingCount ?></span>
-        </button>
-        <button type="button" class="review-tab" data-tab="history" role="tab">
-            Reviewed history
-        </button>
+        <?php if ($canManualReview): ?>
+            <button type="button" class="review-tab<?= $defaultTab === 'pending' ? ' is-active' : '' ?>" data-tab="pending" role="tab">
+                Pending review <span class="review-tab__count"><?= $pendingCount ?></span>
+            </button>
+        <?php endif; ?>
+
+        <?php if ($canJointApprove): ?>
+            <button type="button" class="review-tab<?= $defaultTab === 'approvals' ? ' is-active' : '' ?>" data-tab="approvals" role="tab">
+                Joint approvals <span class="review-tab__count"><?= $gatesCount ?></span>
+            </button>
+        <?php endif; ?>
+
+        <?php if ($canManualReview): ?>
+            <button type="button" class="review-tab" data-tab="history" role="tab">
+                Reviewed history
+            </button>
+        <?php endif; ?>
     </div>
 
-    <div class="review-panel" data-panel="pending">
+    <?php if ($canManualReview): ?>
+    <div class="review-panel" data-panel="pending" <?= $defaultTab === 'pending' ? '' : 'hidden' ?>>
         <?php if (empty($pendingItems)): ?>
             <?php
                 $variant  = 'card';
@@ -76,7 +100,96 @@ $pendingCount = count($pendingItems);
             </div>
         <?php endif; ?>
     </div>
+    <?php endif; ?>
 
+    <?php if ($canJointApprove): ?>
+    <div class="review-panel" data-panel="approvals" <?= $defaultTab === 'approvals' ? '' : 'hidden' ?>>
+        <p class="review-panel__intro">These require sign-off from both the Manager and Team Lead before moving forward.</p>
+
+        <?php if (empty($gates)): ?>
+            <?php
+                $variant  = 'card';
+                $icon     = 'circle-check';
+                $heading  = 'No approval gates open';
+                $subtext  = 'Stage completions and final deliveries awaiting joint sign-off will appear here.';
+            ?>
+            <?php include __DIR__ . '/../partials/empty-state.php'; ?>
+        <?php else: ?>
+            <div class="review-list" id="gateList">
+                <?php foreach ($gates as $gate): ?>
+                    <div class="card approval-gate" data-gate-id="<?= (int) $gate['id'] ?>" data-gate-type="<?= htmlspecialchars($gate['type']) ?>">
+                        <p class="approval-gate__eyebrow"><?= htmlspecialchars(strtoupper($gate['eyebrow'])) ?></p>
+                        <h2 class="approval-gate__title"><?= htmlspecialchars($gate['title']) ?></h2>
+                        <p class="approval-gate__context"><?= htmlspecialchars($gate['context']) ?></p>
+
+                        <div class="approval-gate__parties">
+                            <?php foreach (['manager' => 'Manager', 'teamLead' => 'Team Lead'] as $key => $label): ?>
+                                <?php $party = $gate[$key]; $meta = approvalDecisionMeta($party['decision']); ?>
+                                <div class="approval-party">
+                                    <div class="approval-party__who">
+                                        <span class="avatar avatar--<?= avatarColorClass($party['name']) ?>">
+                                            <?= htmlspecialchars(initials($party['name'])) ?>
+                                        </span>
+                                        <div>
+                                            <p class="approval-party__name"><?= htmlspecialchars($label) ?> &mdash; <?= htmlspecialchars($party['name']) ?></p>
+                                            <p class="approval-party__status-line">
+                                                <?php if ($party['decision'] === 'approved'): ?>
+                                                    Decided <?= htmlspecialchars($party['decidedAgo']) ?>
+                                                <?php elseif ($party['isActionable']): ?>
+                                                    <span class="approval-party__status-line--pending">Your review is pending</span>
+                                                <?php else: ?>
+                                                    Awaiting review
+                                                <?php endif; ?>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <?php if ($party['isActionable']): ?>
+                                        <div class="approval-party__actions">
+                                            <button type="button" class="btn-sm js-gate-reject" data-party="<?= $key ?>">Reject</button>
+                                            <button type="button" class="btn-sm btn-sm--primary js-gate-approve" data-party="<?= $key ?>">Approve</button>
+                                        </div>
+                                    <?php else: ?>
+                                        <span class="badge badge--<?= $meta['tone'] ?> approval-party__badge">
+                                            <?php if ($party['decision'] === 'approved'): ?><?= renderIcon('circle-check') ?><?php endif; ?>
+                                            <?php if ($party['decision'] === 'pending'): ?><?= renderIcon('clock') ?><?php endif; ?>
+                                            <?= htmlspecialchars($meta['label']) ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <div class="approval-gate__progress">
+                            <div class="approval-gate__progress-label">
+                                <span class="js-progress-text"><?= (int) $gate['approvedCount'] ?> of 2 approvals received</span>
+                                <span class="js-progress-percent"><?= (int) $gate['percent'] ?>%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-bar__fill js-progress-fill" style="width: <?= (int) $gate['percent'] ?>%"></div>
+                            </div>
+                            <?php if ($gate['type'] === 'stage'): ?>
+                                <p class="approval-gate__progress-note">Stage will automatically advance to Completed once both approvals are recorded.</p>
+                            <?php endif; ?>
+                        </div>
+
+                        <?php if ($gate['type'] === 'project'): ?>
+                            <div class="approval-gate__notice">
+                                <?= renderIcon('clock') ?>
+                                <div>
+                                    <p class="approval-gate__notice-title">Client approval is tracked separately and required in addition to this.</p>
+                                    <p class="approval-gate__notice-body">Final delivery must also pass external Client Portal review before project closure.</p>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($canManualReview): ?>
     <div class="review-panel" data-panel="history" hidden>
         <div class="card review-history-card">
             <div class="card__header">
@@ -117,6 +230,7 @@ $pendingCount = count($pendingItems);
             <?php endif; ?>
         </div>
     </div>
+    <?php endif; ?>
 
     <p class="review-footnote">Review decisions trigger immediate notifications to task assignees.</p>
 </div>

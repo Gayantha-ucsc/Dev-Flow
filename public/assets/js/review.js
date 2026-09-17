@@ -109,4 +109,80 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     });
+
+    /* Joint approval gates */
+    var gateList = document.getElementById('gateList');
+
+    function updateGatesTabCount() {
+        var remaining = gateList ? gateList.querySelectorAll('.approval-gate').length : 0;
+        var tab = page.querySelector('.review-tab[data-tab="approvals"]');
+        var countEl = tab ? tab.querySelector('.review-tab__count') : null;
+        if (countEl) countEl.textContent = remaining;
+
+        if (gateList && remaining === 0) {
+            gateList.outerHTML =
+                '<div class="empty-state empty-state--card">' +
+                '<div class="empty-state__icon">' + (window.APP_ICONS ? window.APP_ICONS.circleCheck : '') + '</div>' +
+                '<h1 class="empty-state__heading">No approval gates open</h1>' +
+                '<p class="empty-state__subtext">Stage completions and final deliveries awaiting joint sign-off will appear here.</p>' +
+                '</div>';
+        }
+    }
+
+    function removeGate(gate, message) {
+        gate.remove();
+        updateGatesTabCount();
+        if (window.showToast) window.showToast('info', message);
+    }
+
+    document.querySelectorAll('.approval-gate').forEach(function (gate) {
+        var titleEl = gate.querySelector('.approval-gate__title');
+        var gateName = titleEl ? titleEl.textContent.trim() : 'This gate';
+        var isStage = gate.dataset.gateType === 'stage';
+
+        gate.querySelectorAll('.js-gate-reject').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                removeGate(
+                    gate,
+                    '"' + gateName + '" was rejected. ' +
+                        (isStage ? 'The stage has reverted to in progress and the other party has been notified.'
+                                 : 'The other party has been notified.')
+                );
+            });
+        });
+
+        gate.querySelectorAll('.js-gate-approve').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var row = btn.closest('.approval-party');
+                var actions = row ? row.querySelector('.approval-party__actions') : null;
+
+                if (actions) {
+                    actions.outerHTML =
+                        '<span class="badge badge--success approval-party__badge">' +
+                        (window.APP_ICONS ? window.APP_ICONS.circleCheck : '') + ' Approved &bull; Just now</span>';
+                }
+
+                var approvedNow = gate.querySelectorAll('.badge--success.approval-party__badge').length;
+
+                var progressText = gate.querySelector('.js-progress-text');
+                var progressPercent = gate.querySelector('.js-progress-percent');
+                var progressFill = gate.querySelector('.js-progress-fill');
+                var pct = Math.round((approvedNow / 2) * 100);
+                if (progressText) progressText.textContent = approvedNow + ' of 2 approvals received';
+                if (progressPercent) progressPercent.textContent = pct + '%';
+                if (progressFill) progressFill.style.width = pct + '%';
+
+                if (approvedNow >= 2) {
+                    removeGate(
+                        gate,
+                        isStage
+                            ? '"' + gateName + '" fully approved — the stage is now marked Completed.'
+                            : '"' + gateName + '" fully approved internally.'
+                    );
+                } else if (window.showToast) {
+                    window.showToast('success', 'Your approval on "' + gateName + '" was recorded.');
+                }
+            });
+        });
+    });
 });
