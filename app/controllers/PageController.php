@@ -18,7 +18,4 @@ class PageController extends Controller {
     public function payment(): void {
         $this->render('pages/placeholder', mockPageContext('/payment', 'Payment', ['heading' => 'Payment']));
     }
-    public function notifications(): void {
-        $this->render('pages/placeholder', mockPageContext('/notifications', 'Notifications', ['heading' => 'Notifications']));
-    }
 }

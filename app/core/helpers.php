@@ -538,3 +538,71 @@ function chatPermissions(?string $activeRole, bool $hasApprovedClientAccess = fa
         'roleLabel'               => memberRoleLabel($activeRole ?? 'member'),
     ];
 }
+
+// Notifications page helpers 
+
+function renderNotificationMessage(string $message): string {
+    $escaped = htmlspecialchars($message, ENT_QUOTES, 'UTF-8', false);
+    $escaped = preg_replace('/&amp;(#?[a-zA-Z0-9]+;)/', '&$1', $escaped);
+    return preg_replace('/\*\*(.+?)\*\*/', '<strong>$1</strong>', $escaped);
+}
+
+// 'Today', 'Yesterday', or a short absolute date for anything older.
+function notificationDayLabel(string $datetime): string {
+    $then = strtotime($datetime);
+    if ($then === false) {
+        return 'Earlier';
+    }
+
+    $today     = date('Y-m-d');
+    $yesterday = date('Y-m-d', strtotime('-1 day'));
+    $day       = date('Y-m-d', $then);
+
+    if ($day === $today) {
+        return 'Today';
+    }
+    if ($day === $yesterday) {
+        return 'Yesterday';
+    }
+    return date('M j', $then);
+}
+
+// Relative time for Today's items ("12m ago"), absolute "Day, h:mm A" otherwise.
+function notificationTimeLabel(string $datetime, string $dayLabel): string {
+    if ($dayLabel === 'Today') {
+        return timeAgo($datetime);
+    }
+    $then = strtotime($datetime);
+    return $then === false ? $datetime : $dayLabel . ', ' . date('g:i A', $then);
+}
+
+function notificationCategoryLabel(string $category): string {
+    return match ($category) {
+        'tasks'     => 'Tasks',
+        'approvals' => 'Approvals',
+        'chat'      => 'Chat',
+        'payments'  => 'Payments',
+        default     => ucfirst($category),
+    };
+}
+
+function groupNotificationFeed(array $feed): array {
+    $groups = [];
+    foreach ($feed as $item) {
+        $day = notificationDayLabel($item['created_at']);
+        $groups[$day]['label']   = $day;
+        $groups[$day]['unread']  = ($groups[$day]['unread'] ?? 0) + (empty($item['is_read']) ? 1 : 0);
+        $groups[$day]['items'][] = $item;
+    }
+    return $groups;
+}
+
+function notificationCategoryCounts(array $feed): array {
+    $counts = ['all' => count($feed), 'tasks' => 0, 'approvals' => 0, 'chat' => 0, 'payments' => 0];
+    foreach ($feed as $item) {
+        if (isset($counts[$item['category']])) {
+            $counts[$item['category']]++;
+        }
+    }
+    return $counts;
+}

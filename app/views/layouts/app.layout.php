@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="<?= url('assets/css/settings.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/reports.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/client-portal.css') ?>">
+    <link rel="stylesheet" href="<?= url('assets/css/notifications.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/modal.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/wizard.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/datepicker.css') ?>">
@@ -41,6 +42,7 @@
     <script src="<?= url('assets/js/review.js') ?>" defer></script>
     <script src="<?= url('assets/js/dashboard-mytasks.js') ?>" defer></script>
     <script src="<?= url('assets/js/chat.js') ?>" defer></script>
+    <script src="<?= url('assets/js/notification.js') ?>" defer></script>
     <script src="<?= url('assets/js/reports.js') ?>" defer></script>
     <script src="<?= url('assets/js/navbar.js') ?>" defer></script>
 
