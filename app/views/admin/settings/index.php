@@ -62,7 +62,7 @@
         <?= renderIcon('shield-check') ?>
         <div>
             All changes here are recorded in the <a href="<?= url('admin/audit') ?>">Audit Log</a> with the acting
-            administrator and a timestamp (FR-8.3.1).
+            administrator and a timestamp.
         </div>
     </div>
 </div>

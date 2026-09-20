@@ -4,7 +4,7 @@ return [
     [
         'label' => 'Session & Security',
         'icon'  => 'lock',
-        'description' => 'How long an idle session stays signed in before it must be re-authenticated (FR-1.4.2).',
+        'description' => 'How long an idle session stays signed in before it must be re-authenticated.',
         'settings' => [
             [
                 'key'         => 'session_timeout_minutes',
@@ -63,7 +63,7 @@ return [
             [
                 'key'         => 'client_room_request_timeout_hours',
                 'label'       => 'Client-room access request timeout',
-                'description' => "Auto-expires a pending contributor addition request (FR-6.2.3) if Manager and Team Lead haven't both decided.",
+                'description' => "Auto-expires a pending contributor addition request if Manager and Team Lead haven't both decided.",
                 'type'        => 'number',
                 'value'       => 48,
                 'unit'        => 'hours',
@@ -80,7 +80,7 @@ return [
             [
                 'key'         => 'default_workflow_template',
                 'label'       => 'Default workflow template',
-                'description' => 'Pre-selected in the template picker at project creation (FR-2.2.3) — the Team Lead can still pick a different one or start from scratch.',
+                'description' => 'Pre-selected in the template picker at project creation - the Team Lead can still pick a different one or start from scratch.',
                 'type'        => 'select',
                 'value'       => 'Standard Web Development',
                 'updated_by'  => 'User One',
