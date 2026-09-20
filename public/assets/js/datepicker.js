@@ -124,11 +124,11 @@ document.querySelectorAll('[data-datepicker]').forEach(function (field) {
     }
 
     // Fixes bug 2: stops any click inside the calendar from bubbling to the
-    // global outside-click dropdown-closer. Attached once — calendarEl
+    // global outside-click dropdown-closer. Attached once - calendarEl
     // itself persists across re-renders, only its innerHTML is replaced.
     calendarEl.addEventListener('click', e => e.stopPropagation());
 
-    // Reset hook — clears the picked date and restores the placeholder display.
+    // Reset hook - clears the picked date and restores the placeholder display.
     field.datepickerReset = function () {
         selectedDate = null;
         viewDate = new Date();

@@ -1,10 +1,10 @@
 <?php
 // Expects:
-// $currentProjectId     — null triggers the no-project state
+// $currentProjectId     - null triggers the no-project state
 // $currentProjectName
-// $activeRole           — user's role on the currently selected project
-// $currentRoute         — current URL path
-// $currentUser          — used for the is_admin check
+// $activeRole           - user's role on the currently selected project
+// $currentRoute         - current URL path
+// $currentUser          - used for the is_admin check
 
 $navConfig  = require __DIR__ . '/../../../config/nav.php';
 $hasProject = !empty($currentProjectId);

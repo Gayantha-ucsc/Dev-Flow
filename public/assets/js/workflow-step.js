@@ -78,7 +78,7 @@
             return { name: 'Custom Workflow', icon: 'layout-template', stages: stages.map(s => s.name) };
         }
         const tpl = window.WORKFLOW_TEMPLATES.find(t => t.id === selectedTemplateId);
-        return { name: tpl ? tpl.name : '—', icon: tpl ? tpl.icon : 'layout-template', stages: stages.map(s => s.name) };
+        return { name: tpl ? tpl.name : '-', icon: tpl ? tpl.icon : 'layout-template', stages: stages.map(s => s.name) };
     };
 
     // ---------- Stage list rendering + editing ----------

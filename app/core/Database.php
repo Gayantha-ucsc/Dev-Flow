@@ -189,7 +189,7 @@ class DB {
     }
 
 
-    // Generic — any SQL statement
+    // Generic - any SQL statement
 
     public function query(string $sql, array $params = []): array {
         $stmt = $this->conn->prepare($sql);

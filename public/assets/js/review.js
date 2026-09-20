@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     removeGate(
                         gate,
                         isStage
-                            ? '"' + gateName + '" fully approved — the stage is now marked Completed.'
+                            ? '"' + gateName + '" fully approved - the stage is now marked Completed.'
                             : '"' + gateName + '" fully approved internally.'
                     );
                 } else if (window.showToast) {

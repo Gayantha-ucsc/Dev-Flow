@@ -1,5 +1,4 @@
 <?php
-// Placeholder data for WorkflowTemplate + TemplateStage
 
 return [
     [
@@ -9,14 +8,20 @@ return [
         'icon' => 'layout-template',
         'icon_bg' => 'orange',
         'stages' => ['Requirement Gathering', 'Design', 'Client Design Review', 'Revision', 'Final Design Approval', 'Development', 'Testing', 'Client Final Review', 'Delivery and Handoff'],
+        'is_system_default' => true,
+        'created_by' => null,
+        'created_at' => null,
     ],
     [
         'id' => 2,
-        'name' => 'Branding & Design',
-        'description' => 'Streamlined process focused on creative deliverables and client review cycles.',
-        'icon' => 'palette',
+        'name' => 'Bug Fix / Maintenance',
+        'description' => 'A short cycle for support tickets, hotfixes, and regression work outside the main delivery pipeline.',
+        'icon' => 'bug',
         'icon_bg' => 'pink',
-        'stages' => ['Discovery', 'Concept Design', 'Client Review', 'Revision', 'Final Deliverables', 'Handoff'],
+        'stages' => ['Triage & Reproduction', 'Fix Implementation', 'Code Review', 'QA Verification'],
+        'is_system_default' => false,
+        'created_by' => 'User Two',
+        'created_at' => '2026-08-14',
     ],
     [
         'id' => 3,
@@ -25,5 +30,19 @@ return [
         'icon' => 'smartphone',
         'icon_bg' => 'dark',
         'stages' => ['Requirement Gathering', 'UI/UX Design', 'Development', 'QA Testing', 'Client Review', 'Revision', 'Beta Testing', 'Delivery and Handoff'],
+        'is_system_default' => false,
+        'created_by' => 'User One',
+        'created_at' => '2026-05-20',
+    ],
+    [
+        'id' => 4,
+        'name' => 'Simple 3-Stage',
+        'description' => 'A lightweight linear process for small internal deliverables that do not need the full pipeline.',
+        'icon' => 'flag',
+        'icon_bg' => 'orange',
+        'stages' => ['Planning', 'Execution', 'Client Sign-off'],
+        'is_system_default' => false,
+        'created_by' => 'User One',
+        'created_at' => '2026-09-01',
     ],
 ];

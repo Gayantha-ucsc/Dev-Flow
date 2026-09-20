@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <?php include __DIR__ . '/../partials/head-meta.php'; ?>
@@ -22,6 +21,7 @@
     <link rel="stylesheet" href="<?= url('assets/css/reports.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/client-portal.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/notifications.css') ?>">
+    <link rel="stylesheet" href="<?= url('assets/css/admin.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/modal.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/wizard.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/components/datepicker.css') ?>">
@@ -45,6 +45,7 @@
     <script src="<?= url('assets/js/notification.js') ?>" defer></script>
     <script src="<?= url('assets/js/reports.js') ?>" defer></script>
     <script src="<?= url('assets/js/navbar.js') ?>" defer></script>
+    <script src="<?= url('assets/js/admin.js') ?>" defer></script>
 
 </head>
 <body>

@@ -16,7 +16,7 @@
     <div class="team-banner team-banner--highlight">
         <?= renderIcon('flag') ?>
         <div>
-            <strong>First Team Lead — unilateral add</strong>
+            <strong>First Team Lead - unilateral add</strong>
             This project has no Team Lead yet. You can appoint the first Team Lead directly without cross-approval.
             Other roles still follow the standard approval flow.
         </div>

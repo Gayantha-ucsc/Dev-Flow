@@ -18,7 +18,7 @@ $clientCount    = count($projectClients);
         <?= renderIcon('info') ?>
         <div>
             <strong><?= $clientCount ?> client<?= $clientCount === 1 ? '' : 's' ?> on this project</strong>
-            You can invite additional clients anytime — for example a main contact plus stakeholders or approvers from the client side.
+            You can invite additional clients anytime - for example a main contact plus stakeholders or approvers from the client side.
         </div>
     </div>
     <?php endif; ?>

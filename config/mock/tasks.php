@@ -30,7 +30,7 @@ return [
                 ],
                 'comments' => [
                     ['id' => 1, 'parentId' => null, 'author' => 'User Seven', 'body' => 'Can we align this with the existing session flow?', 'createdAt' => '2026-08-09 11:00'],
-                    ['id' => 2, 'parentId' => 1, 'author' => 'User Eight', 'body' => 'Yes — I will keep backward compatibility for one sprint.', 'createdAt' => '2026-08-09 11:45'],
+                    ['id' => 2, 'parentId' => 1, 'author' => 'User Eight', 'body' => 'Yes - I will keep backward compatibility for one sprint.', 'createdAt' => '2026-08-09 11:45'],
                 ],
                 'revisionRounds' => [
                     ['round' => 1, 'status' => 'approved', 'submittedAt' => '2026-08-05', 'reviewedAt' => '2026-08-06', 'reviewer' => 'User Seven', 'notes' => 'Initial scope approved.'],
@@ -102,10 +102,10 @@ return [
                 ],
                 'dependencies' => [202],
                 'progressNotes' => [
-                    ['id' => 1, 'author' => 'User Eleven', 'body' => 'Blocked — waiting on API keys from finance team.', 'createdAt' => '2026-08-11 10:00'],
+                    ['id' => 1, 'author' => 'User Eleven', 'body' => 'Blocked - waiting on API keys from finance team.', 'createdAt' => '2026-08-11 10:00'],
                 ],
                 'comments' => [
-                    ['id' => 1, 'parentId' => null, 'author' => 'User Ten', 'body' => 'Escalated to finance — expect keys by Friday.', 'createdAt' => '2026-08-11 10:30'],
+                    ['id' => 1, 'parentId' => null, 'author' => 'User Ten', 'body' => 'Escalated to finance - expect keys by Friday.', 'createdAt' => '2026-08-11 10:30'],
                 ],
                 'revisionRounds' => [],
             ],

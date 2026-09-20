@@ -1,6 +1,6 @@
 <?php
 
-// Validator — plain static helper methods
+// Validator - plain static helper methods
 class Validator {
 
     public static function name(string $name): ?string {

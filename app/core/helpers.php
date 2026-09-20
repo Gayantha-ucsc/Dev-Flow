@@ -207,10 +207,6 @@ function buildClientProjectBundles(array $clientRows): array {
     }, $clientRows);
 }
 
-// Converts rows from projects-list.php (the logged-in user's own project/role
-// rows) into the card shape used by partials/project-rollup-grid.php. Used for
-// the "Your Projects" rollup on dashboards for non-client roles (team lead,
-// manager without a dedicated mock rollup, developer, designer).
 function buildProjectRollupCards(array $projectRows): array {
     return array_map(function ($row) {
         $doneCount = count(array_filter($row['stages'] ?? [], fn($s) => $s === 'completed'));
@@ -257,6 +253,24 @@ function clientStageIcon(string $stageName): string {
     };
 }
 
+function adminAccountType(array $user): string {
+    if ($user['is_admin']) {
+        return 'admin';
+    }
+    if ($user['is_temp'] && !$user['is_temp_password_changed']) {
+        return 'temporary';
+    }
+    return 'standard';
+}
+
+function adminAccountTypeMeta(array $user): array {
+    return match (adminAccountType($user)) {
+        'admin'     => ['label' => 'Admin',     'tone' => 'primary', 'icon' => 'shield-check'],
+        'temporary' => ['label' => 'Temporary', 'tone' => 'warning', 'icon' => 'clock'],
+        default     => ['label' => 'Standard',  'tone' => 'neutral', 'icon' => null],
+    };
+}
+
 function memberRoleTone(string $role): string {
     return match ($role) {
         'manager'   => 'pink',
@@ -272,6 +286,27 @@ function memberRoleLabel(string $role): string {
     return match ($role) {
         'team_lead' => 'Team Lead',
         default     => ucfirst($role),
+    };
+}
+
+function auditActionTypeMeta(string $type): array {
+    return match ($type) {
+        'create'  => ['label' => 'Created',  'tone' => 'success'],
+        'update'  => ['label' => 'Updated',  'tone' => 'primary'],
+        'approve' => ['label' => 'Approved', 'tone' => 'success'],
+        'reject'  => ['label' => 'Rejected', 'tone' => 'danger'],
+        'delete'  => ['label' => 'Deleted',  'tone' => 'danger'],
+        default   => ['label' => ucfirst($type), 'tone' => 'neutral'],
+    };
+}
+
+function auditTargetTypeMeta(string $type): array {
+    return match ($type) {
+        'task'    => ['label' => 'Task',    'icon' => 'tasks'],
+        'stage'   => ['label' => 'Stage',   'icon' => 'workflow'],
+        'project' => ['label' => 'Project', 'icon' => 'folder'],
+        'user'    => ['label' => 'User',    'icon' => 'user'],
+        default   => ['label' => 'System',  'icon' => null],
     };
 }
 

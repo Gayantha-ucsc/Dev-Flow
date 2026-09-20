@@ -79,7 +79,7 @@ class TeamController extends Controller {
             }
         ));
 
-        // Capped, not the full result set — a targeted lookup, not a browse.
+        // Capped, not the full result set - a targeted lookup, not a browse.
         $matches = array_slice($matches, 0, 8);
 
         echo json_encode(['results' => $matches]);
