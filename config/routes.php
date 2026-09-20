@@ -27,7 +27,7 @@ return [
         '/reports'             => ['ReportController', 'index'],
         '/payment'             => ['PageController', 'payment'],
         '/settings'            => ['ProfileController', 'settings'],
-        '/notifications'       => ['PageController', 'notifications'],
+        '/notifications'       => ['NotificationController', 'index'],
         '/logout'              => ['AuthController', 'logout'],
 
         // System Administration (Admin only, project-agnostic)

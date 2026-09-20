@@ -12,7 +12,7 @@
 </head>
 <body class="auth-body">
     <?php include __DIR__ . '/../partials/flash-message.php'; ?>
-    <main class="auth-shell">
+    <main class="auth-shell <?= isset($layoutVariant) ? 'auth-shell--' . htmlspecialchars($layoutVariant) : '' ?>">
         <?= $content ?>
     </main>
 </body>

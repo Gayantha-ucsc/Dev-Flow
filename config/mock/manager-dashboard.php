@@ -42,7 +42,7 @@ return [
             'icon'    => 'flag',
             'title'   => 'Stage Completion: Client Design Review',
             'project' => 'Project Beta',
-            'meta'    => 'Team Lead has approved — awaiting your sign-off',
+            'meta'    => 'Team Lead has approved - awaiting your sign-off',
             'actions' => [
                 ['label' => 'Review',  'variant' => 'ghost',   'href' => '/review'],
                 ['label' => 'Approve', 'variant' => 'primary', 'href' => '#'],
@@ -51,9 +51,9 @@ return [
         [
             'type'    => 'member_request',
             'icon'    => 'user-plus',
-            'title'   => 'New Member: User Twenty-One — Developer',
+            'title'   => 'New Member: User Twenty-One - Developer',
             'project' => 'Project Gamma',
-            'meta'    => 'Added by Team Lead — needs your confirmation',
+            'meta'    => 'Added by Team Lead - needs your confirmation',
             'actions' => [
                 ['label' => 'Reject',  'variant' => 'text-danger', 'href' => '#'],
                 ['label' => 'Approve', 'variant' => 'primary',     'href' => '#'],
@@ -74,7 +74,7 @@ return [
             'icon'    => 'flag',
             'title'   => 'Final Delivery Ready for Joint Approval',
             'project' => 'Project Alpha',
-            'meta'    => 'All stages approved — final handoff pending',
+            'meta'    => 'All stages approved - final handoff pending',
             'actions' => [
                 ['label' => 'Review',  'variant' => 'ghost',   'href' => '/review'],
                 ['label' => 'Approve', 'variant' => 'primary', 'href' => '#'],

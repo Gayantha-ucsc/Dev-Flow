@@ -7,7 +7,8 @@ class AuthController extends Controller {
         Middleware::guestOnly();
 
         $this->render('auth/login', [
-            'pageTitle' => 'Log In',
+            'pageTitle'     => 'Log In',
+            'layoutVariant' => 'split',
         ], 'auth');
     }
 
@@ -58,8 +59,9 @@ class AuthController extends Controller {
         Session::clearOld();
 
         $this->render('auth/register', [
-            'pageTitle' => 'Create Account',
-            'old'       => $old,
+            'pageTitle'     => 'Create Account',
+            'old'           => $old,
+            'layoutVariant' => 'split',
         ], 'auth');
     }
 

@@ -207,10 +207,6 @@ function buildClientProjectBundles(array $clientRows): array {
     }, $clientRows);
 }
 
-// Converts rows from projects-list.php (the logged-in user's own project/role
-// rows) into the card shape used by partials/project-rollup-grid.php. Used for
-// the "Your Projects" rollup on dashboards for non-client roles (team lead,
-// manager without a dedicated mock rollup, developer, designer).
 function buildProjectRollupCards(array $projectRows): array {
     return array_map(function ($row) {
         $doneCount = count(array_filter($row['stages'] ?? [], fn($s) => $s === 'completed'));
@@ -257,6 +253,24 @@ function clientStageIcon(string $stageName): string {
     };
 }
 
+function adminAccountType(array $user): string {
+    if ($user['is_admin']) {
+        return 'admin';
+    }
+    if ($user['is_temp'] && !$user['is_temp_password_changed']) {
+        return 'temporary';
+    }
+    return 'standard';
+}
+
+function adminAccountTypeMeta(array $user): array {
+    return match (adminAccountType($user)) {
+        'admin'     => ['label' => 'Admin',     'tone' => 'primary', 'icon' => 'shield-check'],
+        'temporary' => ['label' => 'Temporary', 'tone' => 'warning', 'icon' => 'clock'],
+        default     => ['label' => 'Standard',  'tone' => 'neutral', 'icon' => null],
+    };
+}
+
 function memberRoleTone(string $role): string {
     return match ($role) {
         'manager'   => 'pink',
@@ -272,6 +286,27 @@ function memberRoleLabel(string $role): string {
     return match ($role) {
         'team_lead' => 'Team Lead',
         default     => ucfirst($role),
+    };
+}
+
+function auditActionTypeMeta(string $type): array {
+    return match ($type) {
+        'create'  => ['label' => 'Created',  'tone' => 'success'],
+        'update'  => ['label' => 'Updated',  'tone' => 'primary'],
+        'approve' => ['label' => 'Approved', 'tone' => 'success'],
+        'reject'  => ['label' => 'Rejected', 'tone' => 'danger'],
+        'delete'  => ['label' => 'Deleted',  'tone' => 'danger'],
+        default   => ['label' => ucfirst($type), 'tone' => 'neutral'],
+    };
+}
+
+function auditTargetTypeMeta(string $type): array {
+    return match ($type) {
+        'task'    => ['label' => 'Task',    'icon' => 'tasks'],
+        'stage'   => ['label' => 'Stage',   'icon' => 'workflow'],
+        'project' => ['label' => 'Project', 'icon' => 'folder'],
+        'user'    => ['label' => 'User',    'icon' => 'user'],
+        default   => ['label' => 'System',  'icon' => null],
     };
 }
 
@@ -537,4 +572,72 @@ function chatPermissions(?string $activeRole, bool $hasApprovedClientAccess = fa
         'canApproveClientAccess'  => $isLead,
         'roleLabel'               => memberRoleLabel($activeRole ?? 'member'),
     ];
+}
+
+// Notifications page helpers 
+
+function renderNotificationMessage(string $message): string {
+    $escaped = htmlspecialchars($message, ENT_QUOTES, 'UTF-8', false);
+    $escaped = preg_replace('/&amp;(#?[a-zA-Z0-9]+;)/', '&$1', $escaped);
+    return preg_replace('/\*\*(.+?)\*\*/', '<strong>$1</strong>', $escaped);
+}
+
+// 'Today', 'Yesterday', or a short absolute date for anything older.
+function notificationDayLabel(string $datetime): string {
+    $then = strtotime($datetime);
+    if ($then === false) {
+        return 'Earlier';
+    }
+
+    $today     = date('Y-m-d');
+    $yesterday = date('Y-m-d', strtotime('-1 day'));
+    $day       = date('Y-m-d', $then);
+
+    if ($day === $today) {
+        return 'Today';
+    }
+    if ($day === $yesterday) {
+        return 'Yesterday';
+    }
+    return date('M j', $then);
+}
+
+// Relative time for Today's items ("12m ago"), absolute "Day, h:mm A" otherwise.
+function notificationTimeLabel(string $datetime, string $dayLabel): string {
+    if ($dayLabel === 'Today') {
+        return timeAgo($datetime);
+    }
+    $then = strtotime($datetime);
+    return $then === false ? $datetime : $dayLabel . ', ' . date('g:i A', $then);
+}
+
+function notificationCategoryLabel(string $category): string {
+    return match ($category) {
+        'tasks'     => 'Tasks',
+        'approvals' => 'Approvals',
+        'chat'      => 'Chat',
+        'payments'  => 'Payments',
+        default     => ucfirst($category),
+    };
+}
+
+function groupNotificationFeed(array $feed): array {
+    $groups = [];
+    foreach ($feed as $item) {
+        $day = notificationDayLabel($item['created_at']);
+        $groups[$day]['label']   = $day;
+        $groups[$day]['unread']  = ($groups[$day]['unread'] ?? 0) + (empty($item['is_read']) ? 1 : 0);
+        $groups[$day]['items'][] = $item;
+    }
+    return $groups;
+}
+
+function notificationCategoryCounts(array $feed): array {
+    $counts = ['all' => count($feed), 'tasks' => 0, 'approvals' => 0, 'chat' => 0, 'payments' => 0];
+    foreach ($feed as $item) {
+        if (isset($counts[$item['category']])) {
+            $counts[$item['category']]++;
+        }
+    }
+    return $counts;
 }

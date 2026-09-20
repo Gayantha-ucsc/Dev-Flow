@@ -5,7 +5,7 @@ return [
             'id'      => 1,
             'type'    => 'stage',
             'eyebrow' => 'Stage Completion Gate',
-            'title'   => 'Stage completion — Development',
+            'title'   => 'Stage completion - Development',
             'context' => 'All 8 tasks in this stage are approved.',
             'manager' => [
                 'roleKey'    => 'manager',
@@ -49,7 +49,7 @@ return [
             'id'      => 3,
             'type'    => 'stage',
             'eyebrow' => 'Stage Completion Gate',
-            'title'   => 'Stage completion — Design',
+            'title'   => 'Stage completion - Design',
             'context' => 'All 5 tasks in this stage are approved.',
             'manager' => [
                 'roleKey'    => 'manager',

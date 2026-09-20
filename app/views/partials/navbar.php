@@ -8,7 +8,7 @@
 ?>
 
 <?php
-$nonProjectRoutes = ['/dashboard', '/projects', '/settings'];
+$nonProjectRoutes = ['/dashboard', '/projects', '/settings', '/notifications'];
 $isProjectScopedPage = !in_array($currentRoute ?? '', $nonProjectRoutes, true)
     && !str_starts_with($currentRoute ?? '', '/admin');
 $showSwitcher = !empty($currentProjectId) && $isProjectScopedPage;

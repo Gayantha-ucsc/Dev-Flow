@@ -20,7 +20,7 @@ return [
     ],
 
     3 => [ // Project Alpha - decided by User One (Manager, holding the
-           // Team Lead role too per FR-2.1.2 since they created the project)
+           // Team Lead role too since they created the project)
         'approvalHistory' => [
             ['date' => '2026-03-27', 'item' => 'Bug Fixes Round 1',       'stage' => 'Testing',              'decision' => 'approved', 'decidedBy' => 'User One', 'feedback' => 'Fixes verified against UAT feedback, cleared for delivery.'],
             ['date' => '2026-03-25', 'item' => 'UAT with Client',         'stage' => 'Testing',              'decision' => 'approved', 'decidedBy' => 'User One', 'feedback' => 'Client sign-off received during the UAT session, no blockers.'],

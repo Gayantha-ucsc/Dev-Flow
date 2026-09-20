@@ -17,7 +17,7 @@ document.addEventListener('click', function (e) {
         return;
     }
 
-    // Clicked outside any dropdown entirely — close all
+    // Clicked outside any dropdown entirely - close all
     const closer = e.target.closest('[data-dropdown]');
     if (!closer) {
         document.querySelectorAll('[data-dropdown].is-open').forEach(function (d) {

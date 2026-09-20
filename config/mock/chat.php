@@ -3,8 +3,8 @@
 return [
     1 => [ // Project Beta
         'projectMessages' => [
-            ['id' => 1, 'author' => 'User One', 'role' => 'manager', 'body' => 'Team — sprint review is Friday at 3 PM. Please update task statuses before then.', 'createdAt' => '2026-08-12 09:00'],
-            ['id' => 2, 'author' => 'User Seven', 'role' => 'team_lead', 'body' => 'Noted. Dev tasks on track except auth module — needs one more day.', 'createdAt' => '2026-08-12 09:15'],
+            ['id' => 1, 'author' => 'User One', 'role' => 'manager', 'body' => 'Team - sprint review is Friday at 3 PM. Please update task statuses before then.', 'createdAt' => '2026-08-12 09:00'],
+            ['id' => 2, 'author' => 'User Seven', 'role' => 'team_lead', 'body' => 'Noted. Dev tasks on track except auth module - needs one more day.', 'createdAt' => '2026-08-12 09:15'],
             ['id' => 3, 'author' => 'User Eight', 'role' => 'developer', 'body' => 'Auth middleware PR will be up by EOD.', 'createdAt' => '2026-08-12 09:30'],
         ],
         'stageMessages' => [
@@ -19,11 +19,11 @@ return [
         'taskMessages' => [
             101 => [
                 ['id' => 1, 'author' => 'User Seven', 'role' => 'team_lead', 'body' => 'Keep session compatibility in mind for auth.', 'createdAt' => '2026-08-09 11:00'],
-                ['id' => 2, 'author' => 'User Eight', 'role' => 'developer', 'body' => 'Will do — adding adapter layer.', 'createdAt' => '2026-08-09 11:45'],
+                ['id' => 2, 'author' => 'User Eight', 'role' => 'developer', 'body' => 'Will do - adding adapter layer.', 'createdAt' => '2026-08-09 11:45'],
             ],
         ],
         'clientMessages' => [
-            ['id' => 1, 'author' => 'User One', 'role' => 'manager', 'body' => 'Hi — weekly update: development is 65% complete. On track for September delivery.', 'createdAt' => '2026-08-11 16:00'],
+            ['id' => 1, 'author' => 'User One', 'role' => 'manager', 'body' => 'Hi - weekly update: development is 65% complete. On track for September delivery.', 'createdAt' => '2026-08-11 16:00'],
         ],
         'clientAccess' => [
             ['user_id' => 1, 'name' => 'User One', 'role' => 'manager', 'access' => 'always'],
@@ -42,7 +42,7 @@ return [
         ],
     ],
 
-    3 => [ // Project Alpha — client on team
+    3 => [ // Project Alpha - client on team
         'projectMessages' => [
             ['id' => 1, 'author' => 'User One', 'role' => 'manager', 'body' => 'Final handoff prep starts next week.', 'createdAt' => '2026-08-13 10:00'],
         ],
@@ -53,12 +53,12 @@ return [
         ],
         'taskMessages' => [
             301 => [
-                ['id' => 1, 'author' => 'User Thirteen', 'role' => 'developer', 'body' => 'SSL renewed — waiting on DNS.', 'createdAt' => '2026-08-13 08:00'],
+                ['id' => 1, 'author' => 'User Thirteen', 'role' => 'developer', 'body' => 'SSL renewed - waiting on DNS.', 'createdAt' => '2026-08-13 08:00'],
             ],
         ],
         'clientMessages' => [
             ['id' => 1, 'author' => 'User Nineteen', 'role' => 'client', 'body' => 'When can we schedule the training session?', 'createdAt' => '2026-08-12 15:00'],
-            ['id' => 2, 'author' => 'User One', 'role' => 'manager', 'body' => 'Proposing October 22 — does that work for your team?', 'createdAt' => '2026-08-12 15:30'],
+            ['id' => 2, 'author' => 'User One', 'role' => 'manager', 'body' => 'Proposing October 22 - does that work for your team?', 'createdAt' => '2026-08-12 15:30'],
             ['id' => 3, 'author' => 'User Nineteen', 'role' => 'client', 'body' => 'Yes, that works. Please send a calendar invite.', 'createdAt' => '2026-08-12 16:00'],
         ],
         'clientAccess' => [

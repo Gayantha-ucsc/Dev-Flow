@@ -6,7 +6,7 @@
     }
 
     function formatDate(iso) {
-        if (!iso) return '—';
+        if (!iso) return '-';
         const d = new Date(iso + 'T00:00:00');
         return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
     }
@@ -38,7 +38,7 @@
         `;
 
         // --- Workflow ---
-        const summary = window.workflowGetSummary ? window.workflowGetSummary() : { name: '—', stages: [] };
+        const summary = window.workflowGetSummary ? window.workflowGetSummary() : { name: '-', stages: [] };
         document.querySelector('[data-review-workflow]').innerHTML = `
             <div class="review-row"><span class="review-row__label">Template</span><span class="review-row__value">${escapeHtml(summary.name)}</span></div>
             <div class="review-row"><span class="review-row__label">Stages</span><span class="review-row__value">${summary.stages.map(escapeHtml).join(', ')}</span></div>
