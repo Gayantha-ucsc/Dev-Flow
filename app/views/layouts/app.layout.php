@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="<?= url('assets/css/chat.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/settings.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/reports.css') ?>">
+    <link rel="stylesheet" href="<?= url('assets/css/payment.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/client-portal.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/notifications.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/admin.css') ?>">
@@ -44,6 +45,7 @@
     <script src="<?= url('assets/js/chat.js') ?>" defer></script>
     <script src="<?= url('assets/js/notification.js') ?>" defer></script>
     <script src="<?= url('assets/js/reports.js') ?>" defer></script>
+    <script src="<?= url('assets/js/payment.js') ?>" defer></script>
     <script src="<?= url('assets/js/navbar.js') ?>" defer></script>
     <script src="<?= url('assets/js/admin.js') ?>" defer></script>
 

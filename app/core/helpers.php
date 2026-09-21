@@ -641,3 +641,16 @@ function notificationCategoryCounts(array $feed): array {
     }
     return $counts;
 }
+
+function formatMoney(float $amount): string {
+    return '$' . number_format($amount, 2);
+}
+
+function paymentStatusMeta(string $status): array {
+    return match ($status) {
+        'pending'   => ['tone' => 'neutral', 'label' => 'Pending'],
+        'requested' => ['tone' => 'warning', 'label' => 'Requested'],
+        'paid'      => ['tone' => 'success', 'label' => 'Paid'],
+        default     => ['tone' => 'neutral', 'label' => ucfirst($status)],
+    };
+}
