@@ -122,3 +122,86 @@ $defaultOnly = $filters['default_only'] ?? false;
         </a>
     </div>
 </div>
+
+<!-- Create template -->
+<div class="modal-overlay" data-modal="create-template-modal" hidden>
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-box modal-box--form modal-box--template">
+        <div class="modal-box__header">
+            <h2><?= renderIcon('workflow') ?> Create template</h2>
+            <button type="button" class="icon-btn" data-modal-close aria-label="Close"><?= renderIcon('x') ?></button>
+        </div>
+        <div class="modal-box__body">
+            <p class="modal-subtext">Define a reusable stage sequence for future engineering pipelines.</p>
+
+            <div class="form-group">
+                <label for="newTemplateName">Template name <span class="required">*</span></label>
+                <input type="text" id="newTemplateName" placeholder="e.g. Mobile App Development">
+                <span class="field-error" data-error-for="newTemplateName"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="newTemplateDesc">Description</label>
+                <textarea id="newTemplateDesc" rows="3" placeholder="Briefly describe when this template should be used..."></textarea>
+            </div>
+
+            <div class="template-default-toggle">
+                <div>
+                    <span class="template-default-toggle__label">Set as default template</span>
+                    <span class="template-default-toggle__desc">Automatically suggested to Managers when creating a project</span>
+                </div>
+                <button type="button" class="status-switch" id="newTemplateDefaultSwitch" role="switch" aria-checked="false" aria-label="Set as default template"><span class="status-switch__knob"></span></button>
+            </div>
+
+            <div class="template-stage-builder">
+                <div class="template-stage-builder__label">
+                    <span>Stages sequence</span>
+                    <span class="badge badge--neutral" id="newTemplateStageCount">0 stages</span>
+                </div>
+                <div class="wizard-stage-list" id="newTemplateStageList"></div>
+                <button type="button" class="stage-add-btn" id="newTemplateAddStage">
+                    <?= renderIcon('plus') ?> Add Stage
+                </button>
+            </div>
+
+            <div class="modal-box__footer modal-box__footer--split">
+                <span class="modal-box__draft-note" id="newTemplateDraftNote">Draft saved</span>
+                <div class="modal-box__footer-actions">
+                    <button type="button" class="btn-sm" data-modal-close>Cancel</button>
+                    <button type="button" class="btn-primary" id="submitCreateTemplate"><?= renderIcon('check') ?> Create template</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete template confirmation -->
+<div class="modal-overlay" data-modal="delete-template-modal" hidden>
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-box modal-box--form">
+        <div class="modal-box__header">
+            <h2>Delete template</h2>
+            <button type="button" class="icon-btn" data-modal-close aria-label="Close"><?= renderIcon('x') ?></button>
+        </div>
+        <div class="modal-box__body">
+            <p class="modal-subtext">
+                Permanently delete <strong data-delete-template-name></strong>? Projects already using this
+                template's stages are not affected, since their stages are independent copies.
+            </p>
+            <div class="modal-box__footer">
+                <button type="button" class="btn-sm" data-modal-close>Cancel</button>
+                <button type="button" class="btn-sm btn-sm--danger-outline" id="confirmDeleteTemplate">Delete template</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.TEMPLATE_ICONS = {
+        grip:   <?= iconJson('grip-vertical') ?>,
+        pencil: <?= iconJson('pencil') ?>,
+        trash:  <?= iconJson('trash-2') ?>,
+        x:      <?= iconJson('x') ?>,
+        layout: <?= iconJson('layout-template') ?>
+    };
+</script>

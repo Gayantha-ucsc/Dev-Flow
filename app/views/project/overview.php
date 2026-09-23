@@ -2,6 +2,23 @@
 // Expects: 
     // $project (one row from config/mock/projects-list.php),
     // $stages (config/mock/project-detail.php)
+    // $members (config/mock/team-members.php)
+
+$allProjectTasks = [];
+$allTaskTypes = [];
+foreach ($stages as $stage) {
+    foreach ($stage['tasks'] as $task) {
+        $allProjectTasks[] = [
+            'name'      => $task['name'],
+            'stageName' => $stage['name'],
+            'status'    => $task['status'],
+        ];
+        if (!empty($task['type'])) {
+            $allTaskTypes[$task['type']] = true;
+        }
+    }
+}
+$allTaskTypes = array_keys($allTaskTypes);
 ?>
 <div class="project-overview">
 
@@ -87,11 +104,10 @@
         </a>
     <?php endif; ?>
 
-    <div class="project-overview__workflow">
+    <div class="project-overview__workflow" data-workflow-section>
         <div class="project-overview__workflow-header">
             <h2>Project Workflow</h2>
-            <!-- Stage CRUD isn't wired up yet -->
-            <button type="button" class="btn-add-stage"><?= renderIcon('plus') ?> Add Stage</button>
+            <button type="button" class="btn-add-stage" data-add-stage><?= renderIcon('plus') ?> Add Stage</button>
         </div>
 
         <?php if (empty($stages)): ?>
@@ -114,7 +130,7 @@
                         };
                         $isCurrent = in_array($stage['status'], ['in_progress', 'pending_completion'], true);
                     ?>
-                    <div class="card stage-item <?= $isCurrent ? 'stage-item--current stage-item--expanded' : '' ?>">
+                    <div class="card stage-item <?= $isCurrent ? 'stage-item--current stage-item--expanded' : '' ?>" data-stage-name="<?= htmlspecialchars($stage['name']) ?>" draggable="false">
                         <div class="stage-row">
                             <button type="button" class="stage-row__reorder" aria-label="Reorder <?= htmlspecialchars($stage['name']) ?>">
                                 <?= renderIcon('chevrons-up-down') ?>
@@ -125,7 +141,8 @@
                             </span>
 
                             <div class="stage-row__body">
-                                <h3 class="stage-row__name"><?= htmlspecialchars($stage['name']) ?></h3>
+                                <h3 class="stage-row__name" data-name-display><?= htmlspecialchars($stage['name']) ?></h3>
+                                <input type="text" class="stage-row__name-input" data-name-input value="<?= htmlspecialchars($stage['name']) ?>" draggable="false" hidden>
                                 <div class="stage-row__meta">
                                     <span class="stage-row__status stage-row__status--<?= $statusMeta['tone'] ?>">
                                         <?php if ($statusMeta['icon']): ?><?= renderIcon($statusMeta['icon']) ?><?php endif; ?>
@@ -139,9 +156,9 @@
                             </div>
 
                             <div class="stage-row__actions">
-                                <button type="button" class="icon-btn-sm" aria-label="Edit <?= htmlspecialchars($stage['name']) ?>"><?= renderIcon('pencil') ?></button>
-                                <button type="button" class="icon-btn-sm icon-btn-sm--danger" aria-label="Delete <?= htmlspecialchars($stage['name']) ?>"><?= renderIcon('trash-2') ?></button>
-                                <button type="button" class="icon-btn-sm stage-row__expand-toggle" aria-expanded="<?= $isCurrent ? 'true' : 'false' ?>" aria-label="<?= $isCurrent ? 'Collapse' : 'Expand' ?> <?= htmlspecialchars($stage['name']) ?> tasks">
+                                <button type="button" class="icon-btn-sm js-edit-stage" draggable="false" aria-label="Edit <?= htmlspecialchars($stage['name']) ?>"><?= renderIcon('pencil') ?></button>
+                                <button type="button" class="icon-btn-sm icon-btn-sm--danger js-delete-stage" draggable="false" data-stage-name="<?= htmlspecialchars($stage['name']) ?>" data-task-count="<?= (int) $stage['tasksTotal'] ?>" aria-label="Delete <?= htmlspecialchars($stage['name']) ?>"><?= renderIcon('trash-2') ?></button>
+                                <button type="button" class="icon-btn-sm stage-row__expand-toggle" draggable="false" aria-expanded="<?= $isCurrent ? 'true' : 'false' ?>" aria-label="<?= $isCurrent ? 'Collapse' : 'Expand' ?> <?= htmlspecialchars($stage['name']) ?> tasks">
                                     <?= renderIcon('chevron-down') ?>
                                 </button>
                             </div>
@@ -219,8 +236,7 @@
                                     </div>
                                 <?php endforeach; ?>
 
-                                <!-- Task creation isn't wired up yet -->
-                                <div class="task-card task-card--add">
+                                <div class="task-card task-card--add js-add-task" data-stage-name="<?= htmlspecialchars($stage['name']) ?>">
                                     <?= renderIcon('plus') ?>
                                     <span>Add Task</span>
                                 </div>
@@ -232,4 +248,176 @@
         <?php endif; ?>
     </div>
 
+</div>
+
+<script>
+    window.STAGE_ICONS = {
+        grip:        <?= iconJson('grip-vertical') ?>,
+        pencil:      <?= iconJson('pencil') ?>,
+        trash:       <?= iconJson('trash-2') ?>,
+        chevronDown: <?= iconJson('chevron-down') ?>,
+        plus:        <?= iconJson('plus') ?>,
+        chevrons:    <?= iconJson('chevrons-up-down') ?>
+    };
+
+    window.TASK_STATUS_META = {
+        locked:      { tone: 'slate',   icon: <?= iconJson('lock') ?>,          label: 'Locked' },
+        not_started: { tone: 'neutral', icon: <?= iconJson('circle-dashed') ?>, label: 'Not Started' }
+    };
+    window.TASK_ICONS = {
+        lock: <?= iconJson('lock') ?>
+    };
+</script>
+
+<!-- Delete Stage confirmation -->
+<div class="modal-overlay" data-modal="delete-stage-modal" hidden>
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-box modal-box--form">
+        <div class="modal-box__header">
+            <h2>Delete stage</h2>
+            <button type="button" class="icon-btn" data-modal-close aria-label="Close"><?= renderIcon('x') ?></button>
+        </div>
+        <div class="modal-box__body">
+            <p class="modal-subtext">
+                Delete <strong data-delete-stage-name></strong>? This removes the stage and cannot be undone.
+                <span data-delete-stage-task-warning hidden> It still has tasks in it.</span>
+            </p>
+            <div class="modal-box__footer">
+                <button type="button" class="btn-sm" data-modal-close>Cancel</button>
+                <button type="button" class="btn-sm btn-sm--danger-outline" id="confirmDeleteStage">Delete stage</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Task -->
+<div class="side-panel-overlay" data-panel="create-task-panel" hidden>
+    <div class="side-panel-backdrop" data-panel-close></div>
+    <div class="side-panel">
+        <div class="side-panel__header">
+            <div>
+                <h2>Create task</h2>
+                <div class="side-panel__stage-line">
+                    STAGE: <span class="badge badge--primary" data-task-stage-badge></span>
+                </div>
+            </div>
+            <button type="button" class="icon-btn" data-panel-close aria-label="Close"><?= renderIcon('x') ?></button>
+        </div>
+
+        <div class="side-panel__body">
+            <div class="form-group">
+                <label for="taskName">Task name <span class="required">*</span></label>
+                <input type="text" id="taskName" placeholder="e.g. Implement User Authentication Middleware">
+                <span class="field-error" data-error-for="taskName"></span>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group__label-row">
+                    <label for="taskDescription">Description</label>
+                    <span class="form-group__hint">Markdown supported</span>
+                </div>
+                <textarea id="taskDescription" rows="4" placeholder="Describe what this task involves..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="taskType">Task type</label>
+                <input type="text" id="taskType" list="taskTypeList" placeholder="e.g. backend">
+                <datalist id="taskTypeList">
+                    <?php foreach ($allTaskTypes as $type): ?>
+                        <option value="<?= htmlspecialchars($type) ?>">
+                    <?php endforeach; ?>
+                </datalist>
+
+                <div class="tag-suggestions">
+                    <span class="tag-suggestions__label">Suggestions</span>
+                    <span class="tag-suggestions__hint">Type to add a new tag</span>
+                </div>
+                <div class="tag-suggestions__chips" data-tag-suggestions>
+                    <?php foreach (array_slice($allTaskTypes, 0, 6) as $type): ?>
+                        <button type="button" class="tag-chip" data-tag-chip="<?= htmlspecialchars($type) ?>"><?= htmlspecialchars($type) ?></button>
+                    <?php endforeach; ?>
+                    <?php if (empty($allTaskTypes)): ?>
+                        <button type="button" class="tag-chip" data-tag-chip="frontend">frontend</button>
+                        <button type="button" class="tag-chip" data-tag-chip="backend">backend</button>
+                        <button type="button" class="tag-chip" data-tag-chip="design">design</button>
+                        <button type="button" class="tag-chip" data-tag-chip="testing">testing</button>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Deadline <span class="required">*</span></label>
+                <div class="task-deadline-row">
+                    <div class="dropdown date-field" data-dropdown data-datepicker>
+                        <button type="button" class="date-field__input" data-dropdown-trigger data-date-trigger>
+                            <?= renderIcon('calendar') ?>
+                            <span data-date-display>mm/dd/yyyy</span>
+                        </button>
+                        <input type="hidden" id="taskDeadline" data-date-value>
+                        <div class="dropdown__menu dropdown__menu--calendar" data-dropdown-menu data-date-calendar></div>
+                    </div>
+                    <input type="time" id="taskDeadlineTime" class="task-deadline-row__time" value="14:00">
+                </div>
+                <span class="field-error" data-error-for="taskDeadline"></span>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group__label-row">
+                    <label>Assignees</label>
+                    <span class="form-group__hint" data-assignee-count>0 assigned</span>
+                </div>
+                <div class="assignee-chips" data-assignee-chips></div>
+                <div class="dropdown" data-dropdown>
+                    <button type="button" class="assignee-add-btn" data-dropdown-trigger>
+                        <?= renderIcon('user-plus') ?> Add assignee
+                    </button>
+                    <div class="dropdown__menu assignee-add-menu" data-dropdown-menu data-assignee-menu>
+                        <?php foreach ($members ?? [] as $member): ?>
+                            <button type="button" class="assignee-option" data-assignee-option data-assignee-name="<?= htmlspecialchars($member['name']) ?>">
+                                <span class="avatar avatar--sm avatar--<?= avatarColorClass($member['name']) ?>"><?= htmlspecialchars(initials($member['name'])) ?></span>
+                                <?= htmlspecialchars($member['name']) ?>
+                            </button>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group__label-row">
+                    <label>Depends on (optional)</label>
+                </div>
+                <div class="dependency-chips" data-dependency-chips></div>
+                <div class="dropdown" data-dropdown>
+                    <button type="button" class="dependency-add-btn" data-dropdown-trigger>
+                        <?= renderIcon('user-plus') ?> Add dependency
+                    </button>
+                    <div class="dropdown__menu dependency-add-menu" data-dropdown-menu data-dependency-menu>
+                        <?php foreach ($allProjectTasks as $t): ?>
+                            <?php $tMeta = taskStatusMeta($t['status']); ?>
+                            <button type="button" class="dependency-option" data-dependency-option
+                                    data-dependency-name="<?= htmlspecialchars($t['name']) ?>"
+                                    data-dependency-stage="<?= htmlspecialchars($t['stageName']) ?>">
+                                <span class="dependency-option__name"><?= htmlspecialchars($t['name']) ?></span>
+                                <span class="badge badge--<?= $tMeta['tone'] ?>"><?= htmlspecialchars($tMeta['label']) ?></span>
+                            </button>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <p class="form-group__hint">This task will stay locked until all dependencies are approved.</p>
+            </div>
+
+            <div class="review-banner" data-circular-warning hidden>
+                <?= renderIcon('info') ?>
+                <div>
+                    <strong>Circular dependency prevented</strong>
+                    <p data-circular-warning-text></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="side-panel__footer">
+            <button type="button" class="btn-sm" data-panel-close>Cancel</button>
+            <button type="button" class="btn-primary" id="submitCreateTask"><?= renderIcon('plus') ?> Create task</button>
+        </div>
+    </div>
 </div>

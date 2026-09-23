@@ -61,3 +61,38 @@ document.addEventListener('keydown', function (e) {
         document.querySelectorAll('[data-modal].is-open').forEach(closeModal);
     }
 });
+
+/* ---- Slide-over side panels (e.g. Create Task) ---- */
+function openPanel(panel) {
+    panel.removeAttribute('hidden');
+    requestAnimationFrame(() => panel.classList.add('is-open'));
+    panel.dispatchEvent(new CustomEvent('panel:opened'));
+}
+
+function closePanel(panel) {
+    panel.classList.remove('is-open');
+    panel.dispatchEvent(new CustomEvent('panel:closed'));
+    setTimeout(() => panel.setAttribute('hidden', ''), MODAL_TRANSITION_MS);
+}
+
+document.addEventListener('click', function (e) {
+    const opener = e.target.closest('[data-panel-trigger]');
+    if (opener) {
+        e.preventDefault();
+        const panel = document.querySelector(`[data-panel="${opener.dataset.panelTrigger}"]`);
+        if (panel) openPanel(panel);
+        return;
+    }
+
+    const closer = e.target.closest('[data-panel-close]');
+    if (closer) {
+        const panel = closer.closest('[data-panel]');
+        if (panel) closePanel(panel);
+    }
+});
+
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('[data-panel].is-open').forEach(closePanel);
+    }
+});
