@@ -213,6 +213,20 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
+        var createTemplateModal   = document.querySelector('[data-modal="create-template-modal"]');
+        var deleteTemplateModal   = document.querySelector('[data-modal="delete-template-modal"]');
+        var deleteTemplateNameEl  = deleteTemplateModal ? deleteTemplateModal.querySelector('[data-delete-template-name]') : null;
+        var confirmDeleteTemplate = document.getElementById('confirmDeleteTemplate');
+        var pendingTemplateCard   = null;
+
+        var newTemplateName          = document.getElementById('newTemplateName');
+        var newTemplateDesc          = document.getElementById('newTemplateDesc');
+        var newTemplateDefaultSwitch = document.getElementById('newTemplateDefaultSwitch');
+        var newTemplateStageList     = document.getElementById('newTemplateStageList');
+        var newTemplateAddStage      = document.getElementById('newTemplateAddStage');
+        var newTemplateStageCount    = document.getElementById('newTemplateStageCount');
+        var submitCreateTemplate     = document.getElementById('submitCreateTemplate');
+
         templatesPage.addEventListener('click', function (e) {
             var editBtn = e.target.closest('.js-edit-template');
             if (editBtn) {
@@ -228,17 +242,170 @@ document.addEventListener('DOMContentLoaded', function () {
 
             var delBtn = e.target.closest('.js-delete-template');
             if (delBtn && !delBtn.disabled) {
-                var card = delBtn.closest('.admin-template-card');
-                if (card) card.remove();
-                if (window.showToast) showToast('success', '"' + delBtn.dataset.templateName + '" was deleted.');
+                pendingTemplateCard = delBtn.closest('.admin-template-card');
+                if (deleteTemplateNameEl) deleteTemplateNameEl.textContent = delBtn.dataset.templateName;
+                openModal(deleteTemplateModal);
                 return;
             }
 
             var createBtn = e.target.closest('#createTemplateBtn');
             if (createBtn) {
-                if (window.showToast) showToast('info', 'Creating a template from scratch isn\'t wired up yet.');
+                resetTemplateModal();
+                openModal(createTemplateModal);
             }
         });
+
+        if (confirmDeleteTemplate) {
+            confirmDeleteTemplate.addEventListener('click', function () {
+                if (pendingTemplateCard) {
+                    var tName = pendingTemplateCard.querySelector('h3') ? pendingTemplateCard.querySelector('h3').textContent : 'Template';
+                    pendingTemplateCard.remove();
+                    if (window.showToast) showToast('success', '"' + tName + '" was deleted.');
+                    pendingTemplateCard = null;
+                }
+                closeModal(deleteTemplateModal);
+            });
+        }
+
+        /* ---- Create template modal ---- */
+        if (createTemplateModal) {
+            newTemplateDefaultSwitch.addEventListener('click', function () {
+                var willBeOn = !newTemplateDefaultSwitch.classList.contains('is-on');
+                newTemplateDefaultSwitch.classList.toggle('is-on', willBeOn);
+                newTemplateDefaultSwitch.setAttribute('aria-checked', willBeOn ? 'true' : 'false');
+            });
+
+            newTemplateAddStage.addEventListener('click', function () {
+                addTemplateStageRow('');
+            });
+
+            newTemplateStageList.addEventListener('click', function (e) {
+                var removeBtn = e.target.closest('[data-remove-template-stage]');
+                if (removeBtn) {
+                    removeBtn.closest('.wizard-stage-row').remove();
+                    renumberTemplateStages();
+                    return;
+                }
+                var renameBtn = e.target.closest('[data-rename-template-stage]');
+                if (renameBtn) {
+                    var row = renameBtn.closest('.wizard-stage-row');
+                    var nameEl = row.querySelector('.wizard-stage-row__name');
+                    var input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'wizard-stage-row__name-input';
+                    input.value = nameEl.textContent;
+                    nameEl.replaceWith(input);
+                    input.focus();
+                    input.select();
+
+                    function commit() {
+                        var span = document.createElement('span');
+                        span.className = 'wizard-stage-row__name';
+                        span.textContent = input.value.trim() || 'Untitled stage';
+                        input.replaceWith(span);
+                    }
+                    input.addEventListener('blur', commit);
+                    input.addEventListener('keydown', function (ev) {
+                        if (ev.key === 'Enter') input.blur();
+                    });
+                }
+            });
+
+            submitCreateTemplate.addEventListener('click', function () {
+                var name = newTemplateName.value.trim();
+                var err = createTemplateModal.querySelector('[data-error-for="newTemplateName"]');
+                if (!name) {
+                    if (err) { err.textContent = 'Template name is required.'; err.classList.add('is-visible'); }
+                    return;
+                }
+                if (err) { err.textContent = ''; err.classList.remove('is-visible'); }
+
+                var stageNames = Array.prototype.map.call(
+                    newTemplateStageList.querySelectorAll('.wizard-stage-row__name'),
+                    function (el) { return el.textContent.trim(); }
+                ).filter(Boolean);
+
+                prependTemplateCard({
+                    name: name,
+                    description: newTemplateDesc.value.trim() || 'No description provided.',
+                    isDefault: newTemplateDefaultSwitch.classList.contains('is-on'),
+                    stages: stageNames
+                });
+
+                closeModal(createTemplateModal);
+                if (window.showToast) showToast('success', '"' + name + '" was created.');
+            });
+        }
+
+        function resetTemplateModal() {
+            newTemplateName.value = '';
+            newTemplateDesc.value = '';
+            newTemplateDefaultSwitch.classList.remove('is-on');
+            newTemplateDefaultSwitch.setAttribute('aria-checked', 'false');
+            newTemplateStageList.innerHTML = '';
+            renumberTemplateStages();
+            var err = createTemplateModal.querySelector('[data-error-for="newTemplateName"]');
+            if (err) { err.textContent = ''; err.classList.remove('is-visible'); }
+        }
+
+        function addTemplateStageRow(name) {
+            var icons = window.TEMPLATE_ICONS || {};
+            var row = document.createElement('div');
+            row.className = 'wizard-stage-row';
+            row.innerHTML =
+                '<span class="wizard-stage-row__grip">' + (icons.grip || '') + '</span>' +
+                '<span class="wizard-stage-row__badge">0</span>' +
+                '<span class="wizard-stage-row__name"></span>' +
+                '<div class="wizard-stage-row__actions">' +
+                    '<button type="button" class="wizard-stage-row__action" data-rename-template-stage title="Rename">' + (icons.pencil || '') + '</button>' +
+                    '<button type="button" class="wizard-stage-row__action wizard-stage-row__action--danger" data-remove-template-stage title="Remove">' + (icons.trash || '') + '</button>' +
+                '</div>';
+            row.querySelector('.wizard-stage-row__name').textContent = name || ('Stage ' + (newTemplateStageList.children.length + 1));
+            newTemplateStageList.appendChild(row);
+            renumberTemplateStages();
+        }
+
+        function renumberTemplateStages() {
+            var rows = newTemplateStageList.querySelectorAll('.wizard-stage-row');
+            rows.forEach(function (row, i) {
+                row.querySelector('.wizard-stage-row__badge').textContent = i + 1;
+            });
+            if (newTemplateStageCount) newTemplateStageCount.textContent = rows.length + ' stage' + (rows.length === 1 ? '' : 's');
+        }
+
+        function prependTemplateCard(tpl) {
+            var grid = document.querySelector('.template-grid');
+            if (!grid) return;
+
+            var stageChips = tpl.stages.slice(0, 4).map(function (s, i) {
+                return (i > 0 ? (window.TEMPLATE_ICONS ? '' : '&rarr;') : '') + '<span class="badge badge--neutral">' + s + '</span>';
+            }).join('');
+            var extra = tpl.stages.length > 4 ? '<span class="badge badge--outline">+' + (tpl.stages.length - 4) + ' more</span>' : '';
+
+            var card = document.createElement('div');
+            card.className = 'card admin-template-card';
+            card.innerHTML =
+                '<div class="admin-template-card__head">' +
+                    '<span class="template-card__icon template-card__icon--orange">' + (window.TEMPLATE_ICONS ? window.TEMPLATE_ICONS.layout : '') + '</span>' +
+                    '<div class="admin-template-card__title-block">' +
+                        '<div class="admin-template-card__title-row"><h3>' + tpl.name + '</h3>' + (tpl.isDefault ? '<span class="badge badge--primary">Default</span>' : '') + '</div>' +
+                        '<span class="admin-template-card__stage-count">' + tpl.stages.length + ' stages</span>' +
+                    '</div>' +
+                '</div>' +
+                '<p class="admin-template-card__desc">' + tpl.description + '</p>' +
+                '<div class="admin-template-card__stages">' +
+                    '<span class="admin-template-card__stages-label">Stages</span>' +
+                    '<div class="admin-template-card__chips">' + stageChips + extra + '</div>' +
+                '</div>' +
+                '<div class="admin-template-card__footer">' +
+                    '<span class="admin-template-card__meta">Created by you &bull; Just now</span>' +
+                    '<div class="admin-template-card__actions">' +
+                        '<button type="button" class="icon-btn-sm js-edit-template" data-template-name="' + tpl.name + '" title="Edit template">' + (window.TEMPLATE_ICONS ? window.TEMPLATE_ICONS.pencil : '') + '</button>' +
+                        '<button type="button" class="icon-btn-sm icon-btn-sm--danger js-delete-template" data-template-name="' + tpl.name + '" title="Delete template">' + (window.TEMPLATE_ICONS ? window.TEMPLATE_ICONS.trash : '') + '</button>' +
+                    '</div>' +
+                '</div>';
+            grid.insertBefore(card, grid.firstChild);
+        }
     }
 
     // System settings (/admin/settings)
@@ -255,6 +422,8 @@ document.addEventListener('DOMContentLoaded', function () {
         var updatedByEl  = document.getElementById('editSettingUpdatedBy');
         var updatedAtEl  = document.getElementById('editSettingUpdatedAt');
         var saveBtn      = document.getElementById('saveSettingBtn');
+        var stepUpBtn    = document.getElementById('editSettingStepUp');
+        var stepDownBtn  = document.getElementById('editSettingStepDown');
         var activeKey    = null;
         var activeType   = null;
 
@@ -283,6 +452,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
             openModal(modal);
         });
+
+        function stepNumber(delta) {
+            var current = parseInt(numberInput.value, 10);
+            if (isNaN(current)) current = 0;
+            var next = current + delta;
+            if (next < 0) next = 0;
+            numberInput.value = next;
+        }
+        if (stepUpBtn) stepUpBtn.addEventListener('click', function () { stepNumber(1); });
+        if (stepDownBtn) stepDownBtn.addEventListener('click', function () { stepNumber(-1); });
 
         if (saveBtn) {
             saveBtn.addEventListener('click', function () {

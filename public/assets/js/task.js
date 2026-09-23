@@ -176,3 +176,277 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+/* ---- Create Task side panel (project overview page) ---- */
+document.addEventListener('DOMContentLoaded', function () {
+    var panel = document.querySelector('[data-panel="create-task-panel"]');
+    if (!panel) return;
+
+    var stageBadge      = panel.querySelector('[data-task-stage-badge]');
+    var nameInput        = document.getElementById('taskName');
+    var descInput        = document.getElementById('taskDescription');
+    var typeInput        = document.getElementById('taskType');
+    var chipsWrap        = panel.querySelector('[data-tag-suggestions]');
+    var deadlineHidden   = document.getElementById('taskDeadline');
+    var deadlineTime     = document.getElementById('taskDeadlineTime');
+    var assigneeChips    = panel.querySelector('[data-assignee-chips]');
+    var assigneeCount    = panel.querySelector('[data-assignee-count]');
+    var assigneeMenu     = panel.querySelector('[data-assignee-menu]');
+    var dependencyChips  = panel.querySelector('[data-dependency-chips]');
+    var dependencyMenu   = panel.querySelector('[data-dependency-menu]');
+    var submitBtn        = document.getElementById('submitCreateTask');
+
+    var activeStageName  = null;
+    var selectedAssignees = [];
+    var selectedDependencies = [];
+
+    document.addEventListener('click', function (e) {
+        var addBtn = e.target.closest('.js-add-task');
+        if (!addBtn) return;
+        activeStageName = addBtn.dataset.stageName || '';
+        if (stageBadge) stageBadge.textContent = activeStageName;
+        resetPanel();
+        openPanel(panel);
+    });
+
+    if (chipsWrap) {
+        chipsWrap.addEventListener('click', function (e) {
+            var chip = e.target.closest('.tag-chip');
+            if (!chip) return;
+            chipsWrap.querySelectorAll('.tag-chip').forEach(function (c) { c.classList.remove('is-selected'); });
+            chip.classList.add('is-selected');
+            if (typeInput) typeInput.value = chip.dataset.tagChip;
+        });
+    }
+
+    if (assigneeMenu) {
+        assigneeMenu.addEventListener('click', function (e) {
+            var opt = e.target.closest('[data-assignee-option]');
+            if (!opt || opt.classList.contains('is-added')) return;
+            addAssignee(opt.dataset.assigneeName);
+        });
+    }
+
+    if (dependencyMenu) {
+        dependencyMenu.addEventListener('click', function (e) {
+            var opt = e.target.closest('[data-dependency-option]');
+            if (!opt || opt.classList.contains('is-added')) return;
+            addDependency(opt.dataset.dependencyName, opt.dataset.dependencyStage);
+        });
+    }
+
+    function addAssignee(name) {
+        if (selectedAssignees.indexOf(name) !== -1) return;
+        selectedAssignees.push(name);
+        renderAssignees();
+    }
+
+    function removeAssignee(name) {
+        selectedAssignees = selectedAssignees.filter(function (n) { return n !== name; });
+        renderAssignees();
+    }
+
+    function renderAssignees() {
+        assigneeChips.innerHTML = '';
+        selectedAssignees.forEach(function (name) {
+            var chip = document.createElement('span');
+            chip.className = 'assignee-chip';
+            chip.innerHTML =
+                '<span class="avatar avatar--sm avatar--' + colorClass(name) + '">' + initials(name) + '</span>' +
+                '<span>' + escapeHtml(name) + '</span>' +
+                '<button type="button" class="assignee-chip__remove" data-remove-assignee="' + escapeHtml(name) + '">' + (window.WIZARD_ICONS ? window.WIZARD_ICONS.x : '&times;') + '</button>';
+            assigneeChips.appendChild(chip);
+        });
+        if (assigneeCount) assigneeCount.textContent = selectedAssignees.length + ' assigned';
+        assigneeMenu.querySelectorAll('[data-assignee-option]').forEach(function (opt) {
+            opt.classList.toggle('is-added', selectedAssignees.indexOf(opt.dataset.assigneeName) !== -1);
+        });
+    }
+
+    if (assigneeChips) {
+        assigneeChips.addEventListener('click', function (e) {
+            var btn = e.target.closest('[data-remove-assignee]');
+            if (!btn) return;
+            removeAssignee(btn.dataset.removeAssignee);
+        });
+    }
+
+    function addDependency(name, stageName) {
+        if (selectedDependencies.some(function (d) { return d.name === name; })) return;
+        selectedDependencies.push({ name: name, stage: stageName });
+        renderDependencies();
+    }
+
+    function removeDependency(name) {
+        selectedDependencies = selectedDependencies.filter(function (d) { return d.name !== name; });
+        renderDependencies();
+    }
+
+    function renderDependencies() {
+        dependencyChips.innerHTML = '';
+        selectedDependencies.forEach(function (dep) {
+            var chip = document.createElement('div');
+            chip.className = 'dependency-chip';
+            chip.innerHTML =
+                (window.TASK_ICONS ? window.TASK_ICONS.lock : '') +
+                '<span class="dependency-chip__name">' + escapeHtml(dep.name) + '</span>' +
+                '<button type="button" class="dependency-chip__remove" data-remove-dependency="' + escapeHtml(dep.name) + '">' + (window.WIZARD_ICONS ? window.WIZARD_ICONS.x : '&times;') + '</button>';
+            dependencyChips.appendChild(chip);
+        });
+        dependencyMenu.querySelectorAll('[data-dependency-option]').forEach(function (opt) {
+            opt.classList.toggle('is-added', selectedDependencies.some(function (d) { return d.name === opt.dataset.dependencyName; }));
+        });
+    }
+
+    if (dependencyChips) {
+        dependencyChips.addEventListener('click', function (e) {
+            var btn = e.target.closest('[data-remove-dependency]');
+            if (!btn) return;
+            removeDependency(btn.dataset.removeDependency);
+        });
+    }
+
+    function resetPanel() {
+        if (nameInput) nameInput.value = '';
+        if (descInput) descInput.value = '';
+        if (typeInput) typeInput.value = '';
+        if (chipsWrap) chipsWrap.querySelectorAll('.tag-chip').forEach(function (c) { c.classList.remove('is-selected'); });
+        if (deadlineHidden) deadlineHidden.value = '';
+        if (deadlineTime) deadlineTime.value = '14:00';
+        var dateField = panel.querySelector('[data-datepicker]');
+        if (dateField && dateField.datepickerReset) dateField.datepickerReset();
+        selectedAssignees = [];
+        selectedDependencies = [];
+        renderAssignees();
+        renderDependencies();
+        panel.querySelectorAll('.field-error').forEach(function (err) { err.textContent = ''; err.classList.remove('is-visible'); });
+    }
+
+    if (submitBtn) {
+        submitBtn.addEventListener('click', function () {
+            var name = nameInput ? nameInput.value.trim() : '';
+            var nameErr = panel.querySelector('[data-error-for="taskName"]');
+            var deadlineErr = panel.querySelector('[data-error-for="taskDeadline"]');
+            var valid = true;
+
+            if (!name) {
+                if (nameErr) { nameErr.textContent = 'Task name is required.'; nameErr.classList.add('is-visible'); }
+                valid = false;
+            } else if (nameErr) {
+                nameErr.textContent = ''; nameErr.classList.remove('is-visible');
+            }
+
+            if (!deadlineHidden || !deadlineHidden.value) {
+                if (deadlineErr) { deadlineErr.textContent = 'Deadline is required.'; deadlineErr.classList.add('is-visible'); }
+                valid = false;
+            } else if (deadlineErr) {
+                deadlineErr.textContent = ''; deadlineErr.classList.remove('is-visible');
+            }
+
+            if (!valid) return;
+
+            appendTaskCard({
+                name: name,
+                deadline: deadlineHidden.value,
+                assignees: selectedAssignees.slice(),
+                dependencies: selectedDependencies.slice()
+            });
+
+            closePanel(panel);
+            if (window.showToast) showToast('success', '"' + name + '" was added to ' + activeStageName + '.');
+        });
+    }
+
+    function appendTaskCard(task) {
+        var stageItem = Array.prototype.find.call(
+            document.querySelectorAll('.stage-item'),
+            function (item) { return item.dataset.stageName === activeStageName; }
+        );
+        if (!stageItem) return;
+
+        var strip = stageItem.querySelector('[data-task-strip]');
+        var addCard = strip.querySelector('.js-add-task');
+        var existingNamesInStage = {};
+        strip.querySelectorAll('.task-card__name').forEach(function (el) {
+            existingNamesInStage[el.textContent.trim()] = el.closest('.task-card');
+        });
+
+        var localDeps = [];
+        var crossStageDeps = [];
+        task.dependencies.forEach(function (dep) {
+            if (existingNamesInStage[dep.name]) {
+                localDeps.push(existingNamesInStage[dep.name]);
+            } else {
+                crossStageDeps.push(dep.name);
+            }
+        });
+
+        var isLocked = task.dependencies.length > 0;
+        var meta = isLocked ? window.TASK_STATUS_META.locked : window.TASK_STATUS_META.not_started;
+        var newId = 'task-new-' + Date.now();
+
+        localDeps.forEach(function (depCard, i) {
+            if (!depCard.id) depCard.id = 'task-dep-' + Date.now() + '-' + i;
+        });
+        var dependsIdsAttr = localDeps.map(function (d) { return d.id; }).join(',');
+
+        var column = document.createElement('div');
+        column.className = 'task-column';
+
+        var card = document.createElement('div');
+        card.className = 'task-card' + (isLocked ? ' task-card--locked' : '');
+        card.id = newId;
+        if (dependsIdsAttr) card.setAttribute('data-depends-ids', dependsIdsAttr);
+
+        var assigneesHtml = '';
+        if (task.assignees.length === 0) {
+            assigneesHtml = '<span class="task-card__unassigned">Unassigned</span>';
+        } else {
+            task.assignees.slice(0, 2).forEach(function (name) {
+                assigneesHtml += '<span class="avatar avatar--sm avatar--' + colorClass(name) + '" title="' + escapeHtml(name) + '">' + initials(name) + '</span>';
+            });
+            if (task.assignees.length > 2) {
+                assigneesHtml += '<span class="task-card__more">+' + (task.assignees.length - 2) + '</span>';
+            }
+        }
+
+        var deadlineDate = new Date(task.deadline + 'T00:00:00');
+        var deadlineLabel = isNaN(deadlineDate.getTime()) ? task.deadline : deadlineDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+        card.innerHTML =
+            '<span class="badge badge--' + meta.tone + '">' + meta.icon + meta.label + '</span>' +
+            '<h4 class="task-card__name">' + escapeHtml(task.name) + '</h4>' +
+            (crossStageDeps.length ? '<div class="task-card__depends">' + (window.TASK_ICONS ? window.TASK_ICONS.lock : '') + '<span class="task-card__depends-text">Depends on: ' + escapeHtml(crossStageDeps.join(', ')) + '</span></div>' : '') +
+            '<div class="task-card__footer">' +
+                '<div class="task-card__assignees">' + assigneesHtml + '</div>' +
+                '<span class="task-card__deadline">' + escapeHtml(deadlineLabel) + '</span>' +
+            '</div>';
+
+        column.appendChild(card);
+        strip.insertBefore(column, addCard);
+
+        window.dispatchEvent(new Event('resize'));
+    }
+
+    function colorClass(seed) {
+        var palette = ['primary', 'pink', 'success', 'warning', 'danger', 'neutral'];
+        var hash = 0;
+        for (var i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
+        return palette[hash % palette.length];
+    }
+
+    function initials(name) {
+        name = name.trim();
+        if (!name) return '';
+        var parts = name.split(' ');
+        var first = parts[0].charAt(0);
+        var last = parts.length > 1 ? parts[parts.length - 1].charAt(0) : '';
+        return (first + last).toUpperCase();
+    }
+
+    function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+});

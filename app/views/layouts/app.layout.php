@@ -38,6 +38,7 @@
     <script src="<?= url('assets/js/projects.js') ?>" defer></script>
     <script src="<?= url('assets/js/team.js') ?>" defer></script>
     <script src="<?= url('assets/js/project-overview.js') ?>" defer></script>
+    <script src="<?= url('assets/js/stage.js') ?>" defer></script>
     <script src="<?= url('assets/js/settings.js') ?>" defer></script>
     <script src="<?= url('assets/js/task.js') ?>" defer></script>
     <script src="<?= url('assets/js/review.js') ?>" defer></script>

@@ -82,7 +82,12 @@
                 <div class="settings-modal-input-row">
                     <input type="text" inputmode="numeric" id="editSettingNumberInput">
                     <span id="editSettingUnitLabel" class="settings-modal-unit"></span>
+                    <div class="settings-modal-stepper">
+                        <button type="button" class="settings-modal-stepper__btn settings-modal-stepper__btn--up" id="editSettingStepUp" aria-label="Increase value"><?= renderIcon('chevron-down') ?></button>
+                        <button type="button" class="settings-modal-stepper__btn" id="editSettingStepDown" aria-label="Decrease value"><?= renderIcon('chevron-down') ?></button>
+                    </div>
                 </div>
+                <p class="settings-modal-applies-note"><?= renderIcon('info') ?> This applies to all active projects immediately.</p>
             </div>
 
             <div class="form-group" id="editSettingSelectField" hidden>
