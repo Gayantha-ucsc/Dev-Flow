@@ -49,6 +49,11 @@ return [
         '/admin/users/:id/update' => ['AdminUserController', 'update'],
         '/admin/users/:id/delete' => ['AdminUserController', 'destroy'],
 
+        '/payment/milestones'                => ['PaymentController', 'store'],
+        '/payment/milestones/:id/update'     => ['PaymentController', 'update'],
+        '/payment/milestones/:id/delete'     => ['PaymentController', 'destroy'],
+        '/payment/milestones/:id/request'    => ['PaymentController', 'request'],
+
         '/projects/:id/stages' => ['StageController', 'store'],
         '/stages/:id/update'   => ['StageController', 'update'],
         '/stages/:id/move'     => ['StageController', 'move'],

@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
         paid:      { tone: 'success', label: 'Paid' }
     };
     const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const moneyFormat = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+    const moneyFormat = { format: function (n) { return 'Rs. ' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); } };
 
     const money = (amount) => moneyFormat.format(amount);
     const plural = (n, word) => n + ' ' + word + (n === 1 ? '' : 's');
@@ -189,6 +189,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let activeRow = null;
 
+    // Submits a real POST (with CSRF token); the server saves, flashes a message and redirects back.
+    function postForm(suffix, fields) {
+        const f = document.createElement('form');
+        f.method = 'POST';
+        f.action = window.PAYMENT_URL + suffix;
+        fields.csrf_token = window.PAYMENT_CSRF;
+        Object.keys(fields).forEach(function (k) {
+            const i = document.createElement('input');
+            i.type = 'hidden';
+            i.name = k;
+            i.value = fields[k];
+            f.appendChild(i);
+        });
+        document.body.appendChild(f);
+        f.submit();
+    }
+
     function openForm(row) {
         activeRow = row || null;
         form.reset();
@@ -226,26 +243,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (amount > 9999999999.99) return showError('That amount is too large.');
         if (!fieldDue.value) return showError('Choose a due date.');
 
-        const milestone = {
-            id: activeRow ? activeRow.dataset.id : 'new-' + Date.now(),
+        postForm(activeRow ? '/' + activeRow.dataset.id + '/update' : '', {
             description: description,
-            stage: fieldStage.value,
+            stage_id: fieldStage.value,
             amount: amount,
-            dueDate: fieldDue.value,
-            status: 'pending'
-        };
-
-        if (activeRow) {
-            paintRow(activeRow, milestone);
-        } else {
-            const tr = document.createElement('tr');
-            paintRow(tr, milestone);
-            body.appendChild(tr);
-        }
-
-        closeModal(milestoneModal);
-        refresh();
-        window.showToast('success', activeRow ? 'Milestone updated.' : 'Milestone added.');
+            due_date: fieldDue.value
+        });
     });
 
     body.addEventListener('click', function (e) {
@@ -268,21 +271,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.getElementById('confirmRequest').addEventListener('click', function () {
-        if (!activeRow) return;
-        const m = readRow(activeRow);
-        m.status = 'requested';
-        paintRow(activeRow, m);
-        closeModal(requestModal);
-        refresh();
-        window.showToast('success', 'Payment requested. The client has been notified.');
+        if (activeRow) postForm('/' + activeRow.dataset.id + '/request', {});
     });
 
     document.getElementById('confirmDelete').addEventListener('click', function () {
-        if (!activeRow) return;
-        activeRow.remove();
-        closeModal(deleteModal);
-        refresh();
-        window.showToast('success', 'Milestone removed.');
+        if (activeRow) postForm('/' + activeRow.dataset.id + '/delete', {});
     });
 });
 
@@ -291,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!page || page.dataset.view !== 'client') return;
 
     const ICONS = window.PAYMENT_ICONS || {};
-    const moneyFormat = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+    const moneyFormat = { format: function (n) { return 'Rs. ' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); } };
     const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     const money = (amount) => moneyFormat.format(amount);

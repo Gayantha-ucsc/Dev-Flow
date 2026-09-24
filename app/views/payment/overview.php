@@ -116,7 +116,7 @@ $plural = fn(int $n, string $word) => $n . ' ' . $word . ($n === 1 ? '' : 's');
                         <tr data-id="<?= (int) $m['id'] ?>"
                             data-status="<?= htmlspecialchars($m['status']) ?>"
                             data-amount="<?= htmlspecialchars((string) $m['amount']) ?>"
-                            data-stage="<?= htmlspecialchars($stage) ?>"
+                            data-stage="<?= htmlspecialchars((string) $m['stageId']) ?>"
                             data-due="<?= htmlspecialchars($m['dueDate'] ?? '') ?>"
                             data-description="<?= htmlspecialchars($m['description']) ?>"
                             data-search="<?= htmlspecialchars(mb_strtolower($m['description'] . ' ' . $stage)) ?>">
@@ -164,6 +164,8 @@ $plural = fn(int $n, string $word) => $n . ' ' . $word . ($n === 1 ? '' : 's');
 
 <?php if ($canManage): ?>
 <script>
+    window.PAYMENT_CSRF = <?= json_encode(csrfToken()) ?>;
+    window.PAYMENT_URL  = <?= json_encode(url('payment/milestones')) ?>;
     window.PAYMENT_ICONS = {
         edit: <?= iconJson('pencil') ?>,
         remove: <?= iconJson('trash-2') ?>
@@ -186,14 +188,14 @@ $plural = fn(int $n, string $word) => $n . ' ' . $word . ($n === 1 ? '' : 's');
                 <label for="msStage">Linked stage <span class="payment-optional">(optional)</span></label>
                 <select id="msStage">
                     <option value="">No linked stage</option>
-                    <?php foreach ($stageOptions as $stageName): ?>
-                        <option value="<?= htmlspecialchars($stageName) ?>"><?= htmlspecialchars($stageName) ?></option>
+                    <?php foreach ($stageOptions as $opt): ?>
+                        <option value="<?= (int) $opt['id'] ?>"><?= htmlspecialchars($opt['name']) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
             <div class="payment-form-row">
                 <div class="form-group">
-                    <label for="msAmount">Amount ($)</label>
+                    <label for="msAmount">Amount (Rs.)</label>
                     <input type="number" id="msAmount" min="0.01" max="9999999999.99" step="0.01" required>
                 </div>
                 <div class="form-group">

@@ -2,8 +2,141 @@
 
 class PaymentController extends Controller {
 
+    // Layout data comes from the shared context; the project and role come from the real database.
     private function baseContext(string $pageTitle): array {
-        return mockPageContext('/payment', $pageTitle);
+        $context = mockPageContext('/payment', $pageTitle);
+
+        $rows = ProjectMember::projectsForUser(Auth::id());
+        $ids  = array_values(array_unique(array_map(fn($r) => (int) $r['project_id'], $rows)));
+        if (empty($ids)) {
+            return $context;
+        }
+
+        $selected = (int) Session::get('current_project_id');
+        if (!in_array($selected, $ids, true)) {
+            $selected = $ids[0];
+        }
+
+        $roles = ProjectMember::rolesForUser($selected, Auth::id());
+        $role  = in_array('manager', $roles, true) ? 'manager'
+               : (in_array('team_lead', $roles, true) ? 'team_lead' : ($roles[0] ?? null));
+
+        $context['currentProjectId']   = $selected;
+        $context['currentProjectName'] = Project::findById($selected)['name'] ?? '';
+        $context['activeRole']         = $role;
+        return $context;
+    }
+
+    private function back(): void {
+        header('Location: ' . url('payment'));
+        exit;
+    }
+
+    // Manager of this project only, project still open, valid CSRF token.
+    private function requireManager(): array {
+        $context = $this->baseContext('Payment');
+        $project = Project::findById((int) $context['currentProjectId']);
+
+        if ($context['activeRole'] !== 'manager' || !$project) {
+            Session::flash('error', 'Only the Manager can change the payment schedule.');
+            $this->back();
+        }
+        if ($project['status'] === 'closed') {
+            Session::flash('error', 'This project is closed. The payment schedule is read-only.');
+            $this->back();
+        }
+        if (!verifyCsrf()) {
+            Session::flash('error', 'Your session expired. Please try again.');
+            $this->back();
+        }
+        return $context;
+    }
+
+    // Returns [stageId|null, description, amount, dueDate] or flashes an error and redirects.
+    private function readMilestoneInput(int $projectId): array {
+        $description = trim($_POST['description'] ?? '');
+        $amount      = round((float) ($_POST['amount'] ?? 0), 2);
+        $dueDate     = trim($_POST['due_date'] ?? '');
+        $stageId     = (int) ($_POST['stage_id'] ?? 0) ?: null;
+
+        $error = null;
+        if ($description === '' || strlen($description) > 255) {
+            $error = 'Enter a description (255 characters or fewer).';
+        } elseif (!($amount > 0) || $amount > 9999999999.99) {
+            $error = 'Enter an amount greater than zero.';
+        } elseif (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $dueDate) || !strtotime($dueDate)) {
+            $error = 'Choose a valid due date.';
+        } elseif ($stageId !== null && !Stage::belongsToProject($stageId, $projectId)) {
+            $error = 'That stage does not belong to this project.';
+        }
+
+        if ($error !== null) {
+            Session::flash('error', $error);
+            $this->back();
+        }
+        return [$stageId, $description, $amount, $dueDate];
+    }
+
+    // Loads a milestone from the URL, scoped to the current project and still pending.
+    private function findPendingOr_flash(int $projectId): array {
+        $m = PaymentMilestone::findById((int) (Router::$params['id'] ?? 0));
+        if (!$m || (int) $m['project_id'] !== $projectId) {
+            Session::flash('error', 'Milestone not found.');
+            $this->back();
+        }
+        if ($m['status'] !== 'pending') {
+            Session::flash('error', 'Only pending milestones can be changed.');
+            $this->back();
+        }
+        return $m;
+    }
+
+    // POST /payment/milestones
+    public function store(): void {
+        $context   = $this->requireManager();
+        $projectId = (int) $context['currentProjectId'];
+        [$stageId, $desc, $amount, $due] = $this->readMilestoneInput($projectId);
+
+        $member = DB::getInstance()->query(
+            "SELECT project_member_id FROM ProjectMember WHERE project_id = ? AND user_id = ? AND role = 'manager' AND is_active = 1",
+            [$projectId, Auth::id()]
+        );
+        PaymentMilestone::create($projectId, $stageId, (int) $member[0]['project_member_id'], $desc, $amount, $due);
+
+        Session::flash('success', 'Milestone added.');
+        $this->back();
+    }
+
+    // POST /payment/milestones/:id/update
+    public function update(): void {
+        $context   = $this->requireManager();
+        $projectId = (int) $context['currentProjectId'];
+        $m = $this->findPendingOr_flash($projectId);
+        [$stageId, $desc, $amount, $due] = $this->readMilestoneInput($projectId);
+
+        PaymentMilestone::update((int) $m['payment_milestone_id'], $stageId, $desc, $amount, $due);
+        Session::flash('success', 'Milestone updated.');
+        $this->back();
+    }
+
+    // POST /payment/milestones/:id/delete
+    public function destroy(): void {
+        $context = $this->requireManager();
+        $m = $this->findPendingOr_flash((int) $context['currentProjectId']);
+
+        PaymentMilestone::delete((int) $m['payment_milestone_id']);
+        Session::flash('success', 'Milestone removed.');
+        $this->back();
+    }
+
+    // POST /payment/milestones/:id/request
+    public function request(): void {
+        $context = $this->requireManager();
+        $m = $this->findPendingOr_flash((int) $context['currentProjectId']);
+
+        PaymentMilestone::markRequested((int) $m['payment_milestone_id']);
+        Session::flash('success', 'Payment requested. The client has been notified.');
+        $this->back();
     }
 
     private function denyUnlessLead(?string $role): void {
@@ -17,22 +150,38 @@ class PaymentController extends Controller {
     }
 
     private function projectStatus(?int $projectId): string {
-        foreach (projectsListForCurrentUser() as $row) {
-            if ($row['id'] === $projectId) {
-                return $row['status'];
-            }
-        }
-        return 'active';
+        return Project::findById((int) $projectId)['status'] ?? 'active';
     }
 
     private function projectMilestones(int $projectId): array {
-        $all = require __DIR__ . '/../../config/mock/payments.php';
-        return $all[$projectId] ?? [];
+        return array_map(function (array $r) {
+            $payment = null;
+            if ($r['payment_status'] !== null) {
+                $payment = [
+                    'reference'  => $r['gateway_reference'],
+                    'amountPaid' => (float) $r['amount_paid'],
+                    'status'     => $r['payment_status'],
+                    'paidAt'     => $r['paid_at'],
+                ];
+            }
+            return [
+                'id'          => (int) $r['payment_milestone_id'],
+                'description' => $r['description'],
+                'stage'       => $r['stage_name'] ?? '',
+                'stageId'     => $r['stage_id'] !== null ? (int) $r['stage_id'] : '',
+                'amount'      => (float) $r['amount'],
+                'dueDate'     => $r['due_date'],
+                'status'      => $r['status'],
+                'payment'     => $payment,
+            ];
+        }, PaymentMilestone::listByProject($projectId));
     }
 
     private function stageOptions(int $projectId): array {
-        $detail = require __DIR__ . '/../../config/mock/project-detail.php';
-        return array_column($detail[$projectId]['stages'] ?? [], 'name');
+        return array_map(
+            fn($st) => ['id' => (int) $st['stage_id'], 'name' => $st['name']],
+            Stage::listByProject($projectId)
+        );
     }
 
     private function dueInfo(array $milestone, DateTimeImmutable $today): array {
