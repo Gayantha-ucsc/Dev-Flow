@@ -496,3 +496,35 @@
 .stage-row__reorder { cursor: grab; }
 .stage-item.is-dragging { opacity: 0.5; }
 .stage-item.is-drag-over { box-shadow: 0 -3px 0 var(--color-primary) inset; }
+/* ---- Stage CRUD page (no drag-and-drop, per 23.1: up/down arrow buttons instead) ---- */
+.stage-item--static .stage-row { cursor: default; }
+.stage-item--static .stage-row:hover { background: none; }
+
+.stage-row__order-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex-shrink: 0;
+}
+.stage-row__order-controls form { display: flex; }
+.stage-row__order-controls .icon-btn-sm { width: 24px; height: 24px; }
+.stage-row__order-controls .icon-btn-sm svg { width: 14px; height: 14px; }
+
+.stage-row__actions form { display: flex; }
+
+.stage-rename-form {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    width: 100%;
+}
+.stage-rename-form input[type="text"] {
+    flex: 1;
+    padding: 7px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+.stage-rename-form input[type="text"]:focus { outline: none; border-color: var(--color-primary); }

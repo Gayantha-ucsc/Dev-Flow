@@ -107,7 +107,15 @@ $allTaskTypes = array_keys($allTaskTypes);
     <div class="project-overview__workflow" data-workflow-section>
         <div class="project-overview__workflow-header">
             <h2>Project Workflow</h2>
-            <button type="button" class="btn-add-stage" data-add-stage><?= renderIcon('plus') ?> Add Stage</button>
+            <?php if (!empty($stagesEditable)): ?>
+                <form method="post" action="<?= url('projects/' . $project['id'] . '/stages') ?>" data-stage-form>
+                    <?= csrfField() ?>
+                    <input type="hidden" name="name" value="New Stage">
+                    <button type="submit" class="btn-add-stage" data-add-stage><?= renderIcon('plus') ?> Add Stage</button>
+                </form>
+            <?php else: ?>
+                <button type="button" class="btn-add-stage" data-add-stage><?= renderIcon('plus') ?> Add Stage</button>
+            <?php endif; ?>
         </div>
 
         <?php if (empty($stages)): ?>
@@ -130,7 +138,7 @@ $allTaskTypes = array_keys($allTaskTypes);
                         };
                         $isCurrent = in_array($stage['status'], ['in_progress', 'pending_completion'], true);
                     ?>
-                    <div class="card stage-item <?= $isCurrent ? 'stage-item--current stage-item--expanded' : '' ?>" data-stage-name="<?= htmlspecialchars($stage['name']) ?>" draggable="false">
+                    <div class="card stage-item <?= $isCurrent ? 'stage-item--current stage-item--expanded' : '' ?>" data-stage-name="<?= htmlspecialchars($stage['name']) ?>" <?php if (!empty($stage['stage_id'])): ?>data-stage-id="<?= (int) $stage['stage_id'] ?>"<?php endif; ?> draggable="false">
                         <div class="stage-row">
                             <button type="button" class="stage-row__reorder" aria-label="Reorder <?= htmlspecialchars($stage['name']) ?>">
                                 <?= renderIcon('chevrons-up-down') ?>
@@ -142,7 +150,14 @@ $allTaskTypes = array_keys($allTaskTypes);
 
                             <div class="stage-row__body">
                                 <h3 class="stage-row__name" data-name-display><?= htmlspecialchars($stage['name']) ?></h3>
-                                <input type="text" class="stage-row__name-input" data-name-input value="<?= htmlspecialchars($stage['name']) ?>" draggable="false" hidden>
+                                <?php if (!empty($stage['stage_id'])): ?>
+                                    <form method="post" action="<?= url('stages/' . $stage['stage_id'] . '/update') ?>" data-rename-form>
+                                        <?= csrfField() ?>
+                                        <input type="text" name="name" class="stage-row__name-input" data-name-input value="<?= htmlspecialchars($stage['name']) ?>" draggable="false" hidden>
+                                    </form>
+                                <?php else: ?>
+                                    <input type="text" class="stage-row__name-input" data-name-input value="<?= htmlspecialchars($stage['name']) ?>" draggable="false" hidden>
+                                <?php endif; ?>
                                 <div class="stage-row__meta">
                                     <span class="stage-row__status stage-row__status--<?= $statusMeta['tone'] ?>">
                                         <?php if ($statusMeta['icon']): ?><?= renderIcon($statusMeta['icon']) ?><?php endif; ?>
@@ -251,6 +266,9 @@ $allTaskTypes = array_keys($allTaskTypes);
 </div>
 
 <script>
+    window.STAGE_BASE_URL = <?= json_encode(url('stages')) ?>;
+    window.STAGE_CSRF     = <?= json_encode(csrfToken()) ?>;
+
     window.STAGE_ICONS = {
         grip:        <?= iconJson('grip-vertical') ?>,
         pencil:      <?= iconJson('pencil') ?>,
@@ -284,7 +302,10 @@ $allTaskTypes = array_keys($allTaskTypes);
             </p>
             <div class="modal-box__footer">
                 <button type="button" class="btn-sm" data-modal-close>Cancel</button>
-                <button type="button" class="btn-sm btn-sm--danger-outline" id="confirmDeleteStage">Delete stage</button>
+                <form method="post" id="deleteStageForm" data-delete-form>
+                    <?= csrfField() ?>
+                    <button type="submit" class="btn-sm btn-sm--danger-outline" id="confirmDeleteStage">Delete stage</button>
+                </form>
             </div>
         </div>
     </div>

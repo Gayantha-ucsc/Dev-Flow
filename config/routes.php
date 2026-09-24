@@ -42,5 +42,10 @@ return [
     'POST' => [
         '/login'          => ['AuthController', 'login'],
         '/register'       => ['AuthController', 'register'],
+
+        '/projects/:id/stages' => ['StageController', 'store'],
+        '/stages/:id/update'   => ['StageController', 'update'],
+        '/stages/:id/move'     => ['StageController', 'move'],
+        '/stages/:id/delete'   => ['StageController', 'destroy'],
     ],
 ];

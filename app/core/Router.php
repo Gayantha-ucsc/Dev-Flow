@@ -10,7 +10,7 @@ class Router {
         $this->routes = require __DIR__ . '/../../config/routes.php';
 
         $app = require __DIR__ . '/../../config/app.php';
-        $this->basePath = rtrim(parse_url($app['base_url'], PHP_URL_PATH), '/');
+        $this->basePath = rtrim(parse_url($app['base_url'], PHP_URL_PATH) ?? '', '/');
     }
 
     public function dispatch(): void {

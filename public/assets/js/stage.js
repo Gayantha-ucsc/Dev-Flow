@@ -9,13 +9,18 @@ document.addEventListener('DOMContentLoaded', function () {
     /* Add stage (inline, like the project wizard) */
     var addBtn = workflow.querySelector('[data-add-stage]');
     if (addBtn && stageList) {
-        addBtn.addEventListener('click', function () {
-            var newItem = buildStageItem('New Stage');
-            stageList.appendChild(newItem);
-            renumberStages();
-            newItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            startRename(newItem);
-        });
+        var addForm = addBtn.closest('form[data-stage-form]');
+        if (!addForm) {
+            // Demo/mock project - no backend behind it, keep the old client-only preview.
+            addBtn.addEventListener('click', function () {
+                var newItem = buildStageItem('New Stage');
+                stageList.appendChild(newItem);
+                renumberStages();
+                newItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                startRename(newItem);
+            });
+        }
+        // Real project: addForm posts to StageController::store() and the page reloads.
     }
 
     /* Inline rename */
@@ -37,16 +42,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
         function save() {
             var value = input.value.trim();
-            if (value) {
-                display.textContent = value;
-                item.dataset.stageName = value;
-                var deleteBtn = item.querySelector('.js-delete-stage');
-                if (deleteBtn) deleteBtn.dataset.stageName = value;
-                var addTaskCard = item.querySelector('.js-add-task');
-                if (addTaskCard) addTaskCard.dataset.stageName = value;
-            } else {
-                input.value = display.textContent;
+            var original = display.textContent;
+
+            if (!value) {
+                input.value = original;
+                display.hidden = false;
+                input.hidden = true;
+                return;
             }
+
+            if (input.form && item.dataset.stageId) {
+                if (value !== original) {
+                    input.form.submit(); // StageController::update() -> page reload with the new name
+                    return;
+                }
+                display.hidden = false;
+                input.hidden = true;
+                return;
+            }
+
+            // Demo/mock project - client-only preview, same as before.
+            display.textContent = value;
+            item.dataset.stageName = value;
+            var deleteBtn = item.querySelector('.js-delete-stage');
+            if (deleteBtn) deleteBtn.dataset.stageName = value;
+            var addTaskCard = item.querySelector('.js-add-task');
+            if (addTaskCard) addTaskCard.dataset.stageName = value;
             display.hidden = false;
             input.hidden = true;
         }
@@ -99,6 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var items = Array.prototype.slice.call(stageList.querySelectorAll('.stage-item'));
             var fromIndex = items.indexOf(draggedItem);
             var toIndex = items.indexOf(item);
+            var movedItem = draggedItem;
 
             if (toIndex > fromIndex) {
                 item.after(draggedItem);
@@ -106,13 +128,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 item.before(draggedItem);
             }
             renumberStages();
+            persistMove(movedItem, toIndex > fromIndex ? 'down' : 'up', Math.abs(toIndex - fromIndex));
         });
+    }
+
+    // Real project only: replay the drag as one-step moves against StageController::move().
+    function persistMove(item, direction, steps) {
+        var stageId = item.dataset.stageId;
+        if (!stageId || !window.STAGE_BASE_URL || steps < 1) return;
+
+        var i = 0;
+        function next() {
+            if (i >= steps) return;
+            i++;
+            var body = new URLSearchParams({ direction: direction, csrf_token: window.STAGE_CSRF || '' });
+            fetch(window.STAGE_BASE_URL + '/' + stageId + '/move', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: body.toString()
+            }).then(next).catch(function () {});
+        }
+        next();
     }
 
     /* Delete stage */
     var deleteModal    = document.querySelector('[data-modal="delete-stage-modal"]');
     var deleteNameEl   = deleteModal ? deleteModal.querySelector('[data-delete-stage-name]') : null;
     var deleteWarning  = deleteModal ? deleteModal.querySelector('[data-delete-stage-task-warning]') : null;
+    var deleteForm     = document.querySelector('[data-delete-form]');
     var confirmDelete  = document.getElementById('confirmDeleteStage');
     var pendingStageItem = null;
 
@@ -131,14 +174,21 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     if (confirmDelete) {
-        confirmDelete.addEventListener('click', function () {
-            if (pendingStageItem) {
-                var name = pendingStageItem.dataset.stageName || 'Stage';
-                pendingStageItem.remove();
-                renumberStages();
-                if (window.showToast) showToast('success', '"' + name + '" was deleted.');
-                pendingStageItem = null;
+        confirmDelete.addEventListener('click', function (e) {
+            if (!pendingStageItem) return;
+
+            var stageId = pendingStageItem.dataset.stageId;
+            if (stageId && deleteForm && window.STAGE_BASE_URL) {
+                deleteForm.action = window.STAGE_BASE_URL + '/' + stageId + '/delete';
+                return; // let the form submit for real - StageController::destroy()
             }
+
+            e.preventDefault(); // demo/mock project - no backend, keep the old client-only preview
+            var name = pendingStageItem.dataset.stageName || 'Stage';
+            pendingStageItem.remove();
+            renumberStages();
+            if (window.showToast) showToast('success', '"' + name + '" was deleted.');
+            pendingStageItem = null;
             closeModal(deleteModal);
         });
     }
