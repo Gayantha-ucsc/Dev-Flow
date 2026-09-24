@@ -111,3 +111,10 @@ INSERT INTO `PaymentMilestone` (project_id, stage_id, created_by, description, a
 
 INSERT INTO `Payment` (payment_milestone_id, gateway_reference, amount_paid, status, paid_at) VALUES
 (1, 'GW-261005-4821', 4000.00, 'completed', '2026-10-05 10:42:00');
+
+-- DEMO TASKS (Project 1: stage 2 = Design, 3 = Development; created_by = ProjectMember 2, the Manager)
+INSERT INTO `Task` (stage_id, name, description, created_by, status, task_type, deadline) VALUES
+(2, 'Homepage wireframes',  'Low-fidelity wireframes for the homepage and navigation.', 2, 'approved',    'design',   '2026-10-10'),
+(2, 'Visual style guide',   'Colors, typography and component styles for the client site.', 2, 'in_progress', 'design',   '2026-10-20'),
+(3, 'Build homepage',       'Implement the approved homepage design in HTML/CSS.',      2, 'not_started', 'frontend', '2026-11-15'),
+(3, 'Contact form backend', 'PHP handler and validation for the contact form.',         2, 'not_started', 'backend',  '2026-11-25');

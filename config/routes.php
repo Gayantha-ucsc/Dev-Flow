@@ -54,6 +54,10 @@ return [
         '/payment/milestones/:id/delete'     => ['PaymentController', 'destroy'],
         '/payment/milestones/:id/request'    => ['PaymentController', 'request'],
 
+        '/tasks'               => ['TaskController', 'store'],
+        '/tasks/:id/update'    => ['TaskController', 'update'],
+        '/tasks/:id/delete'    => ['TaskController', 'destroy'],
+
         '/projects/:id/stages' => ['StageController', 'store'],
         '/stages/:id/update'   => ['StageController', 'update'],
         '/stages/:id/move'     => ['StageController', 'move'],
