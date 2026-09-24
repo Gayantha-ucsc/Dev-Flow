@@ -7,12 +7,22 @@ $type   = $filters['type'] ?? 'all';
 ?>
 <div class="admin-users-page">
 
+    <?php if (!empty($newTempPassword)): ?>
+        <div class="card admin-temp-pass">
+            <strong>Account created.</strong> Temporary password for
+            <strong><?= htmlspecialchars($newTempPassword['name']) ?></strong>
+            (<?= htmlspecialchars($newTempPassword['username']) ?>):
+            <code><?= htmlspecialchars($newTempPassword['password']) ?></code>
+            <span class="admin-users-table__muted"> - shown once. They must change it on first login.</span>
+        </div>
+    <?php endif; ?>
+
     <div class="admin-page-header">
         <div>
             <h1>User management</h1>
             <p>Manage all registered accounts across DevFlow.</p>
         </div>
-        <button type="button" class="btn-primary" id="createUserBtn">
+        <button type="button" class="btn-primary" id="createUserBtn" data-url="<?= url('admin/users/create') ?>">
             <?= renderIcon('user-plus') ?>
             Create user
         </button>
@@ -81,6 +91,8 @@ $type   = $filters['type'] ?? 'all';
                                 $isSelf   = $user['user_id'] === ($currentUser['user_id'] ?? null);
                             ?>
                             <tr data-user-id="<?= (int) $user['user_id'] ?>"
+                                data-edit-url="<?= url('admin/users/' . (int) $user['user_id'] . '/edit') ?>"
+                                data-delete-url="<?= url('admin/users/' . (int) $user['user_id'] . '/delete') ?>"
                                 data-user-name="<?= htmlspecialchars($user['name']) ?>"
                                 data-active="<?= $user['is_active'] ? '1' : '0' ?>">
                                 <td>
@@ -172,3 +184,7 @@ $type   = $filters['type'] ?? 'all';
         </div>
     </div>
 </div>
+
+<form method="post" id="deleteUserForm" hidden>
+    <?= csrfField() ?>
+</form>
