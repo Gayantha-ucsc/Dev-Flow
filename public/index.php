@@ -20,6 +20,7 @@ require __DIR__ . '/../app/models/User.php';
 require __DIR__ . '/../app/models/Project.php';
 require __DIR__ . '/../app/models/ProjectMember.php';
 require __DIR__ . '/../app/models/Stage.php';
+require __DIR__ . '/../app/models/Task.php';
 require __DIR__ . '/../app/models/PaymentMilestone.php';
 require __DIR__ . '/../app/core/Validator.php';
 require __DIR__ . '/../app/core/Auth.php';
