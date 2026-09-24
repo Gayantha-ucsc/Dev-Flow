@@ -856,3 +856,16 @@
     color: var(--color-text-muted);
     font-style: italic;
 }
+/* ---- User management: create/edit form + temp password banner ---- */
+.admin-temp-pass { padding: 14px 18px; margin-bottom: 16px; border-left: 4px solid var(--accent, #b85c38); }
+.admin-temp-pass code { background: rgba(0,0,0,.06); padding: 2px 8px; border-radius: 6px; font-size: 1rem; user-select: all; }
+.admin-user-form { max-width: 560px; padding: 24px; }
+.admin-user-form .af-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.admin-user-form label { font-weight: 600; font-size: .875rem; }
+.admin-user-form input[type="text"], .admin-user-form input[type="email"] {
+    padding: 10px 12px; border: 1px solid rgba(0,0,0,.18); border-radius: 8px; font: inherit; background: #fff;
+}
+.admin-user-form .af-check { flex-direction: row; align-items: center; gap: 8px; }
+.admin-user-form .af-hint { font-size: .8rem; opacity: .7; }
+.admin-user-form .af-error { color: #b3261e; font-size: .8rem; }
+.admin-user-form .af-actions { display: flex; gap: 10px; margin-top: 8px; }

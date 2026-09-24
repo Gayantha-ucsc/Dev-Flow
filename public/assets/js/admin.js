@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var editBtn = e.target.closest('.js-edit-user');
             if (editBtn) {
                 var name = editBtn.closest('tr').dataset.userName;
-                if (window.showToast) showToast('info', 'Editing ' + name + ' isn\'t wired up yet.');
+                window.location.href = editBtn.closest('tr').dataset.editUrl;
                 return;
             }
 
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             var createBtn = e.target.closest('#createUserBtn');
             if (createBtn) {
-                if (window.showToast) showToast('info', 'Create user flow isn\'t wired up yet.');
+                window.location.href = createBtn.dataset.url;
             }
         });
 
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
             confirmDelete.addEventListener('click', function () {
                 if (pendingRow) {
                     var uName = pendingRow.dataset.userName;
-                    pendingRow.remove();
+                    var df = document.getElementById('deleteUserForm'); df.action = pendingRow.dataset.deleteUrl; df.submit(); return;
                     if (window.showToast) showToast('success', uName + ' was deleted.');
                     pendingRow = null;
                 }

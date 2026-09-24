@@ -33,6 +33,8 @@ return [
 
         // System Administration (Admin only, project-agnostic)
         '/admin/users'       => ['AdminUserController', 'index'],
+        '/admin/users/create'   => ['AdminUserController', 'create'],
+        '/admin/users/:id/edit' => ['AdminUserController', 'edit'],
         '/admin/permissions' => ['AdminPermissionController', 'index'],
         '/admin/templates'   => ['AdminTemplateController', 'index'],
         '/admin/settings'    => ['AdminSettingsController', 'index'],
@@ -42,6 +44,10 @@ return [
     'POST' => [
         '/login'          => ['AuthController', 'login'],
         '/register'       => ['AuthController', 'register'],
+
+        '/admin/users'            => ['AdminUserController', 'store'],
+        '/admin/users/:id/update' => ['AdminUserController', 'update'],
+        '/admin/users/:id/delete' => ['AdminUserController', 'destroy'],
 
         '/projects/:id/stages' => ['StageController', 'store'],
         '/stages/:id/update'   => ['StageController', 'update'],
