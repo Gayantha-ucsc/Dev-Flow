@@ -8,6 +8,44 @@ class ProjectController extends Controller {
         $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
         $projectsList   = projectsListForCurrentUser();
 
+        foreach (ProjectMember::projectsForUser(Auth::id()) as $row) {
+            $projectId = (int) $row['project_id'];
+            $dbProject = Project::findById($projectId);
+            if (!$dbProject) {
+                continue;
+            }
+
+            $entry = [
+                'id'              => $projectId,
+                'name'            => $dbProject['name'],
+                'description'     => $dbProject['description'] ?? '',
+                'status'          => $dbProject['status'],
+                'health'          => null,
+                'role'            => $row['role'],
+                'percent'         => 0,
+                'stages'          => [],
+                'stageLabel'      => 'No stages yet',
+                'deadline'        => $dbProject['deadline'],
+                'pendingCount'    => 0,
+                'overdueCount'    => 0,
+                'blockedCount'    => 0,
+                'milestonesPaid'  => 0,
+                'milestonesTotal' => 0,
+            ];
+
+            $replaced = false;
+            foreach ($projectsList as $i => $mockRow) {
+                if ((int) $mockRow['id'] === $projectId) {
+                    $projectsList[$i] = $entry;
+                    $replaced = true;
+                    break;
+                }
+            }
+            if (!$replaced) {
+                $projectsList[] = $entry;
+            }
+        }
+
         usort($projectsList, fn($a, $b) => strtotime($a['deadline']) <=> strtotime($b['deadline']));
 
         $context = array_merge(
@@ -31,19 +69,41 @@ class ProjectController extends Controller {
         $projectsList = projectsListForCurrentUser();
         $project = null;
         foreach ($projectsList as $row) {
-            if ($row['id'] === $id) {
+            if ((int) $row['id'] === $id) {
                 $project = $row;
                 break;
             }
         }
 
-        if ($project === null) {
+        $dbProject = Project::findById($id);
+        $dbRoles   = $dbProject ? ProjectMember::rolesForUser($id, Auth::id()) : [];
+
+        if ($project === null && empty($dbRoles)) {
             http_response_code(404);
             require __DIR__ . '/../views/errors/404.php';
             return;
         }
 
-        if ($project['role'] === 'client') {
+        if ($project === null) {
+            // No mock stand-in for this project - build the row straight from the DB.
+            $project = [
+                'id'              => $id,
+                'name'            => $dbProject['name'],
+                'description'     => $dbProject['description'] ?? '',
+                'status'          => $dbProject['status'],
+                'health'          => null,
+                'role'            => $dbRoles[0] ?? null,
+                'percent'         => 0,
+                'deadline'        => $dbProject['deadline'],
+                'pendingCount'    => 0,
+                'overdueCount'    => 0,
+                'blockedCount'    => 0,
+                'milestonesPaid'  => 0,
+                'milestonesTotal' => 0,
+            ];
+        }
+
+        if (!empty($dbRoles) ? in_array('client', $dbRoles, true) : $project['role'] === 'client') {
             header('Location: ' . url('client-portal/overview?id=' . $id));
             exit;
         }
@@ -58,6 +118,26 @@ class ProjectController extends Controller {
             $stage['tasks'] = $taskData[$id][$i] ?? [];
         }
         unset($stage);
+
+        $stagesEditable = false;
+        if ($dbProject && !empty($dbRoles)) {
+            $project['name']        = $dbProject['name'];
+            $project['description'] = $dbProject['description'];
+            $project['deadline']    = $dbProject['deadline'];
+            $project['status']      = $dbProject['status'];
+
+            $stagesEditable = ProjectMember::canManageStages($id, Auth::id());
+            $stages = array_map(function ($s) {
+                return [
+                    'stage_id'      => (int) $s['stage_id'],
+                    'name'          => $s['name'],
+                    'status'        => $s['status'],
+                    'tasksTotal'    => Stage::taskCount((int) $s['stage_id']),
+                    'tasksApproved' => 0,
+                    'tasks'         => [],
+                ];
+            }, Stage::listByProject($id));
+        }
 
         $teamData = require __DIR__ . '/../../config/mock/team-members.php';
         $members  = array_values(array_filter(
@@ -78,6 +158,7 @@ class ProjectController extends Controller {
                 'notifications' => $notifications['items'],
                 'project'       => $project,
                 'stages'        => $stages,
+                'stagesEditable' => $stagesEditable,
                 'members'       => $members,
             ],
             $projectContext
