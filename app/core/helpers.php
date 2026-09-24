@@ -643,7 +643,7 @@ function notificationCategoryCounts(array $feed): array {
 }
 
 function formatMoney(float $amount): string {
-    return '$' . number_format($amount, 2);
+    return 'Rs. ' . number_format($amount, 2);
 }
 
 function paymentStatusMeta(string $status): array {
