@@ -26,65 +26,50 @@
         <?= renderIcon('info') ?>
         <div>
             <strong>Cross-approval required</strong>
-            Members you add as Developer or Designer require approval from the qualifying approver
-            (Manager additions need Team Lead approval; Team Lead additions need Manager approval).
+            Members you add as Developer or Designer require approval from the qualifying approver.
         </div>
     </div>
     <?php endif; ?>
 
-    <div class="team-form-grid">
+    <div class="team-form-grid team-form-grid--single">
         <div class="card team-form-card">
             <div class="card__header">
-                <h2 class="card__title"><?= renderIcon('search') ?> Search Users</h2>
-            </div>
-            <div class="team-form-card__body">
-                <div class="projects-search team-form-search">
-                    <?= renderIcon('search') ?>
-                    <input type="text" id="userSearch" placeholder="Search by name or email..." autocomplete="off" minlength="3">
-                </div>
-                <p class="form-hint">Type at least 3 characters of a name or email to look someone up.</p>
-
-                <div class="user-search-results" id="userSearchResults">
-                    <p class="user-search-empty" id="userSearchIdle">Start typing a name or email above to find a user.</p>
-                    <p class="user-search-empty" id="userSearchLoading" hidden>Searching…</p>
-                    <p class="user-search-empty" id="userSearchEmpty" hidden>No user found matching that name or email.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="card team-form-card">
-            <div class="card__header">
-                <h2 class="card__title"><?= renderIcon('user-plus') ?> Member Details</h2>
+                <h2 class="card__title"><?= renderIcon('user-plus') ?> Add Member</h2>
             </div>
             <form class="team-form-card__body" id="addMemberForm">
+                <div class="form-row">
+                    <div class="form-group" style="grid-column: 1 / span 2;">
+                        <label for="userIdentifier">Username or email</label>
+                        <input type="text" id="userIdentifier" placeholder="Enter exact username or email..." autocomplete="off">
+                        <span class="field-error" id="identifierError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="memberRole">Assign Role</label>
+                        <select id="memberRole" name="role">
+                            <?php if (!$hasTeamLead): ?>
+                                <option value="team_lead">Team Lead (direct add)</option>
+                            <?php endif; ?>
+                            <option value="developer" <?= !$hasTeamLead ? '' : 'selected' ?>>Developer</option>
+                            <option value="designer">Designer</option>
+                            <?php if ($hasTeamLead): ?>
+                                <option value="team_lead">Team Lead</option>
+                            <?php endif; ?>
+                        </select>
+                    </div>
+                </div>
                 <div class="form-group form-group--compact">
-                    <label>Selected Member</label>
-                    <div class="selected-user-placeholder" id="selectedUserPlaceholder">
-                        <?= renderIcon('user') ?>
-                        <span>Select a user from the search list on the left</span>
-                    </div>
-                    <div class="selected-user" id="selectedUser" hidden>
-                        <span class="avatar avatar--primary" id="selectedUserAvatar"></span>
-                        <div class="selected-user__info">
-                            <div class="selected-user__name" id="selectedUserName"></div>
-                            <div class="selected-user__email" id="selectedUserEmail"></div>
-                        </div>
-                        <button type="button" class="btn-sm selected-user__change" id="clearSelectedUser">Change</button>
-                    </div>
+                    <button type="button" class="btn-add-member btn-add-member--inline" id="addIdentifierBtn">
+                        <?= renderIcon('plus') ?> Add to List
+                    </button>
+                    <p class="form-hint">Enter the person's exact username or email.</p>
+                </div>
+
+                <div class="team-members" id="addedMemberSection" hidden>
+                    <div class="team-members__label">MEMBER TO ADD</div>
+                    <div class="team-members__list" id="addedMemberList"></div>
                 </div>
 
                 <div class="form-group">
-                    <label for="memberRole">Assign Role</label>
-                    <select id="memberRole" name="role" required>
-                        <?php if (!$hasTeamLead): ?>
-                            <option value="team_lead">Team Lead (direct add)</option>
-                        <?php endif; ?>
-                        <option value="developer" <?= !$hasTeamLead ? '' : 'selected' ?>>Developer</option>
-                        <option value="designer">Designer</option>
-                        <?php if ($hasTeamLead): ?>
-                            <option value="team_lead">Team Lead</option>
-                        <?php endif; ?>
-                    </select>
                     <p class="form-hint" id="roleHint">
                         <?php if (!$hasTeamLead): ?>
                             First Team Lead is added immediately without approval.

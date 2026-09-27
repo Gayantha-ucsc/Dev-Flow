@@ -27,8 +27,8 @@ $meta = taskStatusMeta($task['status']);
     <div class="card task-section">
         <div class="task-panel-body">
             <p><strong>Description</strong><br><?= nl2br(htmlspecialchars($task['description'] ?? 'No description.')) ?></p>
-            <p><strong>Type</strong><br><?= htmlspecialchars($task['task_type'] ?: '—') ?></p>
-            <p><strong>Deadline</strong><br><?= $task['deadline'] ? htmlspecialchars(date('M j, Y', strtotime($task['deadline']))) : '—' ?></p>
+            <p><strong>Type</strong><br><?= htmlspecialchars($task['task_type'] ?: '-') ?></p>
+            <p><strong>Deadline</strong><br><?= $task['deadline'] ? htmlspecialchars(date('M j, Y', strtotime($task['deadline']))) : '-' ?></p>
             <p><strong>Created</strong><br><?= htmlspecialchars(date('M j, Y', strtotime($task['created_at']))) ?></p>
         </div>
     </div>

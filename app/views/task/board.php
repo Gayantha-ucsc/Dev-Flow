@@ -45,7 +45,7 @@ foreach ($tasks as $t) { $byStage[$t['stage_id']][] = $t; }
                 </a>
                 <div class="task-row__meta">
                     <div class="task-row__meta-label">Deadline</div>
-                    <div class="task-row__meta-value"><?= $task['deadline'] ? htmlspecialchars(date('M j, Y', strtotime($task['deadline']))) : '—' ?></div>
+                    <div class="task-row__meta-value"><?= $task['deadline'] ? htmlspecialchars(date('M j, Y', strtotime($task['deadline']))) : '-' ?></div>
                 </div>
                 <?php if ($canEdit): ?>
                 <div style="display:flex;gap:8px;align-items:center">

@@ -124,137 +124,92 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    /* ---- Add member: user search ---- */
-    var userSearch = document.getElementById('userSearch');
-    var userResults = document.getElementById('userSearchResults');
-    if (userSearch && userResults) {
-        var searchIdle = document.getElementById('userSearchIdle');
-        var searchLoading = document.getElementById('userSearchLoading');
-        var searchEmpty = document.getElementById('userSearchEmpty');
-        var selectedUser = document.getElementById('selectedUser');
-        var selectedPlaceholder = document.getElementById('selectedUserPlaceholder');
+    /* ---- Add member: identifier entry (no directory lookup, same pattern as project wizard) ---- */
+    var userIdentifier = document.getElementById('userIdentifier');
+    if (userIdentifier) {
+        var identifierError = document.getElementById('identifierError');
+        var addIdentifierBtn = document.getElementById('addIdentifierBtn');
+        var memberRoleSelect = document.getElementById('memberRole');
+        var addedSection = document.getElementById('addedMemberSection');
+        var addedList = document.getElementById('addedMemberList');
         var submitBtn = document.getElementById('submitAddMember');
-        var MIN_QUERY_LENGTH = 3;
-        var DEBOUNCE_MS = 300;
-        var debounceTimer = null;
-        var currentRequestId = 0;
+        var addedMember = null; // { identifier, role }
 
-        function setState(state) {
-            // state: 'idle' | 'loading' | 'empty' | 'results'
-            if (searchIdle) searchIdle.hidden = state !== 'idle';
-            if (searchLoading) searchLoading.hidden = state !== 'loading';
-            if (searchEmpty) searchEmpty.hidden = state !== 'empty';
-        }
+        var AVATAR_COLORS = ['avatar-color-1', 'avatar-color-2', 'avatar-color-3', 'avatar-color-4'];
 
-        function clearRenderedResults() {
-            userResults.querySelectorAll('.user-result').forEach(function (el) { el.remove(); });
-        }
-
-        function avatarClass(name) {
+        function colorForIdentifier(identifier) {
             var sum = 0;
-            for (var i = 0; i < name.length; i++) sum += name.charCodeAt(i);
-            var classes = ['primary', 'pink', 'teal', 'amber'];
-            return classes[sum % classes.length];
+            for (var i = 0; i < identifier.length; i++) sum += identifier.charCodeAt(i);
+            return AVATAR_COLORS[sum % AVATAR_COLORS.length];
         }
 
-        function renderResults(users) {
-            clearRenderedResults();
-            users.forEach(function (user) {
-                var btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'user-result';
-                btn.dataset.userId = user.user_id;
-                btn.dataset.userName = user.name;
-                btn.dataset.userEmail = user.email;
-                btn.innerHTML =
-                    '<span class="avatar avatar--' + avatarClass(user.name) + '">' +
-                        user.name.charAt(0).toUpperCase() +
-                    '</span>' +
-                    '<span class="user-result__body">' +
-                        '<span class="user-result__name"></span>' +
-                        '<span class="user-result__email"></span>' +
-                    '</span>';
-                btn.querySelector('.user-result__name').textContent = user.name;
-                btn.querySelector('.user-result__email').textContent = user.email;
-                btn.addEventListener('click', function () {
-                    userResults.querySelectorAll('.user-result').forEach(function (b) {
-                        b.classList.remove('is-selected');
-                    });
-                    btn.classList.add('is-selected');
-                    showSelectedUser(user.name, user.email);
-                });
-                userResults.appendChild(btn);
-            });
+        function roleLabel(role) {
+            var labels = { developer: 'Developer', designer: 'Designer', team_lead: 'Team Lead', manager: 'Manager' };
+            return labels[role] || role;
         }
 
-        function showSelectedUser(name, email) {
-            if (selectedPlaceholder) selectedPlaceholder.hidden = true;
-            if (selectedUser) {
-                selectedUser.hidden = false;
-                document.getElementById('selectedUserName').textContent = name;
-                document.getElementById('selectedUserEmail').textContent = email;
-                var avatar = document.getElementById('selectedUserAvatar');
-                avatar.textContent = name.charAt(0).toUpperCase();
-                avatar.className = 'avatar avatar--primary';
+        function isValidEmail(value) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        }
+        function isValidUsername(value) {
+            return /^[a-zA-Z0-9._-]{3,50}$/.test(value);
+        }
+        function isValidIdentifier(value) {
+            return isValidEmail(value) || isValidUsername(value);
+        }
+
+        function render() {
+            if (!addedMember) {
+                addedSection.hidden = true;
+                addedList.innerHTML = '';
+                submitBtn.disabled = true;
+                return;
             }
-            if (submitBtn) submitBtn.disabled = false;
+            addedSection.hidden = false;
+            addedList.innerHTML =
+                '<div class="team-member-row">' +
+                    '<span class="team-member-row__avatar ' + colorForIdentifier(addedMember.identifier) + '">' +
+                        addedMember.identifier.charAt(0).toUpperCase() +
+                    '</span>' +
+                    '<span class="team-member-row__identifier"></span>' +
+                    '<span class="team-member-row__role">' + roleLabel(addedMember.role).toUpperCase() + '</span>' +
+                    '<button type="button" class="team-member-row__remove" id="removeAddedMember">' +
+                        '&times;' +
+                    '</button>' +
+                '</div>';
+            addedList.querySelector('.team-member-row__identifier').textContent = addedMember.identifier;
+            document.getElementById('removeAddedMember').addEventListener('click', function () {
+                addedMember = null;
+                userIdentifier.value = '';
+                render();
+            });
+            submitBtn.disabled = false;
         }
 
-        function clearSelectedUser() {
-            userResults.querySelectorAll('.user-result').forEach(function (b) { b.classList.remove('is-selected'); });
-            if (selectedUser) selectedUser.hidden = true;
-            if (selectedPlaceholder) selectedPlaceholder.hidden = false;
-            if (submitBtn) submitBtn.disabled = true;
-        }
+        function addIdentifier() {
+            var value = userIdentifier.value.trim();
+            identifierError.textContent = '';
+            identifierError.classList.remove('is-visible');
 
-        function searchEndpoint(query) {
-            var base = (window.APP_BASE_URL || '/').replace(/\/$/, '');
-            return base + '/team/search-users?q=' + encodeURIComponent(query);
-        }
-
-        function runSearch(query) {
-            var requestId = ++currentRequestId;
-            setState('loading');
-            fetch(searchEndpoint(query))
-                .then(function (res) { return res.json(); })
-                .then(function (data) {
-                    if (requestId !== currentRequestId) return; // stale response, a newer query superseded it
-                    var results = data.results || [];
-                    if (results.length === 0) {
-                        clearRenderedResults();
-                        setState('empty');
-                    } else {
-                        renderResults(results);
-                        setState('results');
-                    }
-                })
-                .catch(function () {
-                    if (requestId !== currentRequestId) return;
-                    clearRenderedResults();
-                    setState('empty');
-                    if (window.showToast) window.showToast('error', 'Could not search users right now.');
-                });
-        }
-
-        userSearch.addEventListener('input', function () {
-            var q = userSearch.value.trim();
-            clearTimeout(debounceTimer);
-            clearSelectedUser();
-
-            if (q.length < MIN_QUERY_LENGTH) {
-                currentRequestId++; // invalidate any in-flight request
-                clearRenderedResults();
-                setState('idle');
+            if (!value || !isValidIdentifier(value)) {
+                identifierError.textContent = 'Enter a valid username or email address.';
+                identifierError.classList.add('is-visible');
                 return;
             }
 
-            debounceTimer = setTimeout(function () { runSearch(q); }, DEBOUNCE_MS);
+            // Accepted as-is - no directory lookup is performed, the identifier is
+            // assumed correct and resolved server-side when the form is submitted.
+            addedMember = { identifier: value, role: memberRoleSelect.value };
+            userIdentifier.value = '';
+            render();
+        }
+
+        addIdentifierBtn.addEventListener('click', addIdentifier);
+        userIdentifier.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') { e.preventDefault(); addIdentifier(); }
         });
 
-        var clearBtn = document.getElementById('clearSelectedUser');
-        if (clearBtn) {
-            clearBtn.addEventListener('click', clearSelectedUser);
-        }
+        render();
     }
 
     var addMemberForm = document.getElementById('addMemberForm');

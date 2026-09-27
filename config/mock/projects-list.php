@@ -19,7 +19,7 @@ return [
     ],
     [
         'id'          => 4,
-        'name'        => 'Marketing Site Redesign',
+        'name'        => 'Site Redesign',
         'description' => 'Landing Page + CMS',
         'status'      => 'active',
         'health'      => 'at_risk',
@@ -35,7 +35,7 @@ return [
         'milestonesTotal' => 2,
     ],
     [
-        'id'          => 1,
+        'id'          => 9,
         'name'        => 'Project Beta',
         'description' => 'Core Architecture Revamp',
         'status'      => 'active',
@@ -122,7 +122,7 @@ return [
     ],
     [
         'id'          => 8,
-        'name'        => 'Retainer Site Refresh',
+        'name'        => 'Site Refresh',
         'description' => 'Quarterly Content Refresh',
         'status'      => 'active',
         'health'      => 'on_track',

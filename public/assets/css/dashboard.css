@@ -283,6 +283,8 @@
 .activity-footer a:hover { color: var(--color-primary); }
 
 /* Your Projects */
+.dash-projects { margin-top: var(--space-xl, 32px); }
+.dash-projects:first-child { margin-top: 0; }
 .dash-projects__header {
     display: flex;
     align-items: center;
