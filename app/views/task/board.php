@@ -23,42 +23,69 @@ foreach ($tasks as $t) { $byStage[$t['stage_id']][] = $t; }
     <?php endif; ?>
 
     <?php foreach ($stages as $stage): $list = $byStage[$stage['stage_id']] ?? []; ?>
-        <h2 class="card__title" style="margin:24px 0 8px"><?= renderIcon('flag') ?> <?= htmlspecialchars($stage['name']) ?>
-            <span class="badge badge--neutral"><?= count($list) ?></span></h2>
+        <div class="stage-group">
+            <h2 class="stage-group__title"><?= renderIcon('flag') ?> <?= htmlspecialchars($stage['name']) ?>
+                <span class="badge badge--neutral"><?= count($list) ?></span></h2>
 
-        <?php if (empty($list)): ?>
-            <div class="card"><p class="form-hint">No tasks in this stage.</p></div>
-        <?php endif; ?>
-
-        <div class="task-list">
-        <?php foreach ($list as $task): $meta = taskStatusMeta($task['status']); ?>
-            <div class="card task-row">
-                <a href="<?= url('tasks/' . $task['task_id']) ?>" class="task-row__info" style="text-decoration:none;color:inherit">
-                    <div class="task-row__title-line">
-                        <h3 class="task-row__name"><?= htmlspecialchars($task['name']) ?></h3>
-                        <span class="badge badge--<?= $meta['tone'] ?> badge--outline"><?= htmlspecialchars($meta['label']) ?></span>
-                        <?php if (!empty($task['task_type'])): ?>
-                            <span class="role-chip"><?= htmlspecialchars($task['task_type']) ?></span>
-                        <?php endif; ?>
+            <?php if (empty($list)): ?>
+                <div class="task-list__empty-state">
+                    <?= renderIcon('tasks') ?>
+                    <p>No tasks in this stage yet.</p>
+                </div>
+            <?php else: ?>
+            <div class="task-list">
+            <?php foreach ($list as $task): $meta = taskStatusMeta($task['status']); ?>
+                <div class="card task-row">
+                    <a href="<?= url('tasks/' . $task['task_id']) ?>" class="task-row__info" style="text-decoration:none;color:inherit">
+                        <div class="task-row__title-line">
+                            <h3 class="task-row__name"><?= htmlspecialchars($task['name']) ?></h3>
+                            <span class="badge badge--<?= $meta['tone'] ?> badge--outline"><?= htmlspecialchars($meta['label']) ?></span>
+                            <?php if (!empty($task['task_type'])): ?>
+                                <span class="role-chip"><?= htmlspecialchars($task['task_type']) ?></span>
+                            <?php endif; ?>
+                        </div>
+                        <p class="task-row__description"><?= htmlspecialchars(mb_strimwidth($task['description'] ?? '', 0, 100, '…')) ?></p>
+                    </a>
+                    <div class="task-row__meta">
+                        <div class="task-row__meta-label">Deadline</div>
+                        <div class="task-row__meta-value"><?= $task['deadline'] ? htmlspecialchars(date('M j, Y', strtotime($task['deadline']))) : '—' ?></div>
                     </div>
-                    <p class="task-row__description"><?= htmlspecialchars(mb_strimwidth($task['description'] ?? '', 0, 100, '…')) ?></p>
-                </a>
-                <div class="task-row__meta">
-                    <div class="task-row__meta-label">Deadline</div>
-                    <div class="task-row__meta-value"><?= $task['deadline'] ? htmlspecialchars(date('M j, Y', strtotime($task['deadline']))) : '-' ?></div>
+                    <?php if ($canEdit): ?>
+                    <div class="task-row__actions">
+                        <a href="<?= url('tasks/' . $task['task_id'] . '/edit') ?>" class="btn-sm"><?= renderIcon('pencil') ?> Edit</a>
+                        <button type="button" class="btn-sm btn-sm--danger-outline js-delete-task"
+                                data-task-id="<?= (int) $task['task_id'] ?>"
+                                data-task-name="<?= htmlspecialchars($task['name']) ?>"
+                                data-delete-url="<?= url('tasks/' . $task['task_id'] . '/delete') ?>">
+                            <?= renderIcon('trash-2') ?> Delete
+                        </button>
+                    </div>
+                    <?php endif; ?>
                 </div>
-                <?php if ($canEdit): ?>
-                <div style="display:flex;gap:8px;align-items:center">
-                    <a href="<?= url('tasks/' . $task['task_id'] . '/edit') ?>" class="btn-sm"><?= renderIcon('pencil') ?> Edit</a>
-                    <form method="POST" action="<?= url('tasks/' . $task['task_id'] . '/delete') ?>"
-                          onsubmit="return confirm('Delete this task? This cannot be undone.')">
-                        <?= csrfField() ?>
-                        <button type="submit" class="btn-sm btn-sm--danger-outline"><?= renderIcon('trash-2') ?> Delete</button>
-                    </form>
-                </div>
-                <?php endif; ?>
+            <?php endforeach; ?>
             </div>
-        <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     <?php endforeach; ?>
+</div>
+
+<div class="modal-overlay" data-modal="delete-task-modal" hidden id="deleteTaskModal">
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-box modal-box--form modal-box--confirm">
+            <button type="button" class="icon-btn" data-modal-close aria-label="Close"><?= renderIcon('x') ?></button>
+        </div>
+        <div class="modal-box__body">
+            <p class="modal-subtext">
+                Permanently delete <strong id="deleteTaskName"></strong>? This cannot be undone, and any tasks
+                depending on it may need their dependencies reviewed.
+            </p>
+            <form method="POST" id="deleteTaskForm">
+                <?= csrfField() ?>
+                <div class="modal-box__footer">
+                    <button type="button" class="btn-sm" data-modal-close>Cancel</button>
+                    <button type="submit" class="btn-sm btn-sm--danger-outline">Delete task</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

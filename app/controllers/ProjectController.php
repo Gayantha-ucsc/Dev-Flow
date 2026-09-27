@@ -15,6 +15,33 @@ class ProjectController extends Controller {
                 continue;
             }
 
+            $dbStages = Stage::listByProject($projectId);
+
+            $percent    = 0;
+            $stageLabel = 'No stages yet';
+            if (!empty($dbStages)) {
+                $completed = count(array_filter($dbStages, fn($s) => $s['status'] === 'completed'));
+                $percent   = (int) round(($completed / count($dbStages)) * 100);
+
+                $current = null;
+                foreach ($dbStages as $s) {
+                    if ($s['status'] !== 'completed') {
+                        $current = $s;
+                        break;
+                    }
+                }
+                $stageLabel = $current ? $current['name'] : 'Completed';
+            }
+
+            $pendingCount = 0;
+            $overdueCount = 0;
+            $blockedCount = 0;
+            foreach (Task::listByProject($projectId) as $task) {
+                if ($task['status'] === 'pending_review') $pendingCount++;
+                if ($task['status'] === 'overdue')        $overdueCount++;
+                if ($task['status'] === 'blocked')        $blockedCount++;
+            }
+
             $entry = [
                 'id'              => $projectId,
                 'name'            => $dbProject['name'],
@@ -22,13 +49,13 @@ class ProjectController extends Controller {
                 'status'          => $dbProject['status'],
                 'health'          => null,
                 'role'            => $row['role'],
-                'percent'         => 0,
-                'stages'          => [],
-                'stageLabel'      => 'No stages yet',
+                'percent'         => $percent,
+                'stages'          => array_column($dbStages, 'status'),
+                'stageLabel'      => $stageLabel,
                 'deadline'        => $dbProject['deadline'],
-                'pendingCount'    => 0,
-                'overdueCount'    => 0,
-                'blockedCount'    => 0,
+                'pendingCount'    => $pendingCount,
+                'overdueCount'    => $overdueCount,
+                'blockedCount'    => $blockedCount,
                 'milestonesPaid'  => 0,
                 'milestonesTotal' => 0,
             ];

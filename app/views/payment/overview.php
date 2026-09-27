@@ -214,7 +214,7 @@ $plural = fn(int $n, string $word) => $n . ' ' . $word . ($n === 1 ? '' : 's');
 
 <div class="modal-overlay" data-modal="payment-request" hidden>
     <div class="modal-backdrop" data-modal-close></div>
-    <div class="modal-box modal-box--form">
+    <div class="modal-box modal-box--form modal-box--confirm">
         <div class="modal-box__header">
             <h2>Request Payment</h2>
             <button type="button" class="icon-btn" data-modal-close aria-label="Close"><?= renderIcon('x') ?></button>
@@ -231,7 +231,7 @@ $plural = fn(int $n, string $word) => $n . ' ' . $word . ($n === 1 ? '' : 's');
 
 <div class="modal-overlay" data-modal="payment-delete" hidden>
     <div class="modal-backdrop" data-modal-close></div>
-    <div class="modal-box modal-box--form">
+    <div class="modal-box modal-box--form modal-box--confirm">
         <div class="modal-box__header">
             <h2>Remove Milestone</h2>
             <button type="button" class="icon-btn" data-modal-close aria-label="Close"><?= renderIcon('x') ?></button>

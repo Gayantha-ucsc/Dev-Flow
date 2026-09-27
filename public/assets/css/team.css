@@ -538,6 +538,15 @@
 .modal-box__footer { display: flex; justify-content: flex-end; gap: var(--space-sm); padding-top: var(--space-md); }
 .modal-subtext { color: var(--color-text-muted); font-size: 0.9rem; margin: 0 0 var(--space-md); line-height: 1.5; }
 
+/* Short yes/no confirmations (delete stage/task/template/user/etc.) -
+   narrower and tighter than a full form modal, so text and buttons
+   sit close together instead of floating in a wide, half-empty box. */
+.modal-box--confirm { max-width: 420px; }
+.modal-box--confirm .modal-box__body { padding: var(--space-lg); }
+.modal-box--confirm .modal-subtext { margin: 0 0 var(--space-lg); }
+.modal-box--confirm .modal-box__footer { padding-top: 0; border-top: none; }
+.modal-box--confirm form { margin: 0; }
+
 /* ---- Dropdown menu ---- */
 .dropdown-menu {
     position: fixed;
