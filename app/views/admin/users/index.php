@@ -167,7 +167,7 @@ $type   = $filters['type'] ?? 'all';
 <!-- Reactivate confirmation -->
 <div class="modal-overlay" id="deleteUserModal" hidden>
     <div class="modal-backdrop" data-close-modal></div>
-    <div class="modal-box modal-box--form">
+    <div class="modal-box modal-box--form modal-box--confirm">
         <div class="modal-box__header">
             <h2>Delete user account</h2>
             <button type="button" class="icon-btn" data-close-modal aria-label="Close"><?= renderIcon('x') ?></button>

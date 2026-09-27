@@ -5,6 +5,30 @@ document.addEventListener('DOMContentLoaded', function () {
     var stageList = workflow.querySelector('.stage-list');
     var icons = window.STAGE_ICONS || {};
     var draggedItem = null;
+    var FOCUS_KEY = 'devflow:focusStage';
+
+    // Real project actions (add/rename) reload the whole page, which drops
+    // the scroll position back to the top. Whichever stage triggered the
+    // reload is stashed here beforehand, then restored once the page (and
+    // this script) comes back up.
+    (function restoreStageFocus() {
+        var target = sessionStorage.getItem(FOCUS_KEY);
+        if (!target || !stageList) return;
+        sessionStorage.removeItem(FOCUS_KEY);
+
+        var items = stageList.querySelectorAll('.stage-item');
+        var item = target === 'new'
+            ? items[items.length - 1]
+            : stageList.querySelector('[data-stage-id="' + target + '"]');
+        if (!item) return;
+
+        if (target === 'new') {
+            item.scrollIntoView({ behavior: 'auto', block: 'end' });
+            startRename(item);
+        } else {
+            item.scrollIntoView({ behavior: 'auto', block: 'center' });
+        }
+    })();
 
     /* Add stage (inline, like the project wizard) */
     var addBtn = workflow.querySelector('[data-add-stage]');
@@ -19,8 +43,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 newItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 startRename(newItem);
             });
+        } else {
+            // Real project: addForm posts to StageController::store() and the page reloads.
+            // Flag the new stage so it's scrolled to and put into rename mode after reload.
+            addForm.addEventListener('submit', function () {
+                sessionStorage.setItem(FOCUS_KEY, 'new');
+            });
         }
-        // Real project: addForm posts to StageController::store() and the page reloads.
     }
 
     /* Inline rename */
@@ -53,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (input.form && item.dataset.stageId) {
                 if (value !== original) {
+                    sessionStorage.setItem(FOCUS_KEY, item.dataset.stageId);
                     input.form.submit(); // StageController::update() -> page reload with the new name
                     return;
                 }

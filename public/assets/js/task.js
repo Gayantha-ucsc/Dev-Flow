@@ -72,6 +72,33 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    /* ---- Task board: delete-task confirmation modal ---- */
+    var taskDeleteModal = document.getElementById('deleteTaskModal');
+    if (taskDeleteModal) {
+        var taskDeleteForm = document.getElementById('deleteTaskForm');
+        var taskDeleteName = document.getElementById('deleteTaskName');
+
+        function openTaskDeleteModal() {
+            taskDeleteModal.removeAttribute('hidden');
+            requestAnimationFrame(function () { taskDeleteModal.classList.add('is-open'); });
+        }
+        function closeTaskDeleteModal() {
+            taskDeleteModal.classList.remove('is-open');
+            setTimeout(function () { taskDeleteModal.setAttribute('hidden', ''); }, 200);
+        }
+
+        document.querySelectorAll('.js-delete-task').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                taskDeleteName.textContent = btn.dataset.taskName || 'this task';
+                taskDeleteForm.action = btn.dataset.deleteUrl;
+                openTaskDeleteModal();
+            });
+        });
+        taskDeleteModal.querySelectorAll('[data-modal-close]').forEach(function (el) {
+            el.addEventListener('click', closeTaskDeleteModal);
+        });
+    }
+
     /* ---- Task detail: side tabs ---- */
     var taskTabs = document.getElementById('taskTabs');
     if (taskTabs) {

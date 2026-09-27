@@ -8,15 +8,24 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!searchInput || !filterBar || !sortSelect) return; // toolbar hidden (one project) - nothing to wire up
 
     var rows         = Array.prototype.slice.call(list.querySelectorAll('.project-row'));
+    var scrollParent = document.querySelector('.app-shell__content') || document.scrollingElement || document.documentElement;
 
     var activeFilter = 'all';
 
+    function withScrollPreserved(fn) {
+        var y = scrollParent.scrollTop;
+        fn();
+        scrollParent.scrollTop = y;
+    }
+
     function applyFilters() {
-        var query = (searchInput.value || '').trim().toLowerCase();
-        rows.forEach(function (row) {
-            var matchesSearch = !query || row.dataset.name.indexOf(query) !== -1;
-            var matchesStatus = activeFilter === 'all' || row.dataset.status === activeFilter;
-            row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+        withScrollPreserved(function () {
+            var query = (searchInput.value || '').trim().toLowerCase();
+            rows.forEach(function (row) {
+                var matchesSearch = !query || row.dataset.name.indexOf(query) !== -1;
+                var matchesStatus = activeFilter === 'all' || row.dataset.status === activeFilter;
+                row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+            });
         });
     }
 
@@ -32,16 +41,18 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     sortSelect.addEventListener('change', function () {
-        var key = sortSelect.value;
-        var sorted = rows.slice().sort(function (a, b) {
-            if (key === 'name') {
-                return a.dataset.name.localeCompare(b.dataset.name);
-            }
-            if (key === 'deadline') {
-                return new Date(a.dataset.deadline) - new Date(b.dataset.deadline);
-            }
-            return 0; // "Recently Updated" - keep server-given order (no updated_at in the mock yet)
+        withScrollPreserved(function () {
+            var key = sortSelect.value;
+            var sorted = rows.slice().sort(function (a, b) {
+                if (key === 'name') {
+                    return a.dataset.name.localeCompare(b.dataset.name);
+                }
+                if (key === 'deadline') {
+                    return new Date(a.dataset.deadline) - new Date(b.dataset.deadline);
+                }
+                return 0; // "Recently Updated" - keep server-given order (no updated_at in the mock yet)
+            });
+            sorted.forEach(function (row) { list.appendChild(row); });
         });
-        sorted.forEach(function (row) { list.appendChild(row); });
     });
 });

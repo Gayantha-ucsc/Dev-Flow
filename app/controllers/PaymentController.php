@@ -2,29 +2,8 @@
 
 class PaymentController extends Controller {
 
-    // Layout data comes from the shared context; the project and role come from the real database.
     private function baseContext(string $pageTitle): array {
-        $context = mockPageContext('/payment', $pageTitle);
-
-        $rows = ProjectMember::projectsForUser(Auth::id());
-        $ids  = array_values(array_unique(array_map(fn($r) => (int) $r['project_id'], $rows)));
-        if (empty($ids)) {
-            return $context;
-        }
-
-        $selected = (int) Session::get('current_project_id');
-        if (!in_array($selected, $ids, true)) {
-            $selected = $ids[0];
-        }
-
-        $roles = ProjectMember::rolesForUser($selected, Auth::id());
-        $role  = in_array('manager', $roles, true) ? 'manager'
-               : (in_array('team_lead', $roles, true) ? 'team_lead' : ($roles[0] ?? null));
-
-        $context['currentProjectId']   = $selected;
-        $context['currentProjectName'] = Project::findById($selected)['name'] ?? '';
-        $context['activeRole']         = $role;
-        return $context;
+        return mockPageContext('/payment', $pageTitle);
     }
 
     private function back(): void {

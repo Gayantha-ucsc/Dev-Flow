@@ -54,6 +54,46 @@
 
 .tasks-stats { margin-bottom: var(--space-lg); }
 
+/* ---- Stage groups ---- */
+.stage-group { margin-top: var(--space-xl, 32px); }
+.stage-group:first-of-type { margin-top: 0; }
+.stage-group__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--color-text);
+    margin: 0 0 var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-border);
+}
+.stage-group__title svg { width: 18px; height: 18px; color: var(--color-text-muted); }
+
+.task-row__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-shrink: 0;
+}
+
+/* ---- Task list ---- */
+.task-list__empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    text-align: center;
+    padding: var(--space-xl, 40px) var(--space-lg);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    background: var(--color-sidebar-bg);
+}
+.task-list__empty-state svg { width: 28px; height: 28px; opacity: 0.6; }
+.task-list__empty-state p { margin: 0; font-size: 0.9rem; }
+
 /* ---- Task list rows (mirrors project-row) ---- */
 .task-list {
     display: flex;
@@ -68,9 +108,9 @@
     padding: var(--space-lg);
     text-decoration: none;
     color: inherit;
-    transition: border-color 0.15s;
+    transition: border-color 0.15s, box-shadow 0.15s;
 }
-.task-row:hover { border-color: var(--color-primary); }
+.task-row:hover { border-color: var(--color-primary); box-shadow: 0 2px 8px rgba(58, 42, 38, 0.06); }
 
 .task-row__info { flex: 0 0 280px; min-width: 0; }
 .task-row__title-line {

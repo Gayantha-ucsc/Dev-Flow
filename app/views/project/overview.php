@@ -290,9 +290,9 @@ $allTaskTypes = array_keys($allTaskTypes);
 <!-- Delete Stage confirmation -->
 <div class="modal-overlay" data-modal="delete-stage-modal" hidden>
     <div class="modal-backdrop" data-modal-close></div>
-    <div class="modal-box modal-box--form">
+    <div class="modal-box modal-box--form modal-box--confirm">
         <div class="modal-box__header">
-            <h2>Delete stage</h2>
+            <h2>Delete Stage</h2>
             <button type="button" class="icon-btn" data-modal-close aria-label="Close"><?= renderIcon('x') ?></button>
         </div>
         <div class="modal-box__body">

@@ -178,7 +178,7 @@ $defaultOnly = $filters['default_only'] ?? false;
 <!-- Delete template confirmation -->
 <div class="modal-overlay" data-modal="delete-template-modal" hidden>
     <div class="modal-backdrop" data-modal-close></div>
-    <div class="modal-box modal-box--form">
+    <div class="modal-box modal-box--form modal-box--confirm">
         <div class="modal-box__header">
             <h2>Delete template</h2>
             <button type="button" class="icon-btn" data-modal-close aria-label="Close"><?= renderIcon('x') ?></button>
