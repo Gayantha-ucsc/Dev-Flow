@@ -144,7 +144,6 @@
 }
 
 /* ---- Permission markers (backend toggles via data-task-perm) ---- */
-.task-section[data-task-perm] { /* hook for future hide/show */ }
 .task-perm-badge {
     font-size: 0.7rem;
     font-weight: 700;

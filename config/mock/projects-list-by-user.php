@@ -8,14 +8,14 @@ $PERSONA_MANAGER_MIX = [
         'milestonesPaid' => 1, 'milestonesTotal' => 3,
     ],
     [
-        'id' => 4, 'name' => 'Marketing Site Redesign', 'description' => 'Landing Page + CMS',
+        'id' => 4, 'name' => 'Site Redesign', 'description' => 'Landing Page + CMS',
         'status' => 'active', 'health' => 'at_risk', 'role' => 'manager', 'percent' => 28,
         'stages' => ['completed', 'in_progress', 'not_started', 'not_started'], 'stageLabel' => 'Design',
         'deadline' => '2026-11-05', 'pendingCount' => 1, 'overdueCount' => 1, 'blockedCount' => 0,
         'milestonesPaid' => 0, 'milestonesTotal' => 2,
     ],
     [
-        'id' => 1, 'name' => 'Project Beta', 'description' => 'Core Architecture Revamp',
+        'id' => 1, 'name' => 'Demo Project', 'description' => 'Core Architecture Revamp',
         'status' => 'active', 'health' => 'on_track', 'role' => 'team_lead', 'percent' => 65,
         'stages' => ['completed', 'completed', 'completed', 'in_progress', 'not_started', 'not_started'],
         'stageLabel' => 'Development', 'deadline' => '2026-09-15', 'pendingCount' => 0, 'overdueCount' => 0,
@@ -50,7 +50,7 @@ $PERSONA_MANAGER_MIX = [
         'overdueCount' => 0, 'blockedCount' => 0, 'milestonesPaid' => 1, 'milestonesTotal' => 3,
     ],
     [
-        'id' => 8, 'name' => 'Retainer Site Refresh', 'description' => 'Quarterly Content Refresh',
+        'id' => 8, 'name' => 'Site Refresh', 'description' => 'Quarterly Content Refresh',
         'status' => 'active', 'health' => 'on_track', 'role' => 'client', 'percent' => 20,
         'stages' => ['completed', 'in_progress', 'not_started', 'not_started'], 'stageLabel' => 'Design',
         'deadline' => '2027-01-10', 'pendingCount' => 0, 'overdueCount' => 0, 'blockedCount' => 0,

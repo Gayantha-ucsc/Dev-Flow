@@ -285,6 +285,17 @@
 .form-actions--bar { grid-column: 1 / -1; justify-content: space-between; padding: var(--space-md) 0; }
 .form-actions__right { display: flex; gap: var(--space-sm); margin-left: auto; }
 
+.btn-add-member--inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: auto;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+}
+.btn-add-member--inline svg { width: 14px; height: 14px; }
+.team-members { border-top: 1px solid var(--color-border); padding-top: var(--space-md); }
+
 .checkbox-row, .radio-card {
     display: flex;
     align-items: flex-start;
@@ -559,3 +570,4 @@
 @media (max-width: 900px) {
     .team-form-grid { grid-template-columns: 1fr; }
     .form-row { grid-template-columns: 1fr; }
+}

@@ -48,43 +48,6 @@ class TeamController extends Controller {
         $this->render('team/add-member', $context);
     }
 
-    public function searchUsers(): void {
-        $query = trim($_GET['q'] ?? '');
-
-        header('Content-Type: application/json');
-
-        if (mb_strlen($query) < 3) {
-            echo json_encode(['results' => []]);
-            return;
-        }
-
-        $projectId = currentProjectContext()['currentProjectId'];
-        $team      = $this->teamForProject($projectId);
-        $directory = require __DIR__ . '/../../config/mock/user-directory.php';
-
-        $existingIds = array_column($team['members'], 'user_id');
-        foreach ($team['pendingApprovals'] as $pending) {
-            $existingIds[] = $pending['user_id'];
-        }
-
-        $needle = mb_strtolower($query);
-        $matches = array_values(array_filter(
-            $directory,
-            function ($u) use ($needle, $existingIds) {
-                if (in_array($u['user_id'], $existingIds, true)) {
-                    return false;
-                }
-                return str_contains(mb_strtolower($u['name']), $needle)
-                    || str_contains(mb_strtolower($u['email']), $needle);
-            }
-        ));
-
-        // Capped, not the full result set - a targeted lookup, not a browse.
-        $matches = array_slice($matches, 0, 8);
-
-        echo json_encode(['results' => $matches]);
-    }
-
     public function approvals(): void {
         $projectId = currentProjectContext()['currentProjectId'];
         $team      = $this->teamForProject($projectId);
