@@ -72,6 +72,8 @@ foreach ($tasks as $t) { $byStage[$t['stage_id']][] = $t; }
 <div class="modal-overlay" data-modal="delete-task-modal" hidden id="deleteTaskModal">
     <div class="modal-backdrop" data-modal-close></div>
     <div class="modal-box modal-box--form modal-box--confirm">
+        <div class="modal-box__header">
+            <h2>Delete Task</h2>
             <button type="button" class="icon-btn" data-modal-close aria-label="Close"><?= renderIcon('x') ?></button>
         </div>
         <div class="modal-box__body">
