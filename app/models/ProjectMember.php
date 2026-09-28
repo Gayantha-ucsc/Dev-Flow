@@ -42,4 +42,17 @@ class ProjectMember {
 
         return array_values($byProject);
     }
+
+    // Active non-client members, one row per user (for assignee pickers)
+    public static function assignableForProject(int $projectId): array {
+        return DB::getInstance()->query(
+            "SELECT MIN(pm.project_member_id) AS project_member_id, u.name
+             FROM ProjectMember pm
+             JOIN User u ON u.user_id = pm.user_id
+             WHERE pm.project_id = ? AND pm.is_active = 1 AND pm.role <> 'client'
+             GROUP BY u.user_id, u.name
+             ORDER BY u.name ASC",
+            [$projectId]
+        );
+    }
 }

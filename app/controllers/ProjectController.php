@@ -112,7 +112,6 @@ class ProjectController extends Controller {
         }
 
         if ($project === null) {
-            // No mock stand-in for this project - build the row straight from the DB.
             $project = [
                 'id'              => $id,
                 'name'            => $dbProject['name'],
@@ -128,6 +127,18 @@ class ProjectController extends Controller {
                 'milestonesPaid'  => 0,
                 'milestonesTotal' => 0,
             ];
+        }
+
+        $go = (string) ($_GET['go'] ?? '');
+        if ($go !== '') {
+            $switchRole = $dbRoles[0] ?? $project['role'];
+            foreach ((require __DIR__ . '/../../config/nav.php')['project'] as $navItem) {
+                if ($navItem['href'] === $go && in_array($switchRole, $navItem['roles'], true)) {
+                    setCurrentProjectId($id);
+                    header('Location: ' . url($go));
+                    exit;
+                }
+            }
         }
 
         if (!empty($dbRoles) ? in_array('client', $dbRoles, true) : $project['role'] === 'client') {
@@ -164,6 +175,41 @@ class ProjectController extends Controller {
                     'tasks'         => [],
                 ];
             }, Stage::listByProject($id));
+
+            // Load real tasks (with assignee names and dependency names) from the DB
+            $db = DB::getInstance();
+            $byStage = [];
+            foreach (Task::listByProject($id) as $t) {
+                $tid = (int) $t['task_id'];
+                $assignees = array_column($db->query(
+                    'SELECT u.name FROM TaskAssignment ta
+                     JOIN ProjectMember pm ON pm.project_member_id = ta.user_id
+                     JOIN User u ON u.user_id = pm.user_id
+                     WHERE ta.task_id = ?', [$tid]), 'name');
+                $deps = array_column($db->query(
+                    'SELECT t2.name FROM TaskDependency td
+                     JOIN Task t2 ON t2.task_id = td.depends_on_task_id
+                     WHERE td.task_id = ?', [$tid]), 'name');
+                $byStage[(int) $t['stage_id']][] = [
+                    'task_id'   => $tid,
+                    'name'      => $t['name'],
+                    'type'      => $t['task_type'],
+                    'status'    => $t['status'],
+                    'assignees' => $assignees,
+                    'deadline'  => $t['deadline'],
+                    'dependsOn' => $deps,
+                ];
+            }
+            $mockByIndex = empty($byStage) ? ($taskData[$id] ?? []) : [];
+            foreach ($stages as $si => &$st) {
+                $real  = $byStage[$st['stage_id']] ?? [];
+                $names = array_column($real, 'name');
+                $mock  = array_filter($mockByIndex[$si] ?? [], fn($m) => !in_array($m['name'], $names, true));
+                $st['tasks'] = array_merge(array_values($mock), $real);
+                $st['tasksApproved'] = count(array_filter($st['tasks'], fn($x) => $x['status'] === 'approved'));
+                $st['tasksTotal'] = count($st['tasks']);
+            }
+            unset($st);
         }
 
         $teamData = require __DIR__ . '/../../config/mock/team-members.php';
@@ -171,6 +217,10 @@ class ProjectController extends Controller {
             $teamData[$id]['members'] ?? [],
             fn($m) => $m['status'] === 'active'
         ));
+
+        if ($dbProject && !empty($dbRoles)) {
+            $members = array_map(fn($m) => ['name' => $m['name'], 'project_member_id' => (int) $m['project_member_id']], ProjectMember::assignableForProject($id));
+        }
 
         $user           = currentUserContext();
         $projectContext = currentProjectContext();

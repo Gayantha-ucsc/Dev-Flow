@@ -224,6 +224,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var submitBtn        = document.getElementById('submitCreateTask');
 
     var activeStageName  = null;
+    var activeStageId    = null; // set only for stages stored in the database
     var selectedAssignees = [];
     var selectedDependencies = [];
 
@@ -231,6 +232,8 @@ document.addEventListener('DOMContentLoaded', function () {
         var addBtn = e.target.closest('.js-add-task');
         if (!addBtn) return;
         activeStageName = addBtn.dataset.stageName || '';
+        var stageEl = addBtn.closest('.stage-item');
+        activeStageId = stageEl && stageEl.dataset.stageId ? stageEl.dataset.stageId : null;
         if (stageBadge) stageBadge.textContent = activeStageName;
         resetPanel();
         openPanel(panel);
@@ -259,6 +262,8 @@ document.addEventListener('DOMContentLoaded', function () {
             var opt = e.target.closest('[data-dependency-option]');
             if (!opt || opt.classList.contains('is-added')) return;
             addDependency(opt.dataset.dependencyName, opt.dataset.dependencyStage);
+            var dd = dependencyMenu.closest('[data-dropdown]');
+            if (dd) dd.classList.remove('is-open'); // close after each pick
         });
     }
 
@@ -321,7 +326,9 @@ document.addEventListener('DOMContentLoaded', function () {
             dependencyChips.appendChild(chip);
         });
         dependencyMenu.querySelectorAll('[data-dependency-option]').forEach(function (opt) {
-            opt.classList.toggle('is-added', selectedDependencies.some(function (d) { return d.name === opt.dataset.dependencyName; }));
+            var picked = selectedDependencies.some(function (d) { return d.name === opt.dataset.dependencyName; });
+            // Only tasks from the current stage, and never ones already selected.
+            opt.hidden = picked || opt.dataset.dependencyStage !== activeStageName;
         });
     }
 
@@ -371,6 +378,45 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (!valid) return;
+
+            // Real (database) stage: save through the server, then reload to show it.
+            if (activeStageId) {
+                var fd = new FormData();
+                fd.append('ajax', '1');
+                fd.append('csrf_token', window.STAGE_CSRF || '');
+                fd.append('stage_id', activeStageId);
+                fd.append('name', name);
+                fd.append('description', (document.getElementById('taskDescription') || {}).value || '');
+                fd.append('task_type', typeInput ? typeInput.value.trim() : '');
+                fd.append('deadline', deadlineHidden.value);
+                selectedAssignees.forEach(function (n) {
+                    var o = assigneeMenu.querySelector('[data-assignee-option][data-assignee-name="' + n.replace(/"/g, '\\"') + '"]');
+                    if (o && o.dataset.assigneeId && o.dataset.assigneeId !== '0') fd.append('assignees[]', o.dataset.assigneeId);
+                });
+                selectedDependencies.forEach(function (d) {
+                    var opts = dependencyMenu.querySelectorAll('[data-dependency-option]');
+                    for (var i = 0; i < opts.length; i++) {
+                        var o = opts[i];
+                        // mock tasks have no database id (0); they can't be saved as dependencies
+                        if (o.dataset.dependencyName === d.name && o.dataset.dependencyStage === d.stage && o.dataset.dependencyId !== '0') {
+                            fd.append('dependencies[]', o.dataset.dependencyId);
+                        }
+                    }
+                });
+                submitBtn.disabled = true;
+                fetch(window.TASK_STORE_URL || '/tasks', { method: 'POST', body: fd, credentials: 'same-origin' })
+                    .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+                    .then(function (res) {
+                        submitBtn.disabled = false;
+                        if (res.ok && res.body.ok) { window.location.reload(); }
+                        else if (window.showToast) { showToast('error', (res.body && res.body.error) || 'Could not create the task.'); }
+                    })
+                    .catch(function () {
+                        submitBtn.disabled = false;
+                        if (window.showToast) showToast('error', 'Could not create the task.');
+                    });
+                return;
+            }
 
             appendTaskCard({
                 name: name,
@@ -477,3 +523,75 @@ document.addEventListener('DOMContentLoaded', function () {
         return div.innerHTML;
     }
 });
+/* ---- Demo tasks: edits/deletes kept temporarily in sessionStorage (no backend) ---- */
+(function () {
+    var K = 'mockTaskEdits', D = 'mockTaskDeleted';
+    function load(k, d) { try { return JSON.parse(sessionStorage.getItem(k)) || d; } catch (e) { return d; } }
+    var edits = load(K, {}), deleted = load(D, []);
+    var root = document.querySelector('.tasks-page[data-mock-key]');
+
+    // Apply saved edits / deletions on the board and detail page.
+    document.querySelectorAll('.task-row[data-mock-key]').forEach(function (row) {
+        var key = row.dataset.mockKey;
+        if (deleted.indexOf(key) !== -1) { row.remove(); return; }
+        var e = edits[key]; if (!e) return;
+        var n = row.querySelector('.js-mock-name'), d = row.querySelector('.js-mock-desc');
+        if (n && e.name) n.textContent = e.name;
+        if (d && e.description) d.textContent = e.description.slice(0, 100);
+        var dl = row.querySelector('.task-row__meta-value');
+        if (dl && e.deadline) dl.textContent = new Date(e.deadline + 'T00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    });
+    if (root && edits[root.dataset.mockKey]) {
+        var e = edits[root.dataset.mockKey];
+        var n = root.querySelector('.js-mock-name'), d = root.querySelector('.js-mock-desc');
+        if (n && e.name) n.textContent = e.name;
+        if (d && e.description) d.textContent = e.description;
+    }
+
+    // Save from the edit form.
+    var form = document.querySelector('form[data-mock-key]');
+    if (form) {
+        form.addEventListener('submit', function (ev) {
+            ev.preventDefault(); ev.stopImmediatePropagation();
+            edits[form.dataset.mockKey] = {
+                name: form.elements.name.value, description: form.elements.description.value,
+                task_type: form.elements.task_type.value, deadline: form.elements.deadline.value
+            };
+            sessionStorage.setItem(K, JSON.stringify(edits));
+            location.href = form.querySelector('.task-form-footer__actions a').href;
+        }, true);
+        var saved = edits[form.dataset.mockKey];
+        if (saved) { ['name', 'description', 'task_type', 'deadline'].forEach(function (f) { if (saved[f] != null) form.elements[f].value = saved[f]; }); }
+    }
+
+    function markDeleted(key) { deleted.push(key); sessionStorage.setItem(D, JSON.stringify(deleted)); }
+
+    // Demo deletes use the same custom modal as real tasks.
+    var modal = document.getElementById('deleteTaskModal');
+    var delForm = document.getElementById('deleteTaskForm');
+    var pending = null;
+    function closeModal() { modal.classList.remove('is-open'); setTimeout(function () { modal.setAttribute('hidden', ''); }, 200); }
+    document.addEventListener('click', function (e) {
+        var b = e.target.closest('.js-mock-delete, .js-mock-delete-detail');
+        if (!b || !modal) return;
+        var row = b.closest('.task-row');
+        pending = { key: row ? row.dataset.mockKey : (root && root.dataset.mockKey), row: row };
+        document.getElementById('deleteTaskName').textContent = b.dataset.taskName || 'this task';
+        modal.removeAttribute('hidden');
+        requestAnimationFrame(function () { modal.classList.add('is-open'); });
+    });
+    // Runs before the real-delete handlers: a pending demo delete never posts to the server.
+    if (delForm) {
+        delForm.addEventListener('submit', function (e) {
+            if (!pending) return;
+            e.preventDefault(); e.stopImmediatePropagation();
+            markDeleted(pending.key);
+            var wasRow = pending.row; pending = null;
+            closeModal();
+            if (wasRow) { wasRow.remove(); if (window.showToast) window.showToast('success', 'Task deleted.'); }
+            else { location.href = document.querySelector('.back-link').href; }
+        }, true);
+        modal.querySelectorAll('[data-modal-close]').forEach(function (el) { el.addEventListener('click', function () { pending = null; }); });
+        document.querySelectorAll('.js-delete-task').forEach(function (el) { el.addEventListener('click', function () { pending = null; }, true); });
+    }
+})();

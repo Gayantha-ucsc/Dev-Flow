@@ -12,6 +12,7 @@ foreach ($stages as $stage) {
             'name'      => $task['name'],
             'stageName' => $stage['name'],
             'status'    => $task['status'],
+            'id'        => $task['task_id'] ?? null,
         ];
         if (!empty($task['type'])) {
             $allTaskTypes[$task['type']] = true;
@@ -210,7 +211,8 @@ $allTaskTypes = array_keys($allTaskTypes);
                                                 }
                                             ?>
                                             <div
-                                                class="task-card <?= $isLocked ? 'task-card--locked' : '' ?>"
+                                                class="task-card <?= $isLocked ? 'task-card--locked' : '' ?><?= !empty($task['task_id']) ? ' task-card--link' : '' ?>"
+                                                <?php if (!empty($task['task_id'])): ?>data-task-url="<?= htmlspecialchars(url('tasks/' . (int) $task['task_id'])) ?>" style="cursor:pointer"<?php endif; ?>
                                                 id="<?= $taskDomId[$task['name']] ?>"
                                                 <?php if ($localDependIds): ?>data-depends-ids="<?= htmlspecialchars(implode(',', $localDependIds)) ?>"<?php endif; ?>
                                             >
@@ -268,6 +270,7 @@ $allTaskTypes = array_keys($allTaskTypes);
 <script>
     window.STAGE_BASE_URL = <?= json_encode(url('stages')) ?>;
     window.STAGE_CSRF     = <?= json_encode(csrfToken()) ?>;
+    window.TASK_STORE_URL = <?= json_encode(url('tasks')) ?>;
 
     window.STAGE_ICONS = {
         grip:        <?= iconJson('grip-vertical') ?>,
@@ -424,7 +427,7 @@ $allTaskTypes = array_keys($allTaskTypes);
                     </button>
                     <div class="dropdown__menu assignee-add-menu" data-dropdown-menu data-assignee-menu>
                         <?php foreach ($members ?? [] as $member): ?>
-                            <button type="button" class="assignee-option" data-assignee-option data-assignee-name="<?= htmlspecialchars($member['name']) ?>">
+                            <button type="button" class="assignee-option" data-assignee-option data-assignee-name="<?= htmlspecialchars($member['name']) ?>" data-assignee-id="<?= (int) ($member['project_member_id'] ?? 0) ?>">
                                 <span class="avatar avatar--sm avatar--<?= avatarColorClass($member['name']) ?>"><?= htmlspecialchars(initials($member['name'])) ?></span>
                                 <?= htmlspecialchars($member['name']) ?>
                             </button>
@@ -446,7 +449,7 @@ $allTaskTypes = array_keys($allTaskTypes);
                         <?php foreach ($allProjectTasks as $t): ?>
                             <?php $tMeta = taskStatusMeta($t['status']); ?>
                             <button type="button" class="dependency-option" data-dependency-option
-                                    data-dependency-name="<?= htmlspecialchars($t['name']) ?>"
+                                    data-dependency-name="<?= htmlspecialchars($t['name']) ?>" data-dependency-id="<?= (int) ($t['id'] ?? 0) ?>"
                                     data-dependency-stage="<?= htmlspecialchars($t['stageName']) ?>">
                                 <span class="dependency-option__name"><?= htmlspecialchars($t['name']) ?></span>
                                 <span class="badge badge--<?= $tMeta['tone'] ?>"><?= htmlspecialchars($tMeta['label']) ?></span>

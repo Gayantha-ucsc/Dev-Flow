@@ -528,3 +528,20 @@
     color: var(--color-text);
 }
 .stage-rename-form input[type="text"]:focus { outline: none; border-color: var(--color-primary); }
+
+
+/* Large stages: fit screen, scroll both ways, zoom */
+.stage-item { scroll-margin-top: 16px; }
+.stage-viewport { overflow: auto; }
+.stage-sizer { position: relative; }
+.stage-sizer .task-strip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: max-content;
+    overflow: visible;
+    transform-origin: 0 0;
+}
+.stage-zoom { display: inline-flex; gap: 4px; margin-right: 8px; padding-right: 8px; border-right: 1px solid var(--color-border); }
+
+.stage-item:not(.stage-item--expanded) .stage-zoom { display: none; }
