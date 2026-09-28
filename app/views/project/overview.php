@@ -91,7 +91,7 @@ $allTaskTypes = array_keys($allTaskTypes);
         </div>
     </div>
 
-    <?php if (($project['milestonesTotal'] ?? 0) > 0): ?>
+    <?php if (!empty($showPayment) && ($project['milestonesTotal'] ?? 0) > 0): ?>
         <a href="<?= url('/payment') ?>" class="project-payment-card card">
             <span class="project-payment-card__icon"><?= renderIcon('payment') ?></span>
             <div class="project-payment-card__body">

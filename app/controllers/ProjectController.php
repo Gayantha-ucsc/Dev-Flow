@@ -187,6 +187,7 @@ class ProjectController extends Controller {
                 'stages'        => $stages,
                 'stagesEditable' => $stagesEditable,
                 'members'       => $members,
+                'showPayment'   => (bool) array_intersect(!empty($dbRoles) ? $dbRoles : [$project['role'] ?? ''], ['manager', 'team_lead', 'client']),
             ],
             $projectContext
         );

@@ -359,11 +359,12 @@ function computeTaskColumns(array $tasks): array {
     }
 
     $columnOf = [];
+    $independentCount = 0;
     foreach ($tasks as $task) {
         $localDeps = array_filter($task['dependsOn'] ?? [], fn($name) => isset($namesInStage[$name]));
 
         if (empty($localDeps)) {
-            $columnOf[$task['name']] = 0;
+            $columnOf[$task['name']] = $independentCount++;
             continue;
         }
 

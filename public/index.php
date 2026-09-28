@@ -28,4 +28,13 @@ require __DIR__ . '/../app/core/Middleware.php';
 require __DIR__ . '/../app/core/Controller.php';
 require __DIR__ . '/../app/core/Router.php';
 
-(new Router())->dispatch();
+try {
+    (new Router())->dispatch();
+} catch (mysqli_sql_exception $e) {
+    if ((int) $e->getCode() === 1451) {
+        Session::flash('error', 'This item can\'t be deleted because other records still depend on it.');
+        header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? url('/dashboard')));
+        exit;
+    }
+    throw $e;
+}
