@@ -140,7 +140,7 @@ return [
     'activity' => [
         [
             'time'    => '10 mins ago',
-            'text'    => '<strong>User One (Team Lead)</strong> marked stage "Client Design Review" ready for client review.',
+            'text'    => '<strong>Demo User (Team Lead)</strong> marked stage "Client Design Review" ready for client review.',
             'project' => 'Project Beta',
             'tone'    => 'default',
         ],

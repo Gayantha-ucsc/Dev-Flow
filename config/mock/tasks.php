@@ -74,7 +74,7 @@ return [
                 'progressNotes' => [],
                 'comments' => [],
                 'revisionRounds' => [
-                    ['round' => 1, 'status' => 'in_review', 'submittedAt' => '2026-08-12', 'reviewedAt' => null, 'reviewer' => 'User One', 'notes' => 'Awaiting client feedback on color palette.'],
+                    ['round' => 1, 'status' => 'in_review', 'submittedAt' => '2026-08-12', 'reviewedAt' => null, 'reviewer' => 'Demo User', 'notes' => 'Awaiting client feedback on color palette.'],
                 ],
             ],
         ],
@@ -158,7 +158,7 @@ return [
                 ],
                 'comments' => [],
                 'revisionRounds' => [
-                    ['round' => 1, 'status' => 'approved', 'submittedAt' => '2026-08-10', 'reviewedAt' => '2026-08-11', 'reviewer' => 'User One', 'notes' => 'Checklist template approved.'],
+                    ['round' => 1, 'status' => 'approved', 'submittedAt' => '2026-08-10', 'reviewedAt' => '2026-08-11', 'reviewer' => 'Demo User', 'notes' => 'Checklist template approved.'],
                 ],
             ],
             [

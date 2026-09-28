@@ -166,7 +166,7 @@ class TaskController extends Controller {
     }
 
     private function context(array $project, array $roles, string $title): array {
-        $notifications = require __DIR__ . '/../../config/mock/notifications.php';
+        $notifications  = currentUserNotifications();
         $base = currentProjectContext();
         $role = in_array('manager', $roles, true) ? 'manager' : (in_array('team_lead', $roles, true) ? 'team_lead' : $roles[0]);
 

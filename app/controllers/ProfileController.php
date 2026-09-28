@@ -4,7 +4,7 @@ class ProfileController extends Controller {
     public function settings(): void {
         $user           = currentUserContext();
         $projectContext = currentProjectContext();
-        $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
+        $notifications  = currentUserNotifications();
 
         $context = array_merge(
             [

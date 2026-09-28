@@ -3,7 +3,7 @@
 // $currentProjectId = 1
 // $userProjects     = [['project_id'=>.., 'name'=>.., 'role'=>..], ...]  // projects this user belongs to
 // $activeRole       = 'manager'                               // this user's one role on the current project
-// $currentUser      = ['name' => 'User One', 'profile_picture' => null]
+// $currentUser      = ['name' => 'Demo User', 'profile_picture' => null]
 // $unreadCount      = 3
 ?>
 

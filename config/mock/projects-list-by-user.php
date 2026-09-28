@@ -9,14 +9,14 @@ $PERSONA_MANAGER_MIX = [
     ],
     [
         'id' => 4, 'name' => 'Site Redesign', 'description' => 'Landing Page + CMS',
-        'status' => 'active', 'health' => 'at_risk', 'role' => 'manager', 'percent' => 28,
+        'status' => 'active', 'health' => 'at_risk', 'role' => 'team_lead', 'percent' => 28,
         'stages' => ['completed', 'in_progress', 'not_started', 'not_started'], 'stageLabel' => 'Design',
         'deadline' => '2026-11-05', 'pendingCount' => 1, 'overdueCount' => 1, 'blockedCount' => 0,
         'milestonesPaid' => 0, 'milestonesTotal' => 2,
     ],
     [
-        'id' => 1, 'name' => 'Demo Project', 'description' => 'Core Architecture Revamp',
-        'status' => 'active', 'health' => 'on_track', 'role' => 'team_lead', 'percent' => 65,
+        'id' => 1, 'name' => 'DevFlow Demo Project', 'description' => 'Core Architecture Revamp',
+        'status' => 'active', 'health' => 'on_track', 'role' => 'manager', 'percent' => 65,
         'stages' => ['completed', 'completed', 'completed', 'in_progress', 'not_started', 'not_started'],
         'stageLabel' => 'Development', 'deadline' => '2026-09-15', 'pendingCount' => 0, 'overdueCount' => 0,
         'blockedCount' => 0, 'milestonesPaid' => 2, 'milestonesTotal' => 4,
@@ -43,7 +43,7 @@ $PERSONA_MANAGER_MIX = [
         'milestonesPaid' => 2, 'milestonesTotal' => 2,
     ],
     [
-        'id' => 7, 'name' => 'Project Alpha', 'description' => 'Client Website Delivery',
+        'id' => 7, 'name' => 'Project Beta', 'description' => 'Client Website Delivery',
         'status' => 'active', 'health' => 'on_track', 'role' => 'client', 'percent' => 65,
         'stages' => ['completed', 'completed', 'in_progress', 'not_started', 'not_started'],
         'stageLabel' => 'Development', 'deadline' => '2026-12-20', 'pendingCount' => 2,
@@ -58,42 +58,25 @@ $PERSONA_MANAGER_MIX = [
     ],
 ];
 
-// Pure contributor: developer on one project, designer on another
-$PERSONA_CONTRIBUTOR_ONLY = [
-    $PERSONA_MANAGER_MIX[0], // Project Gamma - developer
-    [
-        'id' => 1, 'name' => 'Project Beta', 'description' => 'Core Architecture Revamp',
-        'status' => 'active', 'health' => 'on_track', 'role' => 'designer', 'percent' => 65,
-        'stages' => ['completed', 'completed', 'completed', 'in_progress', 'not_started', 'not_started'],
-        'stageLabel' => 'Development', 'deadline' => '2026-09-15', 'pendingCount' => 0, 'overdueCount' => 0,
-        'blockedCount' => 0, 'milestonesPaid' => 2, 'milestonesTotal' => 4,
-    ],
-];
+// ---- Helper accounts: same projects, seen from their own seeded role ----
+// Rows are the demo rows above with only the role swapped, so each helper sees
+// exactly the projects database/seed.sql gives them membership of.
+$byId = [];
+foreach ($PERSONA_MANAGER_MIX as $row) { $byId[$row['id']] = $row; }
+$asRole = function (array $idToRole) use ($byId): array {
+    $out = [];
+    foreach ($idToRole as $id => $role) { $out[] = array_merge($byId[$id], ['role' => $role]); }
+    return $out;
+};
 
-// Team lead only
-$PERSONA_TEAM_LEAD_ONLY = [
-    $PERSONA_MANAGER_MIX[2], // Project Beta - team_lead
-];
-
-// Contributor + client mix, no manager anywhere -> dashboard/contributor
-$PERSONA_CONTRIBUTOR_AND_CLIENT = [
-    $PERSONA_MANAGER_MIX[0], // Project Gamma - developer
-    $PERSONA_MANAGER_MIX[6], // Project Alpha - client
-];
-
-// Client only -> dashboard/client
-$PERSONA_CLIENT_ONLY = [
-    $PERSONA_MANAGER_MIX[6],
-    $PERSONA_MANAGER_MIX[7],
-];
-
-// ---- Map real user_id -> persona ----
+// ---- Map real user_id -> persona (matches database/seed.sql) ----
+// 1 = admin: no projects on purpose (system administration only).
+// 2 = demo: manager on 1, 3, 5, 6; developer on 2; team lead on 4; client on 7, 8.
 return [
-    1 => $PERSONA_MANAGER_MIX,
-
-    // 2 => $PERSONA_CONTRIBUTOR_ONLY,
-    // 3 => $PERSONA_TEAM_LEAD_ONLY,
-    // 4 => $PERSONA_CONTRIBUTOR_AND_CLIENT,
-    // 5 => $PERSONA_CLIENT_ONLY,
-    // 6 => $PERSONA_MANAGER_MIX,
+    2 => $PERSONA_MANAGER_MIX,
+    3 => $asRole([2 => 'manager', 4 => 'manager', 7 => 'manager', 8 => 'manager']),
+    4 => $asRole([1 => 'team_lead', 2 => 'team_lead', 3 => 'team_lead', 6 => 'team_lead', 7 => 'team_lead']),
+    5 => $asRole([1 => 'developer', 3 => 'developer', 4 => 'developer', 5 => 'developer', 7 => 'developer', 8 => 'developer']),
+    6 => $asRole([1 => 'client', 2 => 'client', 3 => 'client', 4 => 'client']),
+    7 => $asRole([1 => 'designer']),
 ];

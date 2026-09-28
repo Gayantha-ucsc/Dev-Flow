@@ -58,6 +58,7 @@ return [
         '/tasks/:id/update'    => ['TaskController', 'update'],
         '/tasks/:id/delete'    => ['TaskController', 'destroy'],
 
+        '/projects/:id/update' => ['ProjectController', 'update'],
         '/projects/:id/stages' => ['StageController', 'store'],
         '/stages/:id/update'   => ['StageController', 'update'],
         '/stages/:id/move'     => ['StageController', 'move'],

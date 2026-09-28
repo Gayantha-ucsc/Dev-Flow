@@ -5,7 +5,7 @@ class ChatController extends Controller {
     public function index(): void {
         $user           = currentUserContext();
         $projectContext = currentProjectContext();
-        $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
+        $notifications  = currentUserNotifications();
         $chatData       = require __DIR__ . '/../../config/mock/chat.php';
         $taskData       = require __DIR__ . '/../../config/mock/tasks.php';
 

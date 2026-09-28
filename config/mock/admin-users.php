@@ -1,8 +1,8 @@
 <?php
 
 return [
-    ['user_id' => 1,  'name' => 'User One',      'email' => 'user.one@devflow.io',      'is_active' => true,  'is_admin' => true,  'is_temp' => false, 'is_temp_password_changed' => true,  'joined_at' => '2026-01-14'],
-    ['user_id' => 2,  'name' => 'User Two',      'email' => 'user.two@devflow.io',      'is_active' => true,  'is_admin' => false, 'is_temp' => false, 'is_temp_password_changed' => true,  'joined_at' => '2026-02-02'],
+    ['user_id' => 1,  'name' => 'System Administrator', 'email' => 'admin@devflow.io',  'is_active' => true,  'is_admin' => true,  'is_temp' => false, 'is_temp_password_changed' => true,  'joined_at' => '2026-01-14'],
+    ['user_id' => 2,  'name' => 'Demo User',     'email' => 'demo@devflow.io',          'is_active' => true,  'is_admin' => false, 'is_temp' => false, 'is_temp_password_changed' => true,  'joined_at' => '2026-02-02'],
     ['user_id' => 3,  'name' => 'User Three',    'email' => 'user.three@devflow.io',    'is_active' => true,  'is_admin' => false, 'is_temp' => false, 'is_temp_password_changed' => true,  'joined_at' => '2026-02-18'],
     ['user_id' => 4,  'name' => 'User Four',     'email' => 'user.four@devflow.io',     'is_active' => true,  'is_admin' => false, 'is_temp' => false, 'is_temp_password_changed' => true,  'joined_at' => '2026-03-01'],
     ['user_id' => 5,  'name' => 'User Five',     'email' => 'user.five@devflow.io',     'is_active' => false, 'is_admin' => false, 'is_temp' => false, 'is_temp_password_changed' => true,  'joined_at' => '2025-11-10'],

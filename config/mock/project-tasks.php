@@ -76,9 +76,9 @@ return [
 
     3 => [ // Project Alpha - the flagship example, fully populated across all 5 stages
         0 => [ // Discovery - completed, 4/4
-            ['name' => 'Stakeholder Interviews',        'type' => 'research', 'status' => 'approved', 'assignees' => ['User One'], 'deadline' => '2026-01-14', 'dependsOn' => []],
-            ['name' => 'Competitive Analysis',          'type' => 'research', 'status' => 'approved', 'assignees' => ['User One'], 'deadline' => '2026-01-16', 'dependsOn' => []],
-            ['name' => 'Requirements Specification',    'type' => 'research', 'status' => 'approved', 'assignees' => ['User One'], 'deadline' => '2026-01-19', 'dependsOn' => ['Stakeholder Interviews']],
+            ['name' => 'Stakeholder Interviews',        'type' => 'research', 'status' => 'approved', 'assignees' => ['Demo User'], 'deadline' => '2026-01-14', 'dependsOn' => []],
+            ['name' => 'Competitive Analysis',          'type' => 'research', 'status' => 'approved', 'assignees' => ['Demo User'], 'deadline' => '2026-01-16', 'dependsOn' => []],
+            ['name' => 'Requirements Specification',    'type' => 'research', 'status' => 'approved', 'assignees' => ['Demo User'], 'deadline' => '2026-01-19', 'dependsOn' => ['Stakeholder Interviews']],
             ['name' => 'Project Charter Sign-off',      'type' => 'research', 'status' => 'approved', 'assignees' => ['User Thirty-Eight'], 'deadline' => '2026-01-20', 'dependsOn' => ['Requirements Specification']],
         ],
         1 => [ // Design - completed, 6/6
@@ -92,7 +92,7 @@ return [
             ['name' => 'UI Component Library',   'type' => 'design', 'status' => 'approved', 'assignees' => ['User Thirty-Nine'], 'deadline' => '2026-01-29', 'dependsOn' => ['Architecture Review']],
             ['name' => 'UI Design',              'type' => 'design', 'status' => 'approved', 'assignees' => ['User Thirty-Nine'], 'deadline' => '2026-02-01', 'dependsOn' => ['Architecture Review']],
             ['name' => 'Responsive Design Pass', 'type' => 'design', 'status' => 'approved', 'assignees' => ['User Forty'], 'deadline' => '2026-02-03', 'dependsOn' => ['UI Component Library', 'UI Design']],
-            ['name' => 'Design Sign-off',        'type' => 'design', 'status' => 'approved', 'assignees' => ['User One'], 'deadline' => '2026-02-04', 'dependsOn' => ['Responsive Design Pass']],
+            ['name' => 'Design Sign-off',        'type' => 'design', 'status' => 'approved', 'assignees' => ['Demo User'], 'deadline' => '2026-02-04', 'dependsOn' => ['Responsive Design Pass']],
         ],
         2 => [ // Development - completed, 12/12
             ['name' => 'Database Schema',          'type' => 'backend',  'status' => 'approved', 'assignees' => ['User Forty-One'], 'deadline' => '2026-02-10', 'dependsOn' => []],
@@ -148,7 +148,7 @@ return [
         0 => [ // Requirement Gathering - 5/5
             ['name' => 'Legacy System Audit',   'type' => 'research', 'status' => 'approved', 'assignees' => ['User Forty-Nine'], 'deadline' => '2025-11-10', 'dependsOn' => []],
             ['name' => 'Data Migration Plan',   'type' => 'research', 'status' => 'approved', 'assignees' => ['User Forty-Nine'], 'deadline' => '2025-11-14', 'dependsOn' => ['Legacy System Audit']],
-            ['name' => 'Stakeholder Sign-off',  'type' => 'research', 'status' => 'approved', 'assignees' => ['User One'], 'deadline' => '2025-11-16', 'dependsOn' => ['Data Migration Plan']],
+            ['name' => 'Stakeholder Sign-off',  'type' => 'research', 'status' => 'approved', 'assignees' => ['Demo User'], 'deadline' => '2025-11-16', 'dependsOn' => ['Data Migration Plan']],
             ['name' => 'Risk Assessment',       'type' => 'research', 'status' => 'approved', 'assignees' => ['User Forty-Nine'], 'deadline' => '2025-11-18', 'dependsOn' => []],
             ['name' => 'Rollback Strategy',     'type' => 'research', 'status' => 'approved', 'assignees' => ['User Forty-Nine'], 'deadline' => '2025-11-20', 'dependsOn' => ['Risk Assessment']],
         ],
@@ -159,7 +159,7 @@ return [
             ['name' => 'Dry-Run Migration',         'type' => 'devops',  'status' => 'approved', 'assignees' => ['User Forty-Nine'], 'deadline' => '2025-12-12', 'dependsOn' => ['Data Validation Tooling']],
             ['name' => 'Decommission Scripts',      'type' => 'devops',  'status' => 'approved', 'assignees' => ['User Forty-Nine'], 'deadline' => '2025-12-15', 'dependsOn' => []],
             ['name' => 'Access Revocation',         'type' => 'devops',  'status' => 'approved', 'assignees' => ['User Forty-Nine'], 'deadline' => '2025-12-16', 'dependsOn' => []],
-            ['name' => 'Archive Compliance Check',  'type' => 'research','status' => 'approved', 'assignees' => ['User One'], 'deadline' => '2025-12-18', 'dependsOn' => []],
+            ['name' => 'Archive Compliance Check',  'type' => 'research','status' => 'approved', 'assignees' => ['Demo User'], 'deadline' => '2025-12-18', 'dependsOn' => []],
             ['name' => 'Final Data Export',         'type' => 'backend', 'status' => 'approved', 'assignees' => ['User Forty-Nine'], 'deadline' => '2025-12-20', 'dependsOn' => ['Dry-Run Migration']],
             ['name' => 'Legacy Server Shutdown',    'type' => 'devops',  'status' => 'approved', 'assignees' => ['User Forty-Nine'], 'deadline' => '2025-12-22', 'dependsOn' => ['Decommission Scripts']],
             ['name' => 'Documentation Handover',    'type' => 'research','status' => 'approved', 'assignees' => ['User Forty-Nine'], 'deadline' => '2025-12-23', 'dependsOn' => []],
@@ -170,12 +170,12 @@ return [
             ['name' => 'Downstream System Checks',    'type' => 'qa', 'status' => 'approved', 'assignees' => ['User Forty-Nine'], 'deadline' => '2026-01-10', 'dependsOn' => []],
             ['name' => 'Performance Baseline',        'type' => 'qa', 'status' => 'approved', 'assignees' => ['User Forty-Nine'], 'deadline' => '2026-01-12', 'dependsOn' => []],
             ['name' => 'Rollback Drill',              'type' => 'qa', 'status' => 'approved', 'assignees' => ['User Forty-Nine'], 'deadline' => '2026-01-14', 'dependsOn' => []],
-            ['name' => 'Sign-off Review',             'type' => 'qa', 'status' => 'approved', 'assignees' => ['User One'], 'deadline' => '2026-01-15', 'dependsOn' => ['Rollback Drill']],
+            ['name' => 'Sign-off Review',             'type' => 'qa', 'status' => 'approved', 'assignees' => ['Demo User'], 'deadline' => '2026-01-15', 'dependsOn' => ['Rollback Drill']],
         ],
         3 => [ // Delivery and Handoff - 3/3
             ['name' => 'Closure Report',           'type' => 'delivery', 'status' => 'approved', 'assignees' => ['User Forty-Nine'], 'deadline' => '2026-01-20', 'dependsOn' => []],
-            ['name' => 'Client Handover Meeting',  'type' => 'delivery', 'status' => 'approved', 'assignees' => ['User One'], 'deadline' => '2026-01-22', 'dependsOn' => ['Closure Report']],
-            ['name' => 'Archive & Close Project',  'type' => 'delivery', 'status' => 'approved', 'assignees' => ['User One'], 'deadline' => '2026-01-25', 'dependsOn' => ['Client Handover Meeting']],
+            ['name' => 'Client Handover Meeting',  'type' => 'delivery', 'status' => 'approved', 'assignees' => ['Demo User'], 'deadline' => '2026-01-22', 'dependsOn' => ['Closure Report']],
+            ['name' => 'Archive & Close Project',  'type' => 'delivery', 'status' => 'approved', 'assignees' => ['Demo User'], 'deadline' => '2026-01-25', 'dependsOn' => ['Client Handover Meeting']],
         ],
     ],
 
@@ -183,19 +183,19 @@ return [
         0 => [ // Discovery - 3/3
             ['name' => 'Compliance Scope Definition', 'type' => 'research', 'status' => 'approved', 'assignees' => ['User Fifty'], 'deadline' => '2025-09-05', 'dependsOn' => []],
             ['name' => 'Audit Checklist Prep',        'type' => 'research', 'status' => 'approved', 'assignees' => ['User Fifty'], 'deadline' => '2025-09-08', 'dependsOn' => ['Compliance Scope Definition']],
-            ['name' => 'Kickoff with Client',         'type' => 'research', 'status' => 'approved', 'assignees' => ['User One'], 'deadline' => '2025-09-10', 'dependsOn' => ['Audit Checklist Prep']],
+            ['name' => 'Kickoff with Client',         'type' => 'research', 'status' => 'approved', 'assignees' => ['Demo User'], 'deadline' => '2025-09-10', 'dependsOn' => ['Audit Checklist Prep']],
         ],
         1 => [ // Development (the audit work itself) - 7/7
             ['name' => 'Access Control Review',         'type' => 'security', 'status' => 'approved', 'assignees' => ['User Fifty'], 'deadline' => '2025-09-15', 'dependsOn' => []],
             ['name' => 'Network Security Scan',         'type' => 'security', 'status' => 'approved', 'assignees' => ['User Fifty'], 'deadline' => '2025-09-18', 'dependsOn' => []],
             ['name' => 'Data Handling Review',          'type' => 'security', 'status' => 'approved', 'assignees' => ['User Fifty'], 'deadline' => '2025-09-20', 'dependsOn' => ['Access Control Review']],
             ['name' => 'Vulnerability Assessment',      'type' => 'security', 'status' => 'approved', 'assignees' => ['User Fifty'], 'deadline' => '2025-09-24', 'dependsOn' => ['Network Security Scan']],
-            ['name' => 'Policy Documentation Review',   'type' => 'research', 'status' => 'approved', 'assignees' => ['User One'], 'deadline' => '2025-09-26', 'dependsOn' => []],
+            ['name' => 'Policy Documentation Review',   'type' => 'research', 'status' => 'approved', 'assignees' => ['Demo User'], 'deadline' => '2025-09-26', 'dependsOn' => []],
             ['name' => 'Remediation Plan',              'type' => 'security', 'status' => 'approved', 'assignees' => ['User Fifty'], 'deadline' => '2025-09-28', 'dependsOn' => ['Vulnerability Assessment']],
             ['name' => 'Compliance Report Draft',       'type' => 'research', 'status' => 'approved', 'assignees' => ['User Fifty'], 'deadline' => '2025-10-01', 'dependsOn' => ['Remediation Plan']],
         ],
         2 => [ // Delivery and Handoff - 2/2
-            ['name' => 'Final Report Sign-off',    'type' => 'delivery', 'status' => 'approved', 'assignees' => ['User One'], 'deadline' => '2025-10-05', 'dependsOn' => ['Compliance Report Draft']],
+            ['name' => 'Final Report Sign-off',    'type' => 'delivery', 'status' => 'approved', 'assignees' => ['Demo User'], 'deadline' => '2025-10-05', 'dependsOn' => ['Compliance Report Draft']],
             ['name' => 'Client Closeout Meeting',  'type' => 'delivery', 'status' => 'approved', 'assignees' => ['User Fifty'], 'deadline' => '2025-10-08', 'dependsOn' => ['Final Report Sign-off']],
         ],
     ],

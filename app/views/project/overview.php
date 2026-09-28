@@ -23,9 +23,9 @@ $allTaskTypes = array_keys($allTaskTypes);
 <div class="project-overview">
 
     <div class="project-overview__header">
-        <a class="project-overview__edit" href="<?= url('projects/' . $project['id'] . '/edit') ?>" aria-label="Edit project details">
+        <button type="button" class="project-overview__edit" data-modal-trigger="edit-project-modal" aria-label="Edit project details">
             <?= renderIcon('pencil') ?>
-        </a>
+        </button>
 
         <div class="project-overview__title-row">
             <h1><?= htmlspecialchars($project['name']) ?></h1>
@@ -286,6 +286,36 @@ $allTaskTypes = array_keys($allTaskTypes);
         lock: <?= iconJson('lock') ?>
     };
 </script>
+
+<!-- Edit Project Details -->
+<div class="modal-overlay" data-modal="edit-project-modal" hidden>
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-box modal-box--form">
+        <div class="modal-box__header">
+            <h2>Edit Project Details</h2>
+            <button type="button" class="icon-btn" data-modal-close aria-label="Close"><?= renderIcon('x') ?></button>
+        </div>
+        <form method="post" action="<?= url('projects/' . $project['id'] . '/update') ?>" class="modal-box__body">
+            <?= csrfField() ?>
+            <div class="form-group">
+                <label for="editProjectName">Project name</label>
+                <input type="text" id="editProjectName" name="name" maxlength="150" required value="<?= htmlspecialchars($project['name']) ?>">
+            </div>
+            <div class="form-group">
+                <label for="editProjectDescription">Description</label>
+                <textarea id="editProjectDescription" name="description" rows="3"><?= htmlspecialchars($project['description'] ?? '') ?></textarea>
+            </div>
+            <div class="form-group">
+                <label for="editProjectDeadline">Deadline</label>
+                <input type="date" id="editProjectDeadline" name="deadline" value="<?= htmlspecialchars(date('Y-m-d', strtotime($project['deadline']))) ?>">
+            </div>
+            <div class="modal-box__footer">
+                <button type="button" class="btn-sm" data-modal-close>Cancel</button>
+                <button type="submit" class="btn-sm btn-sm--primary">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <!-- Delete Stage confirmation -->
 <div class="modal-overlay" data-modal="delete-stage-modal" hidden>

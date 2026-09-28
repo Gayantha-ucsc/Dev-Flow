@@ -4,7 +4,7 @@ class ReportController extends Controller {
     private function baseContext(string $currentRoute, string $pageTitle): array {
         $user           = currentUserContext();
         $projectContext = currentProjectContext();
-        $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
+        $notifications  = currentUserNotifications();
 
         return array_merge(
             [

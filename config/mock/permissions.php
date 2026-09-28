@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'lastUpdatedBy' => 'User One',
+    'lastUpdatedBy' => 'System Administrator',
     'lastUpdatedAt' => date('Y-m-d H:i:s', strtotime('-3 days')),
 
     'groups' => [

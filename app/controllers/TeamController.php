@@ -4,7 +4,7 @@ class TeamController extends Controller {
     private function baseContext(string $currentRoute, string $pageTitle): array {
         $user           = currentUserContext();
         $projectContext = currentProjectContext();
-        $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
+        $notifications  = currentUserNotifications();
 
         return array_merge(
             [
@@ -18,7 +18,7 @@ class TeamController extends Controller {
         );
     }
 
-    private function teamForProject(int $projectId): array {
+    private function teamForProject(?int $projectId): array {
         $teamData = require __DIR__ . '/../../config/mock/team-members.php';
         return $teamData[$projectId] ?? ['members' => [], 'pendingApprovals' => []];
     }

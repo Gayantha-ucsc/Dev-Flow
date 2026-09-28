@@ -5,7 +5,7 @@ class ProjectController extends Controller {
     public function index(): void {
         $user           = currentUserContext();
         $projectContext = currentProjectContext();
-        $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
+        $notifications  = currentUserNotifications();
         $projectsList   = projectsListForCurrentUser();
 
         foreach (ProjectMember::projectsForUser(Auth::id()) as $row) {
@@ -174,7 +174,7 @@ class ProjectController extends Controller {
 
         $user           = currentUserContext();
         $projectContext = currentProjectContext();
-        $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
+        $notifications  = currentUserNotifications();
 
         $context = array_merge(
             [
@@ -192,5 +192,50 @@ class ProjectController extends Controller {
         );
 
         $this->render('project/overview', $context);
+    }
+
+    // POST /projects/:id/update - edit name / description / deadline
+    public function update(): void {
+        $id = (int) (Router::$params['id'] ?? 0);
+
+        $dbProject = Project::findById($id);
+        if (!$dbProject) {
+            Session::flash('error', "This demo project's details aren't editable.");
+            header('Location: ' . url('projects/' . $id));
+            exit;
+        }
+
+        $roles = ProjectMember::rolesForUser($id, Auth::id());
+        if (!in_array('manager', $roles, true) && !in_array('team_lead', $roles, true)) {
+            Session::flash('error', 'Only a Manager or Team Lead can edit project details.');
+            header('Location: ' . url('projects/' . $id));
+            exit;
+        }
+
+        if (!verifyCsrf()) {
+            Session::flash('error', 'Your session expired. Please try again.');
+            header('Location: ' . url('projects/' . $id));
+            exit;
+        }
+
+        $name        = trim($_POST['name'] ?? '');
+        $description = trim($_POST['description'] ?? '');
+        $deadline    = trim($_POST['deadline'] ?? '');
+
+        if ($name === '') {
+            Session::flash('error', 'Please enter a project name.');
+            header('Location: ' . url('projects/' . $id));
+            exit;
+        }
+        if (strlen($name) > 150) {
+            Session::flash('error', 'Project name must be 150 characters or fewer.');
+            header('Location: ' . url('projects/' . $id));
+            exit;
+        }
+
+        Project::update($id, $name, $description, $deadline ?: $dbProject['deadline']);
+        Session::flash('success', 'Project details updated.');
+        header('Location: ' . url('projects/' . $id));
+        exit;
     }
 }

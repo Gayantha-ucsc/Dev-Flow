@@ -15,7 +15,7 @@ return [
             ],
             'teamLead' => [
                 'roleKey'    => 'team_lead',
-                'name'       => 'User One',
+                'name'       => 'Demo User',
                 'decision'   => 'pending',
                 'decidedAgo' => null,
             ],
@@ -31,7 +31,7 @@ return [
             'context' => 'This is the last internal approval gate before the project can be marked ready for client delivery.',
             'manager' => [
                 'roleKey'    => 'manager',
-                'name'       => 'User One',
+                'name'       => 'Demo User',
                 'decision'   => 'pending',
                 'decidedAgo' => null,
             ],
@@ -53,7 +53,7 @@ return [
             'context' => 'All 5 tasks in this stage are approved.',
             'manager' => [
                 'roleKey'    => 'manager',
-                'name'       => 'User One',
+                'name'       => 'Demo User',
                 'decision'   => 'pending',
                 'decidedAgo' => null,
             ],
