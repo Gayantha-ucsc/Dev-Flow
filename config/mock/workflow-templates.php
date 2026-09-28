@@ -31,7 +31,7 @@ return [
         'icon_bg' => 'dark',
         'stages' => ['Requirement Gathering', 'UI/UX Design', 'Development', 'QA Testing', 'Client Review', 'Revision', 'Beta Testing', 'Delivery and Handoff'],
         'is_system_default' => false,
-        'created_by' => 'User One',
+        'created_by' => 'System Administrator',
         'created_at' => '2026-05-20',
     ],
     [
@@ -42,7 +42,7 @@ return [
         'icon_bg' => 'orange',
         'stages' => ['Planning', 'Execution', 'Client Sign-off'],
         'is_system_default' => false,
-        'created_by' => 'User One',
+        'created_by' => 'System Administrator',
         'created_at' => '2026-09-01',
     ],
 ];

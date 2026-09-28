@@ -89,7 +89,7 @@ $defaultOnly = $filters['default_only'] ?? false;
                             <?php endif; ?>
                         </span>
                         <div class="admin-template-card__actions">
-                            <button type="button" class="icon-btn-sm js-edit-template" data-template-name="<?= htmlspecialchars($tpl['name']) ?>" title="Edit template" aria-label="Edit <?= htmlspecialchars($tpl['name']) ?>">
+                            <button type="button" class="icon-btn-sm js-edit-template" data-template-name="<?= htmlspecialchars($tpl['name']) ?>" data-template-description="<?= htmlspecialchars($tpl['description']) ?>" title="Edit template" aria-label="Edit <?= htmlspecialchars($tpl['name']) ?>">
                                 <?= renderIcon('pencil') ?>
                             </button>
                             <button type="button" class="icon-btn-sm js-duplicate-template" data-template-name="<?= htmlspecialchars($tpl['name']) ?>" title="Duplicate template" aria-label="Duplicate <?= htmlspecialchars($tpl['name']) ?>">
@@ -170,6 +170,33 @@ $defaultOnly = $filters['default_only'] ?? false;
                     <button type="button" class="btn-sm" data-modal-close>Cancel</button>
                     <button type="button" class="btn-primary" id="submitCreateTemplate"><?= renderIcon('check') ?> Create template</button>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit template (name / description only) -->
+<div class="modal-overlay" data-modal="edit-template-modal" hidden>
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-box modal-box--form">
+        <div class="modal-box__header">
+            <h2><?= renderIcon('pencil') ?> Edit template</h2>
+            <button type="button" class="icon-btn" data-modal-close aria-label="Close"><?= renderIcon('x') ?></button>
+        </div>
+        <div class="modal-box__body">
+            <div class="form-group">
+                <label for="editTemplateName">Template name <span class="required">*</span></label>
+                <input type="text" id="editTemplateName">
+                <span class="field-error" data-error-for="editTemplateName"></span>
+            </div>
+            <div class="form-group">
+                <label for="editTemplateDesc">Description</label>
+                <textarea id="editTemplateDesc" rows="3"></textarea>
+            </div>
+            <p class="modal-subtext">Stage sequence editing isn't available from this quick-edit popup - duplicate the template to change its stages.</p>
+            <div class="modal-box__footer">
+                <button type="button" class="btn-sm" data-modal-close>Cancel</button>
+                <button type="button" class="btn-primary" id="submitEditTemplate"><?= renderIcon('check') ?> Save changes</button>
             </div>
         </div>
     </div>

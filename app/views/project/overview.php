@@ -12,6 +12,7 @@ foreach ($stages as $stage) {
             'name'      => $task['name'],
             'stageName' => $stage['name'],
             'status'    => $task['status'],
+            'id'        => $task['task_id'] ?? null,
         ];
         if (!empty($task['type'])) {
             $allTaskTypes[$task['type']] = true;
@@ -23,9 +24,9 @@ $allTaskTypes = array_keys($allTaskTypes);
 <div class="project-overview">
 
     <div class="project-overview__header">
-        <a class="project-overview__edit" href="<?= url('projects/' . $project['id'] . '/edit') ?>" aria-label="Edit project details">
+        <button type="button" class="project-overview__edit" data-modal-trigger="edit-project-modal" aria-label="Edit project details">
             <?= renderIcon('pencil') ?>
-        </a>
+        </button>
 
         <div class="project-overview__title-row">
             <h1><?= htmlspecialchars($project['name']) ?></h1>
@@ -91,7 +92,7 @@ $allTaskTypes = array_keys($allTaskTypes);
         </div>
     </div>
 
-    <?php if (($project['milestonesTotal'] ?? 0) > 0): ?>
+    <?php if (!empty($showPayment) && ($project['milestonesTotal'] ?? 0) > 0): ?>
         <a href="<?= url('/payment') ?>" class="project-payment-card card">
             <span class="project-payment-card__icon"><?= renderIcon('payment') ?></span>
             <div class="project-payment-card__body">
@@ -210,7 +211,8 @@ $allTaskTypes = array_keys($allTaskTypes);
                                                 }
                                             ?>
                                             <div
-                                                class="task-card <?= $isLocked ? 'task-card--locked' : '' ?>"
+                                                class="task-card <?= $isLocked ? 'task-card--locked' : '' ?><?= !empty($task['task_id']) ? ' task-card--link' : '' ?>"
+                                                <?php if (!empty($task['task_id'])): ?>data-task-url="<?= htmlspecialchars(url('tasks/' . (int) $task['task_id'])) ?>" style="cursor:pointer"<?php endif; ?>
                                                 id="<?= $taskDomId[$task['name']] ?>"
                                                 <?php if ($localDependIds): ?>data-depends-ids="<?= htmlspecialchars(implode(',', $localDependIds)) ?>"<?php endif; ?>
                                             >
@@ -268,6 +270,7 @@ $allTaskTypes = array_keys($allTaskTypes);
 <script>
     window.STAGE_BASE_URL = <?= json_encode(url('stages')) ?>;
     window.STAGE_CSRF     = <?= json_encode(csrfToken()) ?>;
+    window.TASK_STORE_URL = <?= json_encode(url('tasks')) ?>;
 
     window.STAGE_ICONS = {
         grip:        <?= iconJson('grip-vertical') ?>,
@@ -286,6 +289,36 @@ $allTaskTypes = array_keys($allTaskTypes);
         lock: <?= iconJson('lock') ?>
     };
 </script>
+
+<!-- Edit Project Details -->
+<div class="modal-overlay" data-modal="edit-project-modal" hidden>
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-box modal-box--form">
+        <div class="modal-box__header">
+            <h2>Edit Project Details</h2>
+            <button type="button" class="icon-btn" data-modal-close aria-label="Close"><?= renderIcon('x') ?></button>
+        </div>
+        <form method="post" action="<?= url('projects/' . $project['id'] . '/update') ?>" class="modal-box__body">
+            <?= csrfField() ?>
+            <div class="form-group">
+                <label for="editProjectName">Project name</label>
+                <input type="text" id="editProjectName" name="name" maxlength="150" required value="<?= htmlspecialchars($project['name']) ?>">
+            </div>
+            <div class="form-group">
+                <label for="editProjectDescription">Description</label>
+                <textarea id="editProjectDescription" name="description" rows="3"><?= htmlspecialchars($project['description'] ?? '') ?></textarea>
+            </div>
+            <div class="form-group">
+                <label for="editProjectDeadline">Deadline</label>
+                <input type="date" id="editProjectDeadline" name="deadline" value="<?= htmlspecialchars(date('Y-m-d', strtotime($project['deadline']))) ?>">
+            </div>
+            <div class="modal-box__footer">
+                <button type="button" class="btn-sm" data-modal-close>Cancel</button>
+                <button type="submit" class="btn-sm btn-sm--primary">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <!-- Delete Stage confirmation -->
 <div class="modal-overlay" data-modal="delete-stage-modal" hidden>
@@ -394,7 +427,7 @@ $allTaskTypes = array_keys($allTaskTypes);
                     </button>
                     <div class="dropdown__menu assignee-add-menu" data-dropdown-menu data-assignee-menu>
                         <?php foreach ($members ?? [] as $member): ?>
-                            <button type="button" class="assignee-option" data-assignee-option data-assignee-name="<?= htmlspecialchars($member['name']) ?>">
+                            <button type="button" class="assignee-option" data-assignee-option data-assignee-name="<?= htmlspecialchars($member['name']) ?>" data-assignee-id="<?= (int) ($member['project_member_id'] ?? 0) ?>">
                                 <span class="avatar avatar--sm avatar--<?= avatarColorClass($member['name']) ?>"><?= htmlspecialchars(initials($member['name'])) ?></span>
                                 <?= htmlspecialchars($member['name']) ?>
                             </button>
@@ -416,7 +449,7 @@ $allTaskTypes = array_keys($allTaskTypes);
                         <?php foreach ($allProjectTasks as $t): ?>
                             <?php $tMeta = taskStatusMeta($t['status']); ?>
                             <button type="button" class="dependency-option" data-dependency-option
-                                    data-dependency-name="<?= htmlspecialchars($t['name']) ?>"
+                                    data-dependency-name="<?= htmlspecialchars($t['name']) ?>" data-dependency-id="<?= (int) ($t['id'] ?? 0) ?>"
                                     data-dependency-stage="<?= htmlspecialchars($t['stageName']) ?>">
                                 <span class="dependency-option__name"><?= htmlspecialchars($t['name']) ?></span>
                                 <span class="badge badge--<?= $tMeta['tone'] ?>"><?= htmlspecialchars($tMeta['label']) ?></span>

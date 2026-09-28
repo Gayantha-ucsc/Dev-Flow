@@ -5,7 +5,7 @@ class NotificationController extends Controller {
     public function index(): void {
         $context = mockPageContext('/notifications', 'Notifications', ['heading' => 'Notifications']);
 
-        $mock = require __DIR__ . '/../../config/mock/notifications.php';
+        $mock = currentUserNotifications();
         $feed = $mock['feed'] ?? [];
 
         // Newest first

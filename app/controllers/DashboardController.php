@@ -5,7 +5,7 @@ class DashboardController extends Controller {
     public function index(): void {
         $user           = currentUserContext();
         $projectContext = currentProjectContext();
-        $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
+        $notifications  = currentUserNotifications();
 
         $context = array_merge(
             [

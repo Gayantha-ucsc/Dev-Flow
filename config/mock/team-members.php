@@ -5,8 +5,8 @@ return [
     1 => [ // Project Beta
         'members' => [
             [
-                'user_id' => 1, 
-                'name' => 'User One',       
+                'user_id' => 2, 
+                'name' => 'Demo User',       
                 'email' => 'user_1@gmail.com',    
                 'role' => 'manager',   
                 'status' => 'active', 
@@ -43,8 +43,8 @@ return [
     2 => [ // Project Gamma
         'members' => [
             [
-                'user_id' => 1,  
-                'name' => 'User One',      
+                'user_id' => 2,  
+                'name' => 'Demo User',      
                 'email' => 'user_1@gmail.com',   
                 'role' => 'manager',   
                 'status' => 'active',   
@@ -90,8 +90,8 @@ return [
     3 => [ // Project Alpha
         'members' => [
             [
-                'user_id' => 1,  
-                'name' => 'User One',        
+                'user_id' => 2,  
+                'name' => 'Demo User',        
                 'email' => 'user_1@gmail.com',     
                 'role' => 'manager', 
                 'status' => 'active', 
@@ -168,7 +168,7 @@ return [
                 'name'         => 'User Twenty-Three',
                 'email'        => 'user_23@dgmail.com',
                 'requestedRole' => 'designer',
-                'requestedBy'  => 'User One (Manager)',
+                'requestedBy'  => 'Demo User (Manager)',
                 'requestedAt'  => '2026-08-06',
             ],
         ],
@@ -177,8 +177,8 @@ return [
     4 => [ // Marketing Site Redesign
         'members' => [
             [
-                'user_id' => 1, 
-                'name' => 'User One',   
+                'user_id' => 2, 
+                'name' => 'Demo User',   
                 'email' => 'user_1@gmail.com', 
                 'role' => 'manager',   
                 'status' => 'active', 
@@ -207,8 +207,8 @@ return [
     5 => [ // Project Delta - archived
         'members' => [
             [
-                'user_id' => 1, 
-                'name' => 'User One',    
+                'user_id' => 2, 
+                'name' => 'Demo User',    
                 'email' => 'user_1@gmail.com', 
                 'role' => 'manager',   
                 'status' => 'active', 

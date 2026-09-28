@@ -19,15 +19,15 @@ return [
         ],
     ],
 
-    3 => [ // Project Alpha - decided by User One (Manager, holding the
+    3 => [ // Project Alpha - decided by Demo User (Manager, holding the
            // Team Lead role too since they created the project)
         'approvalHistory' => [
-            ['date' => '2026-03-27', 'item' => 'Bug Fixes Round 1',       'stage' => 'Testing',              'decision' => 'approved', 'decidedBy' => 'User One', 'feedback' => 'Fixes verified against UAT feedback, cleared for delivery.'],
-            ['date' => '2026-03-25', 'item' => 'UAT with Client',         'stage' => 'Testing',              'decision' => 'approved', 'decidedBy' => 'User One', 'feedback' => 'Client sign-off received during the UAT session, no blockers.'],
-            ['date' => '2026-03-17', 'item' => 'Security Audit',          'stage' => 'Testing',              'decision' => 'approved', 'decidedBy' => 'User One', 'feedback' => 'No critical findings, two low-severity items logged for backlog.'],
-            ['date' => '2026-03-06', 'item' => 'Code Review & Cleanup',   'stage' => 'Development',          'decision' => 'approved', 'decidedBy' => 'User One', 'feedback' => 'Codebase matches the style guide, nothing outstanding.'],
-            ['date' => '2026-02-04', 'item' => 'Design Sign-off',         'stage' => 'Design',                'decision' => 'approved', 'decidedBy' => 'User One', 'feedback' => 'Responsive pass approved, ready for development handoff.'],
-            ['date' => '2026-01-20', 'item' => 'Project Charter Sign-off','stage' => 'Discovery',            'decision' => 'approved', 'decidedBy' => 'User One', 'feedback' => 'Charter matches stakeholder requirements, cleared to start design.'],
+            ['date' => '2026-03-27', 'item' => 'Bug Fixes Round 1',       'stage' => 'Testing',              'decision' => 'approved', 'decidedBy' => 'Demo User', 'feedback' => 'Fixes verified against UAT feedback, cleared for delivery.'],
+            ['date' => '2026-03-25', 'item' => 'UAT with Client',         'stage' => 'Testing',              'decision' => 'approved', 'decidedBy' => 'Demo User', 'feedback' => 'Client sign-off received during the UAT session, no blockers.'],
+            ['date' => '2026-03-17', 'item' => 'Security Audit',          'stage' => 'Testing',              'decision' => 'approved', 'decidedBy' => 'Demo User', 'feedback' => 'No critical findings, two low-severity items logged for backlog.'],
+            ['date' => '2026-03-06', 'item' => 'Code Review & Cleanup',   'stage' => 'Development',          'decision' => 'approved', 'decidedBy' => 'Demo User', 'feedback' => 'Codebase matches the style guide, nothing outstanding.'],
+            ['date' => '2026-02-04', 'item' => 'Design Sign-off',         'stage' => 'Design',                'decision' => 'approved', 'decidedBy' => 'Demo User', 'feedback' => 'Responsive pass approved, ready for development handoff.'],
+            ['date' => '2026-01-20', 'item' => 'Project Charter Sign-off','stage' => 'Discovery',            'decision' => 'approved', 'decidedBy' => 'Demo User', 'feedback' => 'Charter matches stakeholder requirements, cleared to start design.'],
         ],
     ],
 
@@ -38,16 +38,16 @@ return [
         ],
     ],
 
-    5 => [ // Project Delta - archived, decided by User One
+    5 => [ // Project Delta - archived, decided by Demo User
         'approvalHistory' => [
-            ['date' => '2026-01-25', 'item' => 'Archive & Close Project', 'stage' => 'Delivery and Handoff', 'decision' => 'approved', 'decidedBy' => 'User One', 'feedback' => 'All decommission steps verified, safe to archive.'],
-            ['date' => '2026-01-15', 'item' => 'Sign-off Review',         'stage' => 'Testing',              'decision' => 'approved', 'decidedBy' => 'User One', 'feedback' => 'Rollback drill passed, no data integrity issues found.'],
+            ['date' => '2026-01-25', 'item' => 'Archive & Close Project', 'stage' => 'Delivery and Handoff', 'decision' => 'approved', 'decidedBy' => 'Demo User', 'feedback' => 'All decommission steps verified, safe to archive.'],
+            ['date' => '2026-01-15', 'item' => 'Sign-off Review',         'stage' => 'Testing',              'decision' => 'approved', 'decidedBy' => 'Demo User', 'feedback' => 'Rollback drill passed, no data integrity issues found.'],
         ],
     ],
 
-    6 => [ // Project Epsilon - closed, decided by User One
+    6 => [ // Project Epsilon - closed, decided by Demo User
         'approvalHistory' => [
-            ['date' => '2025-10-05', 'item' => 'Final Report Sign-off', 'stage' => 'Delivery and Handoff', 'decision' => 'approved', 'decidedBy' => 'User One', 'feedback' => 'Compliance report accepted by the client, ready to close out.'],
+            ['date' => '2025-10-05', 'item' => 'Final Report Sign-off', 'stage' => 'Delivery and Handoff', 'decision' => 'approved', 'decidedBy' => 'Demo User', 'feedback' => 'Compliance report accepted by the client, ready to close out.'],
         ],
     ],
 

@@ -129,7 +129,7 @@ return [
             'task'     => 'Database Schema V2',
             'project'  => 'Project Beta',
             'decision' => 'rejected',
-            'reviewer' => 'User One',
+            'reviewer' => 'Demo User',
             'role'     => 'manager',
             'comment'  => 'Missing tenant isolation indexes, rework required on compound indexes.',
             'time'     => 'Yesterday',

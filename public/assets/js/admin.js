@@ -219,6 +219,12 @@ document.addEventListener('DOMContentLoaded', function () {
         var confirmDeleteTemplate = document.getElementById('confirmDeleteTemplate');
         var pendingTemplateCard   = null;
 
+        var editTemplateModal  = document.querySelector('[data-modal="edit-template-modal"]');
+        var editTemplateName   = document.getElementById('editTemplateName');
+        var editTemplateDesc   = document.getElementById('editTemplateDesc');
+        var submitEditTemplate = document.getElementById('submitEditTemplate');
+        var pendingEditCard    = null;
+
         var newTemplateName          = document.getElementById('newTemplateName');
         var newTemplateDesc          = document.getElementById('newTemplateDesc');
         var newTemplateDefaultSwitch = document.getElementById('newTemplateDefaultSwitch');
@@ -230,7 +236,12 @@ document.addEventListener('DOMContentLoaded', function () {
         templatesPage.addEventListener('click', function (e) {
             var editBtn = e.target.closest('.js-edit-template');
             if (editBtn) {
-                if (window.showToast) showToast('info', 'Editing "' + editBtn.dataset.templateName + '" isn\'t wired up yet.');
+                pendingEditCard = editBtn.closest('.admin-template-card');
+                if (editTemplateName) editTemplateName.value = editBtn.dataset.templateName || '';
+                if (editTemplateDesc) editTemplateDesc.value = editBtn.dataset.templateDescription || '';
+                var editErr = editTemplateModal ? editTemplateModal.querySelector('[data-error-for="editTemplateName"]') : null;
+                if (editErr) editErr.textContent = '';
+                if (editTemplateModal) openModal(editTemplateModal);
                 return;
             }
 
@@ -264,6 +275,39 @@ document.addEventListener('DOMContentLoaded', function () {
                     pendingTemplateCard = null;
                 }
                 closeModal(deleteTemplateModal);
+            });
+        }
+
+        /* ---- Edit template modal (quick edit: name/description only) ---- */
+        if (submitEditTemplate) {
+            submitEditTemplate.addEventListener('click', function () {
+                var name = (editTemplateName.value || '').trim();
+                var editErr = editTemplateModal.querySelector('[data-error-for="editTemplateName"]');
+
+                if (!name) {
+                    if (editErr) editErr.textContent = 'Please enter a template name.';
+                    editTemplateName.focus();
+                    return;
+                }
+
+                if (pendingEditCard) {
+                    var titleEl = pendingEditCard.querySelector('.admin-template-card__title-row h3');
+                    var descEl  = pendingEditCard.querySelector('.admin-template-card__desc');
+                    if (titleEl) titleEl.textContent = name;
+                    if (descEl) descEl.textContent = editTemplateDesc.value.trim();
+
+                    var editIconBtn = pendingEditCard.querySelector('.js-edit-template');
+                    var dupIconBtn  = pendingEditCard.querySelector('.js-duplicate-template');
+                    var delIconBtn  = pendingEditCard.querySelector('.js-delete-template');
+                    [editIconBtn, dupIconBtn, delIconBtn].forEach(function (btn) {
+                        if (btn) btn.dataset.templateName = name;
+                    });
+                    if (editIconBtn) editIconBtn.dataset.templateDescription = editTemplateDesc.value.trim();
+                }
+
+                if (window.showToast) showToast('success', 'Template updated.');
+                closeModal(editTemplateModal);
+                pendingEditCard = null;
             });
         }
 

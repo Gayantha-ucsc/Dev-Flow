@@ -65,7 +65,7 @@ function projectStatusTone(string $status): string {
 function mockPageContext(string $currentRoute, string $pageTitle, array $extra = []): array {
     $user           = currentUserContext();
     $projectContext = currentProjectContext();
-    $notifications  = require __DIR__ . '/../../config/mock/notifications.php';
+    $notifications  = currentUserNotifications();
 
     return array_merge(
         [
@@ -95,6 +95,25 @@ function currentUserContext(): array {
 
     // fallback for any context reached without an authenticated
     return require __DIR__ . '/../../config/mock/users.php';
+}
+
+function currentUserNotifications(): array {
+    $userId = class_exists('Auth') ? Auth::id() : null;
+
+    if ($userId === null) {
+        $fallback = require __DIR__ . '/../../config/mock/users.php';
+        $userId   = $fallback['user_id'] ?? null;
+    }
+
+    $byUser = require __DIR__ . '/../../config/mock/notifications.php';
+
+    if ($userId !== null && array_key_exists($userId, $byUser)) {
+        return $byUser[$userId];
+    }
+
+    // No notifications on file for this user: an empty inbox, not a
+    // count borrowed from someone else.
+    return ['unreadCount' => 0, 'items' => [], 'feed' => []];
 }
 
 function projectsListForCurrentUser(): array {

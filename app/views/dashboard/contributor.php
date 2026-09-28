@@ -153,4 +153,4 @@ $statusCounts = array_count_values(array_column($myTasks, 'status'));
 
     <?php include __DIR__ . '/../partials/client-projects-widget.php'; ?>
 
-</div>latest approval decisions on submitted wor
+</div>

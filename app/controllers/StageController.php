@@ -76,7 +76,12 @@ class StageController extends Controller {
             $this->back($projectId);
         }
 
-        Stage::delete($stageId);
+        try {
+            Stage::delete($stageId);
+        } catch (mysqli_sql_exception $e) {
+            Session::flash('error', '"' . $stage['name'] . '" can\'t be deleted because other records (e.g. payment milestones) still depend on it. Remove those first.');
+            $this->back($projectId);
+        }
         Session::flash('success', '"' . $stage['name'] . '" was deleted.');
         $this->back($projectId);
     }

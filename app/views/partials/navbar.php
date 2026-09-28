@@ -3,7 +3,7 @@
 // $currentProjectId = 1
 // $userProjects     = [['project_id'=>.., 'name'=>.., 'role'=>..], ...]  // projects this user belongs to
 // $activeRole       = 'manager'                               // this user's one role on the current project
-// $currentUser      = ['name' => 'User One', 'profile_picture' => null]
+// $currentUser      = ['name' => 'Demo User', 'profile_picture' => null]
 // $unreadCount      = 3
 ?>
 
@@ -39,6 +39,13 @@ $showSwitcher = !empty($currentProjectId) && $isProjectScopedPage;
                             $switcherHref = ($project['role'] ?? null) === 'client'
                                 ? url('client-portal/overview?id=' . (int) $project['project_id'])
                                 : url('/projects/' . (int) $project['project_id']);
+                            // Stay on the same page type when switching; ProjectController checks role access.
+                            $goTo = null;
+                            foreach ((require __DIR__ . '/../../../config/nav.php')['project'] as $navItem) {
+                                $cr = (string) ($currentRoute ?? '');
+                                if ($cr === $navItem['href'] || str_starts_with($cr, $navItem['href'] . '/')) { $goTo = $navItem['href']; }
+                            }
+                            if ($goTo) { $switcherHref = url('/projects/' . (int) $project['project_id']) . '?go=' . urlencode($goTo); }
                         ?>
                         <a href="<?= $switcherHref ?>"
                         class="dropdown__item <?= $project['project_id'] === ($currentProjectId ?? null) ? 'is-active' : '' ?>"

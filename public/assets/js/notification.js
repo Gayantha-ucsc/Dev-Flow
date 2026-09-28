@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (action === 'delete') {
+            if (!window.confirm('Delete this notification? This cannot be undone.')) return;
             row.classList.add('is-removing');
             setTimeout(function () {
                 row.remove();

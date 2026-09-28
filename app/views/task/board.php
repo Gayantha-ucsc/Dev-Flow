@@ -35,26 +35,31 @@ foreach ($tasks as $t) { $byStage[$t['stage_id']][] = $t; }
             <?php else: ?>
             <div class="task-list">
             <?php foreach ($list as $task): $meta = taskStatusMeta($task['status']); ?>
-                <div class="card task-row">
-                    <a href="<?= url('tasks/' . $task['task_id']) ?>" class="task-row__info" style="text-decoration:none;color:inherit">
+                <div class="card task-row"<?= !empty($task['is_mock']) ? ' data-mock-key="' . htmlspecialchars($task['mock_key']) . '"' : '' ?>>
+                    <a href="<?= url('tasks/' . (empty($task['is_mock']) ? $task['task_id'] : 'mock/' . $task['mock_key'])) ?>" class="task-row__info" style="text-decoration:none;color:inherit">
                         <div class="task-row__title-line">
-                            <h3 class="task-row__name"><?= htmlspecialchars($task['name']) ?></h3>
+                            <h3 class="task-row__name js-mock-name"><?= htmlspecialchars($task['name']) ?></h3>
                             <span class="badge badge--<?= $meta['tone'] ?> badge--outline"><?= htmlspecialchars($meta['label']) ?></span>
                             <?php if (!empty($task['task_type'])): ?>
                                 <span class="role-chip"><?= htmlspecialchars($task['task_type']) ?></span>
                             <?php endif; ?>
                         </div>
-                        <p class="task-row__description"><?= htmlspecialchars(mb_strimwidth($task['description'] ?? '', 0, 100, '…')) ?></p>
+                        <p class="task-row__description js-mock-desc"><?= htmlspecialchars(mb_strimwidth($task['description'] ?? '', 0, 100, '…')) ?></p>
                     </a>
                     <div class="task-row__meta">
                         <div class="task-row__meta-label">Deadline</div>
                         <div class="task-row__meta-value"><?= $task['deadline'] ? htmlspecialchars(date('M j, Y', strtotime($task['deadline']))) : '—' ?></div>
                     </div>
-                    <?php if ($canEdit): ?>
+                    <?php if ($canEdit && !empty($task['is_mock'])): ?>
+                    <div class="task-row__actions">
+                        <a href="<?= url('tasks/mock/' . $task['mock_key'] . '/edit') ?>" class="btn-sm"><?= renderIcon('pencil') ?> Edit</a>
+                        <button type="button" class="btn-sm btn-sm--danger-outline js-mock-delete" data-task-name="<?= htmlspecialchars($task['name']) ?>"><?= renderIcon('trash-2') ?> Delete</button>
+                    </div>
+                    <?php elseif ($canEdit): ?>
                     <div class="task-row__actions">
                         <a href="<?= url('tasks/' . $task['task_id'] . '/edit') ?>" class="btn-sm"><?= renderIcon('pencil') ?> Edit</a>
                         <button type="button" class="btn-sm btn-sm--danger-outline js-delete-task"
-                                data-task-id="<?= (int) $task['task_id'] ?>"
+                                data-task-id="<?= htmlspecialchars((string) $task['task_id']) ?>"
                                 data-task-name="<?= htmlspecialchars($task['name']) ?>"
                                 data-delete-url="<?= url('tasks/' . $task['task_id'] . '/delete') ?>">
                             <?= renderIcon('trash-2') ?> Delete
@@ -72,6 +77,8 @@ foreach ($tasks as $t) { $byStage[$t['stage_id']][] = $t; }
 <div class="modal-overlay" data-modal="delete-task-modal" hidden id="deleteTaskModal">
     <div class="modal-backdrop" data-modal-close></div>
     <div class="modal-box modal-box--form modal-box--confirm">
+        <div class="modal-box__header">
+            <h2>Delete Task</h2>
             <button type="button" class="icon-btn" data-modal-close aria-label="Close"><?= renderIcon('x') ?></button>
         </div>
         <div class="modal-box__body">

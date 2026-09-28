@@ -17,6 +17,8 @@ return [
         '/team/invite-client'  => ['TeamController', 'inviteClient'],
         '/tasks'               => ['TaskController', 'index'],
         '/tasks/create'        => ['TaskController', 'create'],
+        '/tasks/mock/:key'     => ['TaskController', 'mockDetail'],
+        '/tasks/mock/:key/edit' => ['TaskController', 'mockEdit'],
         '/tasks/:id'           => ['TaskController', 'detail'],
         '/tasks/:id/edit'      => ['TaskController', 'edit'],
         '/review'              => ['ReviewController', 'queue'],
@@ -58,6 +60,7 @@ return [
         '/tasks/:id/update'    => ['TaskController', 'update'],
         '/tasks/:id/delete'    => ['TaskController', 'destroy'],
 
+        '/projects/:id/update' => ['ProjectController', 'update'],
         '/projects/:id/stages' => ['StageController', 'store'],
         '/stages/:id/update'   => ['StageController', 'update'],
         '/stages/:id/move'     => ['StageController', 'move'],

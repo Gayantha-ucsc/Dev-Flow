@@ -464,12 +464,10 @@
 .admin-audit-table tbody tr:hover { background: var(--color-primary-bg-tint); }
 
 .admin-audit-table__timestamp {
-    display: flex;
-    flex-direction: column;
     white-space: nowrap;
     font-size: 0.85rem;
 }
-.admin-audit-table__time { color: var(--color-text-muted); font-size: 0.78rem; }
+.admin-audit-table__time { display: block; color: var(--color-text-muted); font-size: 0.78rem; }
 
 .admin-audit-table .avatar svg { width: 16px; height: 16px; }
 

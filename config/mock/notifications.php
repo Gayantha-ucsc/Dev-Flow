@@ -1,5 +1,12 @@
 <?php
 
+// Notifications are keyed by user_id so the unread badge and feed reflect
+// only the current user's own notifications, not a single global count
+// shared by everyone. Use currentUserNotifications() (app/core/helpers.php)
+// to read this rather than requiring the file directly, since that helper
+// resolves the current user and falls back to an empty/zero state for any
+// user not listed below (i.e. everyone except the Demo User).
+//
 // 'items'  -> short list used by the navbar bell dropdown (kept small on purpose)
 // 'feed'   -> richer list used by the full /notifications page
 //
@@ -17,6 +24,10 @@
 //   created_at  datetime string, used for day-grouping and relative time
 
 return [
+
+// user_id 2 = Demo User (see config/mock/users.php). Every other user_id
+// falls through to currentUserNotifications()'s empty default below.
+2 => [
     'unreadCount' => 4,
     'items' => [
         ['message' => 'Your task "Homepage Design" was approved', 'icon' => 'circle-check', 'is_read' => false, 'created_at' => '12m ago', 'href' => '/tasks'],
@@ -106,4 +117,6 @@ return [
             'created_at' => date('Y-m-d', strtotime('-1 day')) . ' 10:00:00',
         ],
     ],
+],
+
 ];
